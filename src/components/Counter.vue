@@ -2,6 +2,7 @@
   <div>
     <div v-if="isLoading">
       Loading counter ...
+      <loader></loader>
     </div>
     <div v-if="!isLoading">
       <p>{{ count }}</p>
@@ -14,31 +15,36 @@
 </template>
 
 <script>
-  export default {
-    name: 'counter',
-    created() {
-      this.$store.dispatch('loadCounter');
+import Loader from './Loader';
+
+export default {
+  name: 'counter',
+  created() {
+    this.$store.dispatch('loadCounter');
+  },
+  data() {
+    return {
+      msg: 'Welcome to Your Vue.js App',
+    };
+  },
+  computed: {
+    count() {
+      return this.$store.state.counter.count;
     },
-    data() {
-      return {
-        msg: 'Welcome to Your Vue.js App',
-      };
+    isLoading() {
+      return this.$store.state.counter.isLoading;
     },
-    computed: {
-      count() {
-        return this.$store.state.counter.count;
-      },
-      isLoading() {
-        return this.$store.state.counter.isLoading;
-      },
+  },
+  methods: {
+    increment() {
+      this.$store.commit('increment');
     },
-    methods: {
-      increment() {
-        this.$store.commit('increment');
-      },
-      decrement() {
-        this.$store.commit('decrement');
-      },
+    decrement() {
+      this.$store.commit('decrement');
     },
-  };
+  },
+  components: {
+    Loader,
+  },
+};
 </script>

@@ -25,4 +25,13 @@ new Vue({
   store,
   template: '<App/>',
   components: { App },
+  created() {
+    this.$firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.$router.push('/user');
+      } else {
+        this.$router.push('/login');
+      }
+    });
+  },
 });

@@ -30,7 +30,8 @@ const counter = {
       const counterRef = firebase.database().ref('counter');
       counterRef.on('value', (snapshot) => {
         const result = snapshot.val();
-        context.commit('initCounter', { count: result.count, isLoading: false });
+        // delay for confirmation
+        setTimeout(() => context.commit('initCounter', { count: result.count, isLoading: false }), 1000);
       });
     },
   },
