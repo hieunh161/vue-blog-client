@@ -1,6 +1,12 @@
 /* eslint-disable no-param-reassign */
 const authenticate = {
-  state: { count: 0 },
+  state: { 
+    count: 0,
+    facebook: {
+      isLoading: false,
+      result: null,
+    },
+  },
   mutations: {
     increment(state) {
       // `state` is the local module state
