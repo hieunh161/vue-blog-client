@@ -6,6 +6,9 @@ import App from './App';
 import router from './router';
 import store from './store';
 
+import '../semantic/dist/semantic.css';
+import '../semantic/dist/semantic';
+
 Vue.config.productionTip = false;
 
 // allows usage of firebase in your vue components by using this.$firebase
