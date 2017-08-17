@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <counter></counter>
     <h2>Essential Links</h2>
     <ul>
       <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
@@ -21,12 +22,17 @@
 </template>
 
 <script>
+import Counter from './Counter';
+
 export default {
   name: 'hello',
   data() {
     return {
       msg: 'Welcome to Your Vue.js App',
     };
+  },
+  components: {
+    Counter,
   },
 };
 </script>
