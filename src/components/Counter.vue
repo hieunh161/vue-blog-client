@@ -27,9 +27,6 @@ export default {
     this.$store.dispatch('loadCounter');
   },
   data() {
-    return {
-      msg: 'Welcome to Your Vue.js App',
-    };
   },
   computed: {
     count() {

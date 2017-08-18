@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import authenticate from './authenticate';
+import customer from './customer';
 import counter from './counter';
 
 Vue.use(Vuex);
@@ -11,5 +12,6 @@ export default new Vuex.Store({
   modules: {
     authenticate,
     counter,
+    customer,
   },
 });
