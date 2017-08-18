@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import * as firebase from 'firebase';
+// import { mapState } from 'vuex';
 import Vue from 'vue';
 import App from './App';
 import router from './router';
@@ -22,19 +23,23 @@ Vue.prototype.$firebase = firebase.initializeApp({
 });
 
 /* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  template: '<App/>',
-  components: { App },
-  created() {
-    this.$firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.$router.push('/user');
-      } else {
-        this.$router.push('/login');
-      }
-    });
-  },
+const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    template: '<App/>',
+    components: { App },
+    created() {
+      console.log(user.email);
+      // this.$firebase.auth().onAuthStateChanged((user) => {
+      //   if (user) {
+      //     this.$router.push('/user');
+      //   } else {
+      //     this.$router.push('/login');
+      //   }
+      // });
+    },
+  });
+  unsubscribe();
 });

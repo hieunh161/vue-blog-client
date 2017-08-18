@@ -10,37 +10,39 @@ const authenticate = {
     },
     user: null,
   },
+  namespaced: true,
   mutations: {
     increment(state) {
       // `state` is the local module state
       state.count += 1;
     },
-    setLoggedInUser(state, payload) {
-      state.user = payload.user;
+    setUser(state, value) {
+      state.user = value;
     },
   },
   actions: {
     loginFacebook: (context) => {
-      console.log('facebook');
       const provider = new firebase.auth.FacebookAuthProvider();
       firebase.auth().signInWithPopup(provider)
       .then((result) => {
-        const token = result.credential.accessToken;
-        const user = result.user;
-        console.log(token);
-        console.log(user);
-        context.commit({
-          type: 'setLoggedInUser',
-          user,
-        });
+        context.commit('setUser', result.user);
       }).catch((error) => {
         console.log(error);
       });
     },
+    logOut: (context) => {
+      firebase.auth().signOut()
+      .then(() => {
+        console.log('Signout successful!');
+        context.commit('setUser', null);
+      }, (error) => {
+        console.log(`Signout failed, ${error}!`);
+      });
+    },
   },
   getters: {
-    doubleCount(state) {
-      return state.count * 2;
+    isLoggedIn() {
+      return !!firebase.auth().currentUser;
     },
   },
 };

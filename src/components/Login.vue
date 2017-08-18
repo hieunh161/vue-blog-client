@@ -7,24 +7,14 @@
 </template>
 
 <script>
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
 
 export default {
   name: 'login',
   methods: {
     loginFacebook() {
       console.log('facebook');
-      const provider = new firebase.auth.FacebookAuthProvider();
-      firebase.auth().signInWithPopup(provider)
-      .then((result) => {
-        const token = result.credential.accessToken;
-        const user = result.user;
-        console.log(token);
-        console.log(user);
-      }).catch((error) => {
-        console.log(error.code);
-        console.log(error.message);
-      });
+      this.$store.dispatch('authenticate/loginFacebook');
     },
     loginGoogle() {
       console.log('google');
