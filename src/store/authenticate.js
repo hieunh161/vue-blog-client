@@ -33,7 +33,6 @@ const authenticate = {
     logOut: (context) => {
       firebase.auth().signOut()
       .then(() => {
-        console.log('Signout successful!');
         context.commit('setUser', null);
       }, (error) => {
         console.log(`Signout failed, ${error}!`);
@@ -42,6 +41,8 @@ const authenticate = {
   },
   getters: {
     isLoggedIn: state => !!state.user,
+    avatar: state => (state.user ? state.user.photoURL : ''),
+    displayName: state => (state.user ? state.user.displayName : ''),
   },
 };
 

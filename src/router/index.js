@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import Hello from '@/components/Hello';
 import Login from '@/components/Login';
 import UserProfile from '@/components/UserProfile';
+import Customer from '@/components/Customer';
 import PageNotFound from '@/components/PageNotFound';
 import * as firebase from 'firebase';
 
@@ -16,7 +17,6 @@ const requireAuth = (to, from, next) => {
       path: '/login',
     });
   } else {
-    console.log('User is logged in:', firebase.auth().currentUser.uid);
     next();
   }
 };
@@ -37,6 +37,12 @@ export default new Router({
       path: '/user',
       name: 'UserProfile',
       component: UserProfile,
+      beforeEnter: requireAuth,
+    },
+    {
+      path: '/customer',
+      name: 'Customer',
+      component: Customer,
       beforeEnter: requireAuth,
     },
     {

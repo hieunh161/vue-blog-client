@@ -3,6 +3,7 @@
 import * as firebase from 'firebase';
 // import { mapState } from 'vuex';
 import Vue from 'vue';
+import VueProgressiveImage from 'vue-progressive-image';
 import App from './App';
 import router from './router';
 import store from './store';
@@ -11,6 +12,7 @@ import '../semantic/dist/semantic.css';
 import '../semantic/dist/semantic';
 
 Vue.config.productionTip = false;
+Vue.use(VueProgressiveImage);
 
 // allows usage of firebase in your vue components by using this.$firebase
 Vue.prototype.$firebase = firebase.initializeApp({

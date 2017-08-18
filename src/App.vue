@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <navbar></navbar>
-    <img src="./assets/logo.png">
     <router-view v-if="user !== null"></router-view>
-    <div>User: {{user}}</div>
   </div>
 </template>
 

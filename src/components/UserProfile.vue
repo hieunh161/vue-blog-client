@@ -1,7 +1,10 @@
 <template>
   <div>
-    <h1>AUTHEN SUCCESS</h1>
-    <button class="ui btn button">LogOut</button>
+     <progressive-img class="ui small circular image"
+        :blur="10"
+        placeholder=""
+        :src= "avatar" />
+    <h1>{{displayName}}</h1>
     <div class="ui container">
       <div class="ui labeled button" tabindex="0">
         <div class="ui red button">
@@ -34,12 +37,14 @@
 
 <script>
 // import * as firebase from 'firebase';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'user-profile',
   computed: {
     ...mapState(['user']),
+    ...mapGetters({ avatar: 'authenticate/avatar' }),
+    ...mapGetters({ displayName: 'authenticate/displayName' }),
   },
   mounted() {
     /* global $:true */
