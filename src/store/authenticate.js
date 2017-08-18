@@ -41,9 +41,7 @@ const authenticate = {
     },
   },
   getters: {
-    isLoggedIn() {
-      return !!firebase.auth().currentUser;
-    },
+    isLoggedIn: state => !!state.user,
   },
 };
 

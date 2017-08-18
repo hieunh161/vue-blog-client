@@ -1,19 +1,19 @@
 <template>
   <div>
     <router-link class="nav-link"  to="/">Home</router-link>
-    <router-link class="nav-link"  to="/login">Login</router-link>
-    <div>LoggedIn {{this.$store.getters.isLoggedIn}}</div>
-    <button v-on:click="logout">Logout</button>
+    <router-link class="nav-link"  to="/login" v-if="!isLoggedIn" >Login</router-link>
+    <button v-on:click="logout" v-if="isLoggedIn">Logout</button>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'navbar',
   computed: {
     ...mapState(['user']),
+    ...mapGetters({ isLoggedIn: 'authenticate/isLoggedIn' }),
   },
   methods: {
     logout() {
