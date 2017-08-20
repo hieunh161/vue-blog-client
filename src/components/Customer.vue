@@ -24,12 +24,14 @@
         </tr>
       </tbody>
     </table>
+    <customer-table></customer-table>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import Loader from './Loader';
+import CustomerTable from './CustomerTable';
 
 export default {
   name: 'customer',
@@ -46,6 +48,7 @@ export default {
   },
   components: {
     Loader,
+    CustomerTable,
   },
 };
 </script>
