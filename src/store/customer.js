@@ -64,7 +64,7 @@ const customer = {
   },
   actions: {
     loadCustomers: (context) => {
-      setTimeout(() => context.commit('initCustomers', { customers: customerData, isLoading: false }), 3000);
+      setTimeout(() => context.commit('initCustomers', { customers: customerData, isLoading: false }), 1000);
     },
   },
   getters: {

@@ -10,7 +10,7 @@
         <button @click="increment">+</button>
         <button @click="decrement">-</button>
       </p>
-      <progressive-img class="ui medium rounded image"
+      <progressive-img class="ui large rounded image"
         :blur="10"
         placeholder="https://scontent-nrt1-1.xx.fbcdn.net/v/t1.0-9/18839071_286508268425274_2831750220322310106_n.jpg?oh=83c2bc65dda91a3dce04903bd8437602&oe=5A2D20B3"
         src="https://scontent-nrt1-1.xx.fbcdn.net/v/t1.0-9/18839071_286508268425274_2831750220322310106_n.jpg?oh=83c2bc65dda91a3dce04903bd8437602&oe=5A2D20B3" />
@@ -25,8 +25,6 @@ export default {
   name: 'counter',
   created() {
     this.$store.dispatch('loadCounter');
-  },
-  data() {
   },
   computed: {
     count() {
