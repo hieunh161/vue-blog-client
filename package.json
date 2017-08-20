@@ -23,6 +23,7 @@
     "vue-progressive-image": "^2.1.2",
     "vue-router": "^2.6.0",
     "vuefire": "^1.4.3",
+    "vuetable": "^1.5.12",
     "vuex": "^2.3.1"
   },
   "devDependencies": {

@@ -24,7 +24,7 @@
         </tr>
       </tbody>
     </table>
-    <customer-table></customer-table>
+    
   </div>
 </template>
 
