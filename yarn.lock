@@ -5043,7 +5043,7 @@ longest@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
 
-loose-envify@^1.0.0:
+loose-envify@^1.0.0, loose-envify@^1.2.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.3.1.tgz#d1a8ad33fa9ce0e713d65fdd0ac8b748d478c848"
   dependencies:
@@ -7849,6 +7849,12 @@ void-elements@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
+vue-clickaway@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/vue-clickaway/-/vue-clickaway-2.1.0.tgz#392de764751f31cd20787e8fb3a6e319825f8d4f"
+  dependencies:
+    loose-envify "^1.2.0"
+
 vue-data-tables@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/vue-data-tables/-/vue-data-tables-2.0.3.tgz#12157743081513e0e086a9335c3c2c8f6a71080c"
@@ -7891,6 +7897,12 @@ vue-resource@^1.0.2:
 vue-router@^2.6.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.7.0.tgz#16d424493aa51c3c8cce8b7c7210ea4c3a89aff1"
+
+vue-semantic-modal@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/vue-semantic-modal/-/vue-semantic-modal-2.0.0.tgz#7aba8430258c04039ae418fba256f5d3fd221c1f"
+  dependencies:
+    vue-clickaway "^2.1.0"
 
 vue-style-loader@^3.0.0, vue-style-loader@^3.0.1:
   version "3.0.1"
