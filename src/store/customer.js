@@ -1,4 +1,6 @@
 import * as firebase from 'firebase';
+import * as uuidv4 from 'uuid/v4';
+// const uuidv4 = require('uuid/v4');
 
 // const customerData = [
 //   { name: 'FX',
@@ -68,6 +70,18 @@ const customer = {
     setSelectedCustomer: (s, c) => {
       s.selectedCustomer = c;
     },
+    addCustomer: (s, c) => {
+      s.customers.push(c);
+    },
+    removeCustomer: (s, c) => {
+      const index = s.customers.indexOf(c);
+      if (index > -1) {
+        s.customers.splice(index, 1);
+      }
+    },
+    setUpdateFlag: (s, v) => {
+      s.isUpdating = v;
+    },
   },
   actions: {
     loadCustomers: (context) => {
@@ -82,33 +96,38 @@ const customer = {
       });
     },
     addCustomer: (context, c) => {
-      this.isUpdating = true;
-      firebase.database().ref('customer').push(c)
+      context.commit('setUpdateFlag', true);
+      const customerId = uuidv4();
+      console.log(customerId);
+      firebase.database().ref('customer').child(customerId).set(c)
       .then(
         () => {
           setTimeout(() => {
-            this.isUpdating = true;
+            c.key = customerId;
+            context.commit('addCustomer', c);
+            context.commit('setUpdateFlag', false);
             console.log('push data success');
           }, 3000);
         },
         (err) => {
-          this.isUpdating = true;
+          context.commit('setUpdateFlag', false);
           console.log(`push data err ${err}`);
         },
       );
     },
     removeCustomer: (context, c) => {
-      this.isUpdating = true;
+      context.commit('setUpdateFlag', true);
       firebase.database().ref(`customer/${c.key}`).remove()
       .then(
         () => {
           setTimeout(() => {
-            this.isUpdating = true;
+            context.commit('removeCustomer', c);
+            context.commit('setUpdateFlag', false);
             console.log('remove data success');
           }, 3000);
         },
         (err) => {
-          this.isUpdating = true;
+          context.commit('setUpdateFlag', false);
           console.log(`remove data err ${err}`);
         },
       );

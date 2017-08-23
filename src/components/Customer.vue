@@ -2,6 +2,7 @@
   <div class="ui container">
     <button @click="openModal">open modal</button>
     <h1>CUSTOMER LIST</h1>
+    <h1>is Updating ... {{isUpdating}}</h1>
     <loader  v-if="!isDoneLoading"></loader>
     <table class="ui striped table" v-if="isDoneLoading">
       <thead>
@@ -62,7 +63,7 @@
         </form>
       </div>
       <div class="actions">
-        <div class="ui button basic red" @click="cancelForm">Cancel</div>
+        <div class="ui button basic red" @click="dismissForm">Cancel</div>
         <div class="ui button green" id="updateButton" @click="submitForm">OK</div>
       </div>
     </div>
@@ -100,27 +101,20 @@ export default {
       .modal('show');
     },
     addCustomer(c) {
-      this.$store.dispatch('customer/addCustomer', c).then(
-        () => {
-          console.log('done');
-          $('#updateButton').removeClass('loading');
-          this.cancelForm();
-        },
-      );
+      this.$store.dispatch('customer/addCustomer', c);
       this.iCustomer = {};
     },
     editCustomer(c) {
       console.log(c.$key);
     },
     removeCustomer(c) {
-      console.log(c);
       this.$store.dispatch('customer/removeCustomer', c);
     },
     submitForm() {
       $('#updateButton').addClass('loading');
       this.addCustomer(this.iCustomer);
     },
-    cancelForm() {
+    dismissForm() {
       $('#editCustomer')
       .modal('hide');
     },
@@ -136,9 +130,15 @@ export default {
     CustomerForm,
   },
   watch: {
-    // isUpdating(updating) {
-    //   console.log(`We have updating value ${updating} now, yaay!`);
-    // },
+    isUpdating: {
+      handler(value) {
+        if (!value) {
+          $('#updateButton').removeClass('loading');
+          this.dismissForm();
+        }
+      },
+      deep: true,
+    },
   },
 };
 </script>
