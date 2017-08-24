@@ -63,9 +63,9 @@ const customer = {
     selectedCustomer: null,
   },
   mutations: {
-    initCustomers: (s, payload) => {
-      s.customers = payload.customers;
-      s.isLoading = payload.isLoading;
+    initCustomers: (s, c) => {
+      s.customers = c;
+      s.isLoading = false;
     },
     setSelectedCustomer: (s, c) => {
       s.selectedCustomer = c;
@@ -92,7 +92,7 @@ const customer = {
           value.key = item.key;
           result.push(value);
         });
-        context.commit('initCustomers', { customers: result, isLoading: false });
+        context.commit('initCustomers', result);
       });
     },
     addCustomer: (context, c) => {
@@ -107,7 +107,23 @@ const customer = {
             context.commit('addCustomer', c);
             context.commit('setUpdateFlag', false);
             console.log('push data success');
-          }, 3000);
+          }, 1000);
+        },
+        (err) => {
+          context.commit('setUpdateFlag', false);
+          console.log(`push data err ${err}`);
+        },
+      );
+    },
+    editCustomer: (context, c) => {
+      context.commit('setUpdateFlag', true);
+      firebase.database().ref('customer').child(c.key).set(c)
+      .then(
+        () => {
+          setTimeout(() => {
+            context.commit('setUpdateFlag', false);
+            console.log('push data success');
+          }, 1000);
         },
         (err) => {
           context.commit('setUpdateFlag', false);
@@ -124,7 +140,7 @@ const customer = {
             context.commit('removeCustomer', c);
             context.commit('setUpdateFlag', false);
             console.log('remove data success');
-          }, 3000);
+          }, 1000);
         },
         (err) => {
           context.commit('setUpdateFlag', false);

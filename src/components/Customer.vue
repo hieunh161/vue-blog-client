@@ -1,6 +1,7 @@
 <template>
   <div class="ui container">
-    <button @click="openModal">open modal</button>
+    <customer-table></customer-table>
+    <button @click="openAddForm">open modal</button>
     <h1>CUSTOMER LIST</h1>
     <h1>is Updating ... {{isUpdating}}</h1>
     <loader  v-if="!isDoneLoading"></loader>
@@ -23,8 +24,8 @@
           <td>{{customer.currentBill}}</td>
           <td>{{customer.revenue}}</td>
           <td>
-            <div class="ui icon green button" @click="() => editCustomer(customer)"><i class="icon edit"></i></div>
-            <div class="ui icon red button" @click="() => removeCustomer(customer)"><i class="icon remove"></i></div>
+            <div class="ui icon green button" v-bind:id="'editButton'+customer.key" @click="() => openEditForm(customer)"><i class="icon edit"></i></div>
+            <div class="ui icon red button" v-bind:id="'deleteButton'+customer.key" @click="() => removeCustomer(customer)"><i class="icon remove"></i></div>
           </td>
         </tr>
       </tbody>
@@ -85,9 +86,19 @@ export default {
     return {
       iCustomer: {},
       selectedCustomer: null,
+      editMode: false,
     };
   },
   methods: {
+    openEditForm(c) {
+      this.iCustomer = c;
+      this.editMode = true;
+      this.openModal();
+    },
+    openAddForm() {
+      this.editMode = false;
+      this.openModal();
+    },
     setSelectedCustomer(customer) {
       this.selectedCustomer = customer;
     },
@@ -102,17 +113,21 @@ export default {
     },
     addCustomer(c) {
       this.$store.dispatch('customer/addCustomer', c);
-      this.iCustomer = {};
     },
     editCustomer(c) {
-      console.log(c.$key);
+      this.$store.dispatch('customer/editCustomer', c);
     },
     removeCustomer(c) {
+      $(`#deleteButton${c.key}`).addClass('loading');
       this.$store.dispatch('customer/removeCustomer', c);
     },
     submitForm() {
       $('#updateButton').addClass('loading');
-      this.addCustomer(this.iCustomer);
+      if (this.editMode) {
+        this.editCustomer(this.iCustomer);
+      } else {
+        this.addCustomer(this.iCustomer);
+      }
     },
     dismissForm() {
       $('#editCustomer')
@@ -135,6 +150,7 @@ export default {
         if (!value) {
           $('#updateButton').removeClass('loading');
           this.dismissForm();
+          this.iCustomer = {};
         }
       },
       deep: true,
