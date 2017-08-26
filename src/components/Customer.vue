@@ -1,7 +1,7 @@
 <template>
   <div class="ui container">
-    <customer-table></customer-table>
     <button @click="openAddForm">open modal</button>
+    <customer-chart></customer-chart>
     <h1>CUSTOMER LIST</h1>
     <h1>is Updating ... {{isUpdating}}</h1>
     <loader  v-if="!isDoneLoading"></loader>
@@ -73,9 +73,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
+// import * as d3 from 'd3';
+import * as $ from 'jquery';
 import Loader from './Loader';
 import CustomerTable from './CustomerTable';
 import CustomerForm from './CustomerForm';
+import CustomerChart from './CustomerChart';
 
 export default {
   name: 'customer',
@@ -106,7 +109,6 @@ export default {
       return this.selectedCustomer;
     },
     openModal() {
-      /* global $:true */
       $('#editCustomer')
       .modal({ inverted: true })
       .modal('show');
@@ -143,6 +145,7 @@ export default {
     Loader,
     CustomerTable,
     CustomerForm,
+    CustomerChart,
   },
   watch: {
     isUpdating: {
