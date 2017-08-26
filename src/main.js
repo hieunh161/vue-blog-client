@@ -7,6 +7,7 @@ import VueProgressiveImage from 'vue-progressive-image';
 import App from './App';
 import router from './router';
 import store from './store';
+import './filter';
 
 import '../semantic/dist/semantic.css';
 import '../semantic/dist/semantic';
@@ -25,23 +26,13 @@ Vue.prototype.$firebase = firebase.initializeApp({
 });
 
 /* eslint-disable no-new */
-const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+const unsubscribe = firebase.auth().onAuthStateChanged(() => {
   new Vue({
     el: '#app',
     router,
     store,
     template: '<App/>',
     components: { App },
-    created() {
-      console.log(user.email);
-      // this.$firebase.auth().onAuthStateChanged((user) => {
-      //   if (user) {
-      //     this.$router.push('/user');
-      //   } else {
-      //     this.$router.push('/login');
-      //   }
-      // });
-    },
   });
   unsubscribe();
 });

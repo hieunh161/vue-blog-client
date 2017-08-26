@@ -1,7 +1,6 @@
 <template>
   <div class="ui container">
     <button @click="openAddForm">open modal</button>
-    <customer-chart></customer-chart>
     <h1>CUSTOMER LIST</h1>
     <h1>is Updating ... {{isUpdating}}</h1>
     <loader  v-if="!isDoneLoading"></loader>
@@ -20,9 +19,9 @@
         <tr v-for="customer in customers">
           <td>{{customer.name}}</td>
           <td>{{customer.startYear}}</td>
-          <td>{{customer.relationship}}</td>
-          <td>{{customer.currentBill}}</td>
-          <td>{{customer.revenue}}</td>
+          <td>{{customer.relationship | relationship}}</td>
+          <td>{{customer.currentBill | currency}}</td>
+          <td>{{customer.revenue | currency}}</td>
           <td>
             <div class="ui icon green button" v-bind:id="'editButton'+customer.key" @click="() => openEditForm(customer)"><i class="icon edit"></i></div>
             <div class="ui icon red button" v-bind:id="'deleteButton'+customer.key" @click="() => removeCustomer(customer)"><i class="icon remove"></i></div>
@@ -61,6 +60,16 @@
               <input type="text" v-model="iCustomer.revenue" name="Revenue" placeholder="Revenue">
             </div>
           </div>
+          <div class="two fields">
+            <div class="field">
+              <label>Potential (USD)</label>
+              <input type="text" v-model="iCustomer.potential" name="Potential" placeholder="Potential">
+            </div>
+            <div class="field">
+              <label>Address</label>
+              <input type="text" v-model="iCustomer.address" name="Address" placeholder="Address">
+            </div>
+          </div>
         </form>
       </div>
       <div class="actions">
@@ -68,6 +77,7 @@
         <div class="ui button green" id="updateButton" @click="submitForm">OK</div>
       </div>
     </div>
+    <customer-chart :customers="customers"></customer-chart>
   </div>
 </template>
 

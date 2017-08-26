@@ -102,12 +102,9 @@ const customer = {
       firebase.database().ref('customer').child(customerId).set(c)
       .then(
         () => {
-          setTimeout(() => {
-            c.key = customerId;
-            context.commit('addCustomer', c);
-            context.commit('setUpdateFlag', false);
-            console.log('push data success');
-          }, 1000);
+          c.key = customerId;
+          context.commit('addCustomer', c);
+          context.commit('setUpdateFlag', false);
         },
         (err) => {
           context.commit('setUpdateFlag', false);
@@ -120,10 +117,7 @@ const customer = {
       firebase.database().ref('customer').child(c.key).set(c)
       .then(
         () => {
-          setTimeout(() => {
-            context.commit('setUpdateFlag', false);
-            console.log('push data success');
-          }, 1000);
+          context.commit('setUpdateFlag', false);
         },
         (err) => {
           context.commit('setUpdateFlag', false);
@@ -136,11 +130,8 @@ const customer = {
       firebase.database().ref(`customer/${c.key}`).remove()
       .then(
         () => {
-          setTimeout(() => {
-            context.commit('removeCustomer', c);
-            context.commit('setUpdateFlag', false);
-            console.log('remove data success');
-          }, 1000);
+          context.commit('removeCustomer', c);
+          context.commit('setUpdateFlag', false);
         },
         (err) => {
           context.commit('setUpdateFlag', false);

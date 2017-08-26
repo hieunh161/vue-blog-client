@@ -8,20 +8,20 @@
 import * as d3 from 'd3';
 
 export default {
+  props: ['customers'],
   mounted() {
-    // d3.select('.axis')
-    // .call(d3.axisBottom(x));
-    console.log(d3);
+    console.log(this.customers);
     const width = 960;
     const height = 480;
     const margin = 40;
     const data = [];
-    for (let i = 0; i < 42; i += 1) {
+    for (let i = 0; i < this.customers.length; i += 1) {
+      console.log(this.customers[i].currentBill);
       data.push({
-        x: Math.random() * 400,
-        y: Math.random() * 100,
-        c: Math.round(Math.random() * 5),
-        size: Math.random() * 200,
+        x: this.customers[i].currentBill,
+        y: this.customers[i].relationship,
+        c: this.customers[i].relationship,
+        size: this.customers[i].currentBill,
       });
     }
     const svg = d3.select('.chart')
