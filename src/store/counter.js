@@ -31,7 +31,7 @@ const counter = {
       counterRef.on('value', (snapshot) => {
         const result = snapshot.val();
         // delay for confirmation
-        setTimeout(() => context.commit('initCounter', { count: result.count, isLoading: false }), 1000);
+        context.commit('initCounter', { count: result.count, isLoading: false });
       });
     },
   },

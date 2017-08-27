@@ -7,6 +7,7 @@
           Customer Manager
         </a>
         <router-link class="nav-link item"  to="/">Home</router-link>
+        <router-link class="nav-link item"  to="/customer">Customer</router-link>
         <div class="ui simple dropdown item">
           Service <i class="dropdown icon"></i>
           <div class="menu">

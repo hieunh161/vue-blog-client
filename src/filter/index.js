@@ -15,8 +15,3 @@ const relationship = (point) => {
 
 Vue.filter('currency', currency);
 Vue.filter('relationship', relationship);
-
-// export default {
-//   currency,
-//   relationship,
-// };

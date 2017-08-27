@@ -1,57 +1,6 @@
 import * as firebase from 'firebase';
 import * as uuidv4 from 'uuid/v4';
-// const uuidv4 = require('uuid/v4');
-
-// const customerData = [
-//   { name: 'FX',
-//     startYear: 2012,
-//     relationship: 'very good',
-//     currentBill: '4M',
-//     revenue: '100M',
-//     logo: 'http://nsv.com/wp-content/uploads/2012/06/fuji-xerox-logo.png',
-//     homepage: '',
-//   },
-//   { name: 'FXSS',
-//     startYear: 2014,
-//     relationship: 'good',
-//     currentBill: '1M',
-//     revenue: '100M',
-//     logo: 'http://nsv.com/wp-content/uploads/2012/06/fuji-xerox-logo.png',
-//     homepage: '',
-//   },
-//   { name: 'Canon',
-//     startYear: 2016,
-//     relationship: 'good',
-//     currentBill: '1M',
-//     revenue: '1B',
-//     logo: 'http://www.canon.it/Images/Canon_Logo_350_tcm80-959888.jpg',
-//     homepage: '',
-//   },
-//   { name: 'Sony',
-//     startYear: 2012,
-//     relationship: 'good',
-//     currentBill: '4M',
-//     revenue: '2B',
-//     logo: 'https://lh4.googleusercontent.com/-G0mDI6fQXeM/AAAAAAAAAAI/AAAAAAAAfEI/q3w_lbwesr4/photo.jpg',
-//     homepage: '',
-//   },
-//   { name: 'Konica',
-//     startYear: 2017,
-//     relationship: 'good',
-//     currentBill: '1M',
-//     revenue: '1B',
-//     logo: 'https://www.konicaminolta.jp/about/release/minolta/org/img/konicaminolta_logo.gif',
-//     homepage: '',
-//   },
-//   { name: 'SDNA',
-//     startYear: 2011,
-//     relationship: 'good',
-//     currentBill: '0.5M',
-//     revenue: '300M',
-//     logo: 'https://lh4.googleusercontent.com/-G0mDI6fQXeM/AAAAAAAAAAI/AAAAAAAAfEI/q3w_lbwesr4/photo.jpg',
-//     homepage: '',
-//   },
-// ];
+import Vue from 'vue';
 
 /* eslint-disable no-param-reassign */
 const customer = {
@@ -59,8 +8,8 @@ const customer = {
   state: {
     isLoading: true,
     isUpdating: false,
-    customers: null,
-    selectedCustomer: null,
+    customers: [],
+    selectedCustomer: {},
   },
   mutations: {
     initCustomers: (s, c) => {
@@ -72,6 +21,16 @@ const customer = {
     },
     addCustomer: (s, c) => {
       s.customers.push(c);
+    },
+    editCustomer: (s, c) => {
+      for (let index = 0; index < s.customers.length; index += 1) {
+        const element = s.customers[index];
+        if (element.key === c.key) {
+          // https://vuejs.org/v2/guide/list.html#Mutation-Methods
+          Vue.set(s.customers, index, c);
+          break;
+        }
+      }
     },
     removeCustomer: (s, c) => {
       const index = s.customers.indexOf(c);
@@ -117,6 +76,7 @@ const customer = {
       firebase.database().ref('customer').child(c.key).set(c)
       .then(
         () => {
+          context.commit('editCustomer', c);
           context.commit('setUpdateFlag', false);
         },
         (err) => {

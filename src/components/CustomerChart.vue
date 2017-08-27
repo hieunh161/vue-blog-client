@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class='chart'></div>
+    <div class='bubble-chart'></div>
   </div>
 </template>
 
@@ -9,37 +9,41 @@ import * as d3 from 'd3';
 
 export default {
   props: ['customers'],
+  data() {
+    return {
+      reactiveCustomers: this.customers,
+    };
+  },
   mounted() {
-    console.log(this.customers);
     const width = 960;
     const height = 480;
     const margin = 40;
     const data = [];
-    for (let i = 0; i < this.customers.length; i += 1) {
-      console.log(this.customers[i].currentBill);
+    for (let i = 0; i < this.reactiveCustomers.length; i += 1) {
+      console.log(this.reactiveCustomers[i].currentBill);
       data.push({
-        x: this.customers[i].currentBill,
-        y: this.customers[i].relationship,
-        c: this.customers[i].relationship,
-        size: this.customers[i].currentBill,
+        title: this.reactiveCustomers[i].name,
+        x: this.reactiveCustomers[i].currentBill,
+        y: this.reactiveCustomers[i].relationship,
+        c: this.reactiveCustomers[i].relationship,
+        size: this.reactiveCustomers[i].currentBill,
       });
     }
-    const svg = d3.select('.chart')
+    const svg = d3.select('.bubble-chart')
       .append('svg')
-      .attr('class', 'chart')
-      .attr('width', width + margin + margin)
-      .attr('height', height + margin + margin)
+      .attr('width', width + (margin * 2))
+      .attr('height', height + (margin * 2))
       .append('g')
       .attr('transform', `translate(${margin},${margin})`);
     const x = d3.scaleLinear()
-      .domain([d3.min(data, d => d.x), d3.max(data, d => d.x)])
+      .domain([0, d3.max(data, d => d.x) * 1.2])
       .range([0, width]);
     const y = d3.scaleLinear()
-      .domain([d3.min(data, d => d.y), d3.max(data, d => d.y)])
+      .domain([0, d3.max(data, d => d.y) * 1.2])
       .range([height, 0]);
     const scale = d3.scaleSqrt()
       .domain([d3.min(data, d => d.size), d3.max(data, d => d.size)])
-      .range([1, 20]);
+      .range([10, 50]);
     const opacity = d3.scaleSqrt()
       .domain([d3.min(data, d => d.size), d3.max(data, d => d.size)])
       .range([1, 0.5]);
@@ -92,11 +96,26 @@ export default {
       .duration(500)
       .attr('cx', d => x(d.x))
       .attr('cy', d => y(d.y))
-      .ease(d3.easeLinear);
+      .ease(d3.easeLinear)
+      .append('text')
+      .text(d => d.title)
+      .attr('dx', d => x(d.x))
+      .attr('dy', d => y(d.y));
   },
 };
 </script>
 
 <style>
-  
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 28px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
 </style>

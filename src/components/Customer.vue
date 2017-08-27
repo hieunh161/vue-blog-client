@@ -1,34 +1,46 @@
 <template>
   <div class="ui container">
-    <button @click="openAddForm">open modal</button>
-    <h1>CUSTOMER LIST</h1>
-    <h1>is Updating ... {{isUpdating}}</h1>
+    <h1>ESG Customer</h1>
     <loader  v-if="!isDoneLoading"></loader>
-    <table class="ui striped table" v-if="isDoneLoading">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Start Year</th>
-          <th>Relationship</th>
-          <th>Current Bill</th>
-          <th>Revenue</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="customer in customers">
-          <td>{{customer.name}}</td>
-          <td>{{customer.startYear}}</td>
-          <td>{{customer.relationship | relationship}}</td>
-          <td>{{customer.currentBill | currency}}</td>
-          <td>{{customer.revenue | currency}}</td>
-          <td>
-            <div class="ui icon green button" v-bind:id="'editButton'+customer.key" @click="() => openEditForm(customer)"><i class="icon edit"></i></div>
-            <div class="ui icon red button" v-bind:id="'deleteButton'+customer.key" @click="() => removeCustomer(customer)"><i class="icon remove"></i></div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div v-if="isDoneLoading">
+      <button class="ui basic positive button" @click="openAddForm">
+        <i class="icon plus"></i>
+        Add Customer
+      </button>
+      <button class="ui basic positive button" @click="openCustomerChart">
+        <i class="icon line chart"></i>
+        View Graph
+      </button>
+      <div class="ui modal" id="customerChart">
+        <i class="red close icon"></i>
+        <customer-chart v-bind:customers="customers"></customer-chart>
+      </div>
+      <table class="ui striped table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Start Year</th>
+            <th>Relationship</th>
+            <th>Current Bill ($)</th>
+            <th>Revenue ($)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="customer in customers">
+            <td>{{customer.name}}</td>
+            <td>{{customer.startYear}}</td>
+            <td>{{customer.relationship | relationship}}</td>
+            <td>{{customer.currentBill | currency}}</td>
+            <td>{{customer.revenue | currency}}</td>
+            <td>
+              <div class="ui icon green button" v-bind:id="'editButton'+customer.key" @click="() => openEditForm(customer)"><i class="icon edit"></i></div>
+              <div class="ui icon red button" v-bind:id="'deleteButton'+customer.key" @click="() => removeCustomer(customer)"><i class="icon remove"></i></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="ui modal" id="editCustomer">
       <i class="close icon"></i>
       <div class="header">
@@ -47,7 +59,14 @@
             </div>
             <div class="field">
               <label>Relationship</label>
-              <input type="text" v-model="iCustomer.relationship" name="relationship" placeholder="Relationship">
+              <select class="ui dropdown" v-model="iCustomer.relationship">
+                <option value="">Relationship</option>
+                <option value="1">First Contact</option>
+                <option value="2">Transactional</option>
+                <option value="3">Collaborative</option>
+                <option value="4">Partner</option>
+                <option value="5">Strategy Partner</option>
+              </select>
             </div>
           </div>
           <div class="two fields">
@@ -77,7 +96,6 @@
         <div class="ui button green" id="updateButton" @click="submitForm">OK</div>
       </div>
     </div>
-    <customer-chart :customers="customers"></customer-chart>
   </div>
 </template>
 
@@ -89,6 +107,7 @@ import Loader from './Loader';
 import CustomerTable from './CustomerTable';
 import CustomerForm from './CustomerForm';
 import CustomerChart from './CustomerChart';
+import CustomerBarChart from './CustomerBarChart';
 
 export default {
   name: 'customer',
@@ -103,8 +122,16 @@ export default {
     };
   },
   methods: {
+    openCustomerChart() {
+      console.log('chart');
+      $('#customerChart')
+      .modal('setting', {
+        inverted: true,
+      })
+      .modal('show');
+    },
     openEditForm(c) {
-      this.iCustomer = c;
+      this.iCustomer = Object.assign({}, c);
       this.editMode = true;
       this.openModal();
     },
@@ -147,15 +174,18 @@ export default {
     },
   },
   computed: {
-    ...mapGetters({ customers: 'customer/customers' }),
-    ...mapGetters({ isDoneLoading: 'customer/isDoneLoading' }),
-    ...mapGetters({ isUpdating: 'customer/isUpdating' }),
+    ...mapGetters({
+      customers: 'customer/customers',
+      isDoneLoading: 'customer/isDoneLoading',
+      isUpdating: 'customer/isUpdating',
+    }),
   },
   components: {
     Loader,
     CustomerTable,
     CustomerForm,
     CustomerChart,
+    CustomerBarChart,
   },
   watch: {
     isUpdating: {
@@ -173,5 +203,7 @@ export default {
 </script>
 
 <style>
-  
+#customerChart{
+  width:80%; height:90%;
+}
 </style>
