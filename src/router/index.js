@@ -5,6 +5,11 @@ import Hello from '@/components/Hello';
 import Login from '@/components/Login';
 import UserProfile from '@/components/UserProfile';
 import Customer from '@/components/Customer';
+import Article from '@/components/Article';
+import ArticeCreate from '@/components/ArticeCreate';
+import ArticleList from '@/components/ArticleList';
+import ArticleDetail from '@/components/ArticleDetail';
+import ArticleEdit from '@/components/ArticleEdit';
 import PageNotFound from '@/components/PageNotFound';
 import * as firebase from 'firebase';
 
@@ -15,6 +20,17 @@ const requireAuth = (to, from, next) => {
     console.log('User is not logged in');
     next({
       path: '/login',
+    });
+  } else {
+    next();
+  }
+};
+
+// redirect to home if user come to login page when logged in
+const isLoggedIn = (to, from, next) => {
+  if (firebase.auth().currentUser && to.path === '/login') {
+    next({
+      path: '/',
     });
   } else {
     next();
@@ -32,6 +48,7 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login,
+      beforeEnter: isLoggedIn,
     },
     {
       path: '/user',
@@ -50,5 +67,41 @@ export default new Router({
       name: 'PageNotFound',
       component: PageNotFound,
     },
+    {
+      path: '/article/', 
+      component: Article,
+      children: [
+        {
+          // UserProfile will be rendered inside User's <router-view>
+          // when /user/:id/profile is matched
+          path: 'create',
+          component: ArticeCreate,
+        },
+        {
+          // UserProfile will be rendered inside User's <router-view>
+          // when /user/:id/profile is matched
+          path: ':id',
+          component: ArticleDetail,
+        },
+        {
+          // UserProfile will be rendered inside User's <router-view>
+          // when /user/:id/profile is matched
+          path: ':id/edit',
+          component: ArticleEdit,
+        },
+        {
+          // UserProfile will be rendered inside User's <router-view>
+          // when /user/:id/profile is matched
+          path: '',
+          component: ArticleList,
+        },
+      ],
+    },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+    return { x: 0, y: 0 };
+  },
 });

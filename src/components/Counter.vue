@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="counter">
     <div v-if="isLoading">
       Loading ...
       <loader></loader>
@@ -47,3 +47,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#counter {
+  text-align: center;
+}
+</style>

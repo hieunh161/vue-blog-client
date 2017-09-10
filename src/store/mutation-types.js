@@ -1,0 +1,4 @@
+export const SAVE_ARTICLE = 'SAVE_ARTICLE';
+export const PUBLIC_ARTICLE = 'PUBLIC_ARTICLE';
+export const DELETE_ARTICLE = 'DELETE_ARTICLE';
+export const LOAD_ARTICLES = 'LOAD_ARTICLES';

@@ -8,9 +8,9 @@ const counter = {
   },
   // define the possible mutations that can be applied to our state
   mutations: {
-    initCounter: (s, payload) => {
-      s.count = payload.count;
-      s.isLoading = payload.isLoading;
+    initCounter: (s, r = 0) => {
+      s.count = r.count;
+      s.isLoading = false;
     },
     increment: (s) => {
       /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -31,7 +31,7 @@ const counter = {
       counterRef.on('value', (snapshot) => {
         const result = snapshot.val();
         // delay for confirmation
-        context.commit('initCounter', { count: result.count, isLoading: false });
+        context.commit('initCounter', result);
       });
     },
   },

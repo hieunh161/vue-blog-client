@@ -43,6 +43,10 @@ h1, h2 {
   font-weight: normal;
 }
 
+.hello {
+  text-align: center;
+}
+
 ul {
   list-style-type: none;
   padding: 0;

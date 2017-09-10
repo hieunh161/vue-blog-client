@@ -27,6 +27,29 @@
           </div>
         </div>
         <div class="right menu">
+          <router-link to="/article/create" class="nav-link item">
+            <i class="write icon"></i>
+            Write a story
+          </router-link>
+          <div class="ui simple dropdown item">
+            <i class="write icon"></i>Write an article <i class="dropdown icon"></i>
+            <div class="menu">
+              <template-article></template-article>
+              <div class="nav-link item" ><i class="write icon"></i>Write an article</div>
+              <a class="item" href="#">Link Item</a>
+              <div class="divider"></div>
+              <div class="header">Header Item</div>
+              <div class="item">
+                <i class="dropdown icon"></i>
+                Sub Menu
+                <div class="menu">
+                  <a class="item" href="#">Link Item</a>
+                  <a class="item" href="#">Link Item</a>
+                </div>
+              </div>
+              <a class="item" href="#">Link Item</a>
+            </div>
+          </div>
           <router-link class="nav-link item"  to="/login" v-if="!isLoggedIn" >Login</router-link>
           <div class="ui simple dropdown item" v-if="isLoggedIn">
             <img class="ui avatar image" :src= "avatar"/>
@@ -45,6 +68,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import TemplateArticle from './TemplateArticle';
 
 export default {
   name: 'navbar',
@@ -57,6 +81,9 @@ export default {
     logout() {
       this.$store.dispatch('authenticate/logOut');
     },
+  },
+  components: {
+    TemplateArticle,
   },
 };
 </script>

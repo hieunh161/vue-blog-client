@@ -7,22 +7,22 @@ import VueProgressiveImage from 'vue-progressive-image';
 import App from './App';
 import router from './router';
 import store from './store';
-import './filter';
 
 import '../semantic/dist/semantic.css';
 import '../semantic/dist/semantic';
+import './filter';
 
 Vue.config.productionTip = false;
 Vue.use(VueProgressiveImage);
 
 // allows usage of firebase in your vue components by using this.$firebase
 Vue.prototype.$firebase = firebase.initializeApp({
-  apiKey: 'AIzaSyCzA-y8C021W67dmjysTqewxr5hcVbL-uU',
-  authDomain: 'my-login-49810.firebaseapp.com',
-  databaseURL: 'https://my-login-49810.firebaseio.com',
-  projectId: 'my-login-49810',
-  storageBucket: 'my-login-49810.appspot.com',
-  messagingSenderId: '14639730247',
+  apiKey: 'AIzaSyD6QnbW4Sk4kZuWdGzO2BkIKtHj9n4CxHg',
+  authDomain: 'my-blog-68afd.firebaseapp.com',
+  databaseURL: 'https://my-blog-68afd.firebaseio.com',
+  projectId: 'my-blog-68afd',
+  storageBucket: '',
+  messagingSenderId: '157291960262',
 });
 
 /* eslint-disable no-new */
