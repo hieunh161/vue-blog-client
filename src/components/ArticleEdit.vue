@@ -1,7 +1,8 @@
 <template>
   <div>
     <div> Edit Article {{this.$route.params.id}} </div>
-    <div>{{content}}</div>
+    <textarea v-model="article.content"></textarea>
+    <button @click="saveArticle">Save</button>
   </div>
 </template>
 
@@ -9,15 +10,29 @@
 export default {
   data() {
     return {
-      content: 'ABC',
+      articleId: '',
+      article: {},
     };
+  },
+  methods: {
+    saveArticle() {
+      console.log(this.article.content);
+      this.article.lastModified = Date.now();
+      this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article }).then(
+        () => console.log('save successful'),
+      );
+    },
   },
   mounted() {
     // load data from api
-    this.$store.dispatch('article/readArticle', this.$route.params.id).then(
+    this.articleId = this.$route.params.id;
+    this.$store.dispatch('article/readArticle', this.articleId).then(
       (articleContent) => {
-        console.log(articleContent);
-        this.content = articleContent.content;
+        if (articleContent) {
+          this.article = articleContent;
+        } else {
+          this.$router.push({ path: 'page-not-found' });
+        }
       });
   },
 };

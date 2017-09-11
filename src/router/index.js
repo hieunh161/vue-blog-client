@@ -63,11 +63,6 @@ export default new Router({
       beforeEnter: requireAuth,
     },
     {
-      path: '*',
-      name: 'PageNotFound',
-      component: PageNotFound,
-    },
-    {
       path: '/article/', 
       component: Article,
       children: [
@@ -96,6 +91,11 @@ export default new Router({
           component: ArticleList,
         },
       ],
+    },
+    {
+      path: '*',
+      name: 'PageNotFound',
+      component: PageNotFound,
     },
   ],
   scrollBehavior(to, from, savedPosition) {

@@ -36,24 +36,6 @@ const createTemplateArticle = (metaData) => {
 
 const createArticle = (data) => {
   const articleId = uuidv4();
-  // const articleContent = {
-  //   author: {
-  //     id: 'id',
-  //     photoURL: 'photoUrl',
-  //     displayName: 'displayName',
-  //   },
-  //   title: 'title',
-  //   content: data,
-  //   slugify: 'slugify',
-  //   category: 'category',
-  //   tags: ['tag1', 'tag2'],
-  //   createdDate: Date.now(),
-  //   lastModified: Date.now(),
-  //   status: 'DRAFT',
-  //   comments: [''],
-  //   views: 0,
-  //   likes: 0,
-  // };
   return firebase.database().ref('article').child(articleId).set(data)
   .then(
     (success) => {
@@ -70,22 +52,38 @@ const createArticle = (data) => {
 const readArticle = (articleId) => {
   console.log(articleId);
   const ref = firebase.database().ref('article').child(articleId);
-  return ref.once('value').then((snapshot) => {
-    console.log(snapshot.val());
-    return Promise.resolve(snapshot.val());
-  });
+  return ref.once('value').then(snapshot => Promise.resolve(snapshot.val()));
 };
 
-const editArticle = (article) => {
-  console.log(article);
+const readArticlesByUser = (userId) => {
+  console.log(userId);
+  const ref = firebase.database().ref('article');
+  return ref.orderByChild('author/id')
+    .equalTo(userId)
+    .on('child_added')
+    .then(snapshot => Promise.resolve(snapshot.val()));
 };
+
+const updateArticle = data => firebase.database().ref('article').child(data.articleId).set(data.article)
+  .then(
+    () => Promise.resolve(data.articleId),
+    (error) => {
+      console.log(error);
+      return Promise.resolve(data.articleId);
+    },
+  );
+
+const deleteArticle = articleId => firebase.database().ref('article').child(articleId).remove()
+  .then(() => Promise.resolve(articleId));
 
 export default {
   loadArticles() {
     return Promise.resolve([]);
   },
-  readArticle,
   createArticle,
-  editArticle,
+  readArticle,
+  readArticlesByUser,
+  updateArticle,
+  deleteArticle,
   createTemplateArticle,
 };

@@ -22,6 +22,10 @@ const actions = {
     console.log(articleId);
     return articleApi.readArticle(articleId);
   },
+  updateArticle(context, updateData) {
+    console.log(updateData);
+    return articleApi.updateArticle(updateData);
+  },
   saveDraftArticle(context, data) {
     console.log(data);
     // const articleId = uuidv4();
