@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="user-profile">
      <progressive-img class="ui small circular image"
         :blur="10"
         placeholder=""
@@ -52,3 +52,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#user-profile {
+  text-align: "center";
+}
+</style>

@@ -1,34 +1,47 @@
 import * as firebase from 'firebase';
+import userApi from '../api/user';
 
 /* eslint-disable no-param-reassign */
 const authenticate = {
   state: {
-    count: 0,
     facebook: {
       isLoading: false,
       result: null,
     },
     user: null,
+    userInfo: null,
   },
   namespaced: true,
   mutations: {
-    increment(state) {
-      // `state` is the local module state
-      state.count += 1;
-    },
     setUser(state, value) {
       state.user = value;
     },
+    setUserInfo(state, value) {
+      state.userInfo = value;
+    },
   },
   actions: {
-    loginFacebook: (context) => {
-      const provider = new firebase.auth.FacebookAuthProvider();
-      firebase.auth().signInWithPopup(provider)
+    loginWithFacebook: (context) => {
+      userApi.signInWithFacebook()
       .then((result) => {
         context.commit('setUser', result.user);
+        context.dispatch('getUserInfo', result.user);
       }).catch((error) => {
         console.log(error);
       });
+    },
+    loginWithGoogle: (context) => {
+      userApi.signInWithGoogle()
+      .then((result) => {
+        context.commit('setUser', result.user);
+        context.dispatch('getUserInfo', result.user);
+      }).catch((error) => {
+        console.log(error);
+      });
+    },
+    getUserInfo: (context, user) => {
+      userApi.getLocalUserInfo(user)
+      .then(userInfo => context.commit('setUserInfo', userInfo));
     },
     logOut: (context) => {
       firebase.auth().signOut()
@@ -43,6 +56,15 @@ const authenticate = {
     isLoggedIn: state => !!state.user,
     avatar: state => (state.user ? state.user.photoURL : ''),
     displayName: state => (state.user ? state.user.displayName : ''),
+    currentUser: state => state.user,
+    currentUserInfo: state => state.userInfo,
+    isAdmin: (state) => {
+      if (state.userInfo) {
+        // admin is 2
+        return state.userInfo.role === 2;
+      }
+      return false;
+    },
   },
 };
 

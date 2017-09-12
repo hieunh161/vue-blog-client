@@ -9,7 +9,7 @@ import Article from '@/components/Article';
 import ArticeCreate from '@/components/ArticeCreate';
 import ArticleList from '@/components/ArticleList';
 import ArticleDetail from '@/components/ArticleDetail';
-import ArticleEdit from '@/components/ArticleEdit';
+import ArticleEdit from '@/components/article/ArticleEdit';
 import PageNotFound from '@/components/PageNotFound';
 import * as firebase from 'firebase';
 
@@ -38,6 +38,7 @@ const isLoggedIn = (to, from, next) => {
 };
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -63,6 +64,10 @@ export default new Router({
       beforeEnter: requireAuth,
     },
     {
+      path: '/article/:id/edit',
+      component: ArticleEdit,
+    },
+    {
       path: '/article/', 
       component: Article,
       children: [
@@ -73,20 +78,14 @@ export default new Router({
           component: ArticeCreate,
         },
         {
-          // UserProfile will be rendered inside User's <router-view>
-          // when /user/:id/profile is matched
+          path: 'list',
+          component: ArticleList,
+        },
+        {
           path: ':id',
           component: ArticleDetail,
         },
         {
-          // UserProfile will be rendered inside User's <router-view>
-          // when /user/:id/profile is matched
-          path: ':id/edit',
-          component: ArticleEdit,
-        },
-        {
-          // UserProfile will be rendered inside User's <router-view>
-          // when /user/:id/profile is matched
           path: '',
           component: ArticleList,
         },

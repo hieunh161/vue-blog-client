@@ -22,6 +22,9 @@ export default {
     Firebase.auth().onAuthStateChanged((user) => {
       // initially user = null, after auth it will be either <fb_user> or false
       this.$store.commit('authenticate/setUser', user || false);
+      if (user) {
+        this.$store.dispatch('authenticate/getUserInfo', user);
+      }
       if (user && this.$route.path === '/login') {
         this.$router.replace('/');
       } else if (!user && this.$route.path !== '/login') {

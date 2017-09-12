@@ -1,16 +1,15 @@
 <template>
-  <div>
-    <button @click="loginFacebook" class="ui facebook button">
+  <div class="ui container" id="login-page">
+    <h1><i class="ui icon sign in"></i>SignIn</h1>
+    <div @click="facebookLogin" class="ui fluid large facebook button">
       <i class="facebook icon"></i>
       Facebook
-    </button>
-    <button @click="loginGoogle" class="ui google plus button">
+    </div>
+    <div class="ui horizontal divider">OR</div>
+    <div @click="googleLogin" class="ui fluid large google plus button">
       <i class="google plus icon"></i>
       Google Plus
-    </button>
-    <button v-on:click="loginFacebook">Login Facebook</button>
-    <button v-on:click="loginGoogle">Login Google</button>
-    <button v-on:click="loginAccount">Login Account</button>
+    </div>
   </div>
 </template>
 
@@ -20,16 +19,20 @@
 export default {
   name: 'login',
   methods: {
-    loginFacebook() {
-      console.log('facebook');
-      this.$store.dispatch('authenticate/loginFacebook');
+    facebookLogin() {
+      this.$store.dispatch('authenticate/loginWithFacebook');
     },
-    loginGoogle() {
-      console.log('google');
-    },
-    loginAccount() {
-      console.log('account');
+    googleLogin() {
+      this.$store.dispatch('authenticate/loginWithGoogle');
     },
   },
 };
 </script>
+
+<style scoped>
+#login-page {
+  width: 400px;
+  margin-top: 150px;
+  text-align: center;
+}
+</style>

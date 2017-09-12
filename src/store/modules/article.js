@@ -28,7 +28,6 @@ const actions = {
   },
   saveDraftArticle(context, data) {
     console.log(data);
-    // const articleId = uuidv4();
     const articleContent = {
       author: {
         id: 'id',

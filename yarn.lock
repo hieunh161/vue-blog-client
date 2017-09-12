@@ -5245,9 +5245,9 @@ math-expression-evaluator@^1.2.14:
   version "1.2.17"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.17.tgz#de819fdbcd84dccd8fae59c6aeb79615b9d266ac"
 
-mavon-editor@^2.2.4:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/mavon-editor/-/mavon-editor-2.2.4.tgz#86cfa1045f2fd56f097c414fc1c7edcfeee96950"
+mavon-editor@^2.2.6:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/mavon-editor/-/mavon-editor-2.2.6.tgz#079796db4f66b0a3eea06122ace46715f363e33f"
   dependencies:
     highlight.js "^9.11.0"
     highlight.js-async-webpack "^1.0.4"
@@ -5436,7 +5436,7 @@ mocha@^3.2.0:
     mkdirp "0.5.1"
     supports-color "3.1.2"
 
-moment@2.x.x:
+moment@2.x.x, moment@^2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
