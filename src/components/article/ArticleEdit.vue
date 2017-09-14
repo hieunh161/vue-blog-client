@@ -12,7 +12,17 @@
       v-model="article.title"
       placeholder="Title...">
     </div>
+    <image-uploader></image-uploader>
     <br>
+    <!--
+    <dropzone id="myVueDropzone" 
+      :headers="csrfHeader"
+      url="https://api.imgur.com/3/upload" 
+      v-on:vdropzone-success="showSuccess">
+      -->
+      <!-- Optional parameters if any! -->
+      <input type="hidden" name="token" value="xxx">
+    </dropzone>
     <markdown-editor
       language="en" 
       value="write a story"
@@ -30,17 +40,24 @@
 import { mapGetters } from 'vuex';
 import { mavonEditor } from 'mavon-editor';
 import { markdownEditor } from 'vue-simplemde';
+import Dropzone from 'vue2-dropzone';
 import 'mavon-editor/dist/css/index.css';
 import AsyncButton from '../common/AsyncButton';
+import ImageUploader from './ImageUploader';
 
 export default {
   data() {
     return {
       articleId: '',
       article: {},
+      csrfHeader: { Authorization: 'Client-ID b83be4684a2c869' },
     };
   },
   methods: {
+    showSuccess(file, response) {
+      console.log('A file was successfully uploaded');
+      console.log(response);
+    },
     saveArticle() {
       this.article.lastModified = Date.now();
       this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article }).then(
@@ -69,6 +86,8 @@ export default {
   },
   components: {
     AsyncButton,
+    ImageUploader,
+    Dropzone,
     markdownEditor,
     mavonEditor,
   },

@@ -15,6 +15,7 @@
     "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "d3": "^4.10.0",
     "firebase": "^4.2.0",
     "jquery": "^3.2.1",
@@ -27,6 +28,7 @@
     "vue-progressive-image": "^2.1.2",
     "vue-router": "^2.6.0",
     "vue-simplemde": "^0.3.8",
+    "vue2-dropzone": "^2.3.5",
     "vuefire": "^1.4.3",
     "vuex": "^2.3.1"
   },

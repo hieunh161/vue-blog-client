@@ -19,12 +19,13 @@ const actions = {
     return articleApi.createTemplateArticle({});
   },
   readArticle(context, articleId) {
-    console.log(articleId);
     return articleApi.readArticle(articleId);
   },
   updateArticle(context, updateData) {
-    console.log(updateData);
     return articleApi.updateArticle(updateData);
+  },
+  uploadImage(context, formData) {
+    return articleApi.uploadImage(formData);
   },
   saveDraftArticle(context, data) {
     console.log(data);

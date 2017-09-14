@@ -38,7 +38,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import TemplateArticle from './TemplateArticle';
+import TemplateArticle from './article/TemplateArticle';
 
 export default {
   name: 'navbar',

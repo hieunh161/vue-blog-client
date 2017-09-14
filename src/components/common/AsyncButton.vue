@@ -15,8 +15,6 @@ export default {
   },
   data() {
     return {
-      text: '',
-      className: '',
       isLoading: false,
     };
   },
