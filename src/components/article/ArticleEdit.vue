@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { mavonEditor } from 'mavon-editor';
 import { markdownEditor } from 'vue-simplemde';
 import Dropzone from 'vue2-dropzone';
@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       articleId: '',
-      article: {},
+      // article: {},
       csrfHeader: { Authorization: 'Client-ID b83be4684a2c869' },
     };
   },
@@ -76,9 +76,9 @@ export default {
     // load data from api
     this.articleId = this.$route.params.id;
     this.$store.dispatch('article/readArticle', this.articleId).then(
-      (articleContent) => {
-        if (articleContent) {
-          this.article = articleContent;
+      (result) => {
+        if (result) {
+          // this.article = articleContent;
         } else {
           this.$router.push({ path: 'page-not-found' });
         }
@@ -92,8 +92,11 @@ export default {
     mavonEditor,
   },
   computed: {
+    // ...mapGetters({ content: 'article/articleContent' }),
     ...mapGetters({ isAdmin: 'authenticate/isAdmin' }),
     ...mapGetters({ currentUserInfo: 'authenticate/currentUserInfo' }),
+    // ...mapState({ article: state => (state.article.article ? state.article.article : {}) }),
+    ...mapState('article', ['article']),
   },
 };
 </script>

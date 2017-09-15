@@ -27,7 +27,7 @@
         <p>
           <a href="javascript:void(0)" @click="reset()">Upload again</a>
         </p>
-        <div v-for="item in uploadedFiles">
+        <div v-for="item in uploadedFiles" v-bind:key="item.id">
           <img :src="item.url" class="img-responsive img-thumbnail" :alt="item.originalName">
         </div>
       </div>

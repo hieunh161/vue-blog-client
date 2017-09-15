@@ -11,6 +11,7 @@ const createTemplateArticle = (metaData) => {
       displayName: 'displayName',
     },
     title: 'Article Title',
+    coverImage: null,
     content: 'Write an article',
     slugify: '',
     category: [''],
@@ -72,6 +73,17 @@ const updateArticle = data => firebase.database().ref('article').child(data.arti
     },
   );
 
+const setArticleCoverImage = (articleId, img) => firebase.database().ref('article').child(articleId).set({
+  coverImage: img,
+})
+.then(
+  () => Promise.resolve(articleId),
+  (error) => {
+    console.log(error);
+    return Promise.resolve(articleId);
+  },
+);
+
 const deleteArticle = articleId => firebase.database().ref('article').child(articleId).remove()
   .then(() => Promise.resolve(articleId));
 
@@ -103,4 +115,5 @@ export default {
   updateArticle,
   deleteArticle,
   createTemplateArticle,
+  setArticleCoverImage,
 };

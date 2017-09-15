@@ -4,13 +4,14 @@ import articleApi from '../../api/article';
 /* eslint-disable no-param-reassign */
 // initial state
 const state = {
-  all: [],
   article: {},
 };
 
 // getters
 const getters = {
   article: s => s.article,
+  articleTitle: s => (s.article ? s.article.title : ''),
+  articleContent: s => (s.article ? s.article.content : ''),
 };
 
 // actions
@@ -19,13 +20,24 @@ const actions = {
     return articleApi.createTemplateArticle({});
   },
   readArticle(context, articleId) {
-    return articleApi.readArticle(articleId);
+    return articleApi.readArticle(articleId).then(
+      (articleContent) => {
+        if (articleContent) {
+          context.commit(types.SET_ARTICLE, articleContent);
+          console.log(context.state.article);
+          return Promise.resolve(articleContent);
+        }
+        return Promise.resolve(null);
+      });
   },
   updateArticle(context, updateData) {
     return articleApi.updateArticle(updateData);
   },
   uploadImage(context, formData) {
     return articleApi.uploadImage(formData);
+  },
+  setArticleCoverImage(context, articleId, img) {
+    return articleApi.setArticleCoverImage(articleId, img);
   },
   saveDraftArticle(context, data) {
     console.log(data);
@@ -67,6 +79,14 @@ const actions = {
 const mutations = {
   [types.SAVE_ARTICLE](s, { data }) {
     s.article.articleId = data;
+  },
+  [types.SET_ARTICLE](s, article) {
+    s.article = article;
+  },
+  [types.UPDATE_COVER_IMAGE](s, coverImage) {
+    if (s.article) {
+      s.article.coverImage = coverImage;
+    }
   },
 };
 
