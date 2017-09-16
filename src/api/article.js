@@ -25,30 +25,7 @@ const createTemplateArticle = (metaData) => {
   };
   const articleId = uuidv4();
   return firebase.database().ref('article').child(articleId).set(articleContent)
-  .then(
-    (success) => {
-      console.log(success);
-      return Promise.resolve(articleId);
-    },
-    (error) => {
-      console.log(error);
-    },
-  );
-};
-
-const createArticle = (data) => {
-  const articleId = uuidv4();
-  return firebase.database().ref('article').child(articleId).set(data)
-  .then(
-    (success) => {
-      console.log(success);
-      return Promise.resolve(articleId);
-    },
-    (error) => {
-      console.log(error);
-      return Promise.resolve(articleId);
-    },
-  );
+  .then(() => articleId);
 };
 
 const readArticle = (articleId) => {
@@ -64,28 +41,12 @@ const readArticlesByUser = (userId) => {
     .then(snapshot => Promise.resolve(snapshot.val()));
 };
 
-const updateArticle = data => firebase.database().ref('article').child(data.articleId).set(data.article)
-  .then(
-    () => Promise.resolve(data.articleId),
-    (error) => {
-      console.log(error);
-      return Promise.resolve(data.articleId);
-    },
-  );
+const updateArticle = data => firebase.database().ref('article').child(data.articleId).set(data.article);
 
-const setArticleCoverImage = (articleId, img) => firebase.database().ref('article').child(articleId).set({
-  coverImage: img,
-})
-.then(
-  () => Promise.resolve(articleId),
-  (error) => {
-    console.log(error);
-    return Promise.resolve(articleId);
-  },
-);
+const setArticleCoverImage = (articleId, img) => firebase.database().ref('article').child(articleId).child('coverImage')
+.set(img);
 
-const deleteArticle = articleId => firebase.database().ref('article').child(articleId).remove()
-  .then(() => Promise.resolve(articleId));
+const deleteArticle = articleId => firebase.database().ref('article').child(articleId).remove();
 
 const uploadImage = (formData) => {
   const config = {
@@ -109,7 +70,6 @@ export default {
     return Promise.resolve([]);
   },
   uploadImage,
-  createArticle,
   readArticle,
   readArticlesByUser,
   updateArticle,

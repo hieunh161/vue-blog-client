@@ -1,14 +1,8 @@
-// CLIENT-ID 3bc255da724ab4f
-// CLIENT-SECRET 559057085ea043e8741b17b48eb2bd1f1217d0f6
-
-// aa6b5fc61ea4571
-// 18e0b7e33a1f9aff8fba5f1ce73980a57dbd2656
 <template>
 <div>
   <div class="container">
     <!--UPLOAD-->
     <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-      <h4>Cover Image</h4>
       <div class="dropbox">
         <input type="file"
           :name="uploadFieldName" 
@@ -18,18 +12,19 @@
           <p v-if="isInitial">
             Drag your file here to begin<br> or click to browse
           </p>
-          <p v-if="isSaving">
-            Uploading file...
-          </p>
+          <div v-if="isSaving">
+            <div class="ui active centered inline loader">Uploading file...</div>
+          </div>
       </div>
     </form>
       <div v-if="isSuccess">
         <p>
           <a href="javascript:void(0)" @click="reset()">Upload again</a>
         </p>
-        <div v-for="item in uploadedFiles" v-bind:key="item.id">
-          <img :src="item.url" class="img-responsive img-thumbnail" :alt="item.originalName">
-        </div>
+        <img :src="coverImage.url" class="img-responsive img-thumbnail" :alt="coverImage.originalName">
+        <!-- <div v-for="item in uploadedFiles" v-bind:key="item.id">
+          
+        </div> -->
       </div>
       <!--FAILED-->
       <div v-if="isFailed">
@@ -45,6 +40,8 @@
 
 <!-- Javascript -->
 <script>
+import { mapGetters } from 'vuex';
+
 const STATUS_INITIAL = 0;
 const STATUS_SAVING = 1;
 const STATUS_SUCCESS = 2;
@@ -55,44 +52,46 @@ export default {
     return {
       uploadedFiles: [],
       uploadError: null,
-      currentStatus: null,
+      // currentStatus: null,
       uploadFieldName: 'image',
     };
   },
   computed: {
+    ...mapGetters({ uploadStatus: 'article/uploadStatus' }),
+    ...mapGetters({ coverImage: 'article/coverImage' }),
     isInitial() {
-      return this.currentStatus === STATUS_INITIAL;
+      return this.uploadStatus === STATUS_INITIAL;
     },
     isSaving() {
-      return this.currentStatus === STATUS_SAVING;
+      return this.uploadStatus === STATUS_SAVING;
     },
     isSuccess() {
-      return this.currentStatus === STATUS_SUCCESS;
+      return this.uploadStatus === STATUS_SUCCESS;
     },
     isFailed() {
-      return this.currentStatus === STATUS_FAILED;
+      return this.uploadStatus === STATUS_FAILED;
     },
   },
   methods: {
     reset() {
       // reset form to initial state
-      this.currentStatus = STATUS_INITIAL;
-      this.uploadedFiles = [];
+      // this.currentStatus = STATUS_INITIAL;
+      // this.uploadedFiles = [];
       this.uploadError = null;
     },
     save(formData) {
       // upload data to the server
-      this.currentStatus = STATUS_SAVING;
-      this.$store.dispatch('article/uploadImage', formData)
-        .then((x) => {
-          console.log(x);
-          this.uploadedFiles = [].concat(x);
-          this.currentStatus = STATUS_SUCCESS;
-        })
-        .catch((err) => {
-          this.uploadError = err.response;
-          this.currentStatus = STATUS_FAILED;
-        });
+      // this.currentStatus = STATUS_SAVING;
+      this.$store.dispatch('article/uploadImage', formData);
+        // .then((x) => {
+        //   console.log(x);
+        //   // this.uploadedFiles = [].concat(x);
+        //   this.currentStatus = STATUS_SUCCESS;
+        // })
+        // .catch((err) => {
+        //   this.uploadError = err.response;
+        //   this.currentStatus = STATUS_FAILED;
+        // });
     },
     filesChange(fieldName, fileList) {
       // handle file changes
@@ -119,7 +118,7 @@ export default {
   background: lightcyan;
   color: dimgray;
   padding: 10px 10px;
-  min-height: 200px; /* minimum height */
+  min-height: 100px; /* minimum height */
   position: relative;
   cursor: pointer;
 }
@@ -127,7 +126,7 @@ export default {
 .input-file {
   opacity: 0; /* invisible but it's there! */
   width: 100%;
-  height: 200px;
+  height: 100px;
   position: absolute;
   cursor: pointer;
 }
@@ -139,6 +138,6 @@ export default {
 .dropbox p {
   font-size: 1.2em;
   text-align: center;
-  padding: 50px 0;
+  padding: 20px 0;
 }
 </style>

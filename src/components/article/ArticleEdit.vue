@@ -1,5 +1,8 @@
 <template>
   <div id="article-edit-page">
+    <div class="ui active inverted dimmer" v-if="isLoading">
+      <div class="ui text loader">Loading Article...</div>
+    </div>
     <!--
     <mavon-editor
       v-model="article.content"
@@ -14,25 +17,19 @@
     </div>
     <image-uploader></image-uploader>
     <br>
-    <!--
-    <dropzone id="myVueDropzone" 
-      :headers="csrfHeader"
-      url="https://api.imgur.com/3/upload" 
-      v-on:vdropzone-success="showSuccess">
-      -->
-      <!-- Optional parameters if any! -->
-      <input type="hidden" name="token" value="xxx">
-    </dropzone>
+    <div>
+      <div class="ui button basic" @click="saveArticle">Save Draft</div>
+      <div class="ui button basic positive" @click="publicArticle">Public Article</div>
+      <async-button 
+        :text="'Async Button'"
+        :className="'basic positive'"></async-button>
+      <br>
+    </div>
     <markdown-editor
       language="en" 
       value="write a story"
       v-model="article.content">
     </markdown-editor>
-    <div class="ui button basic" @click="saveArticle">Save Draft</div>
-    <div class="ui button basic positive" @click="publicArticle">Public Article</div>
-    <async-button 
-      :text="'Async Button'"
-      :className="'basic positive'"></async-button>
   </div>
 </template>
 
@@ -40,7 +37,6 @@
 import { mapGetters, mapState } from 'vuex';
 import { mavonEditor } from 'mavon-editor';
 import { markdownEditor } from 'vue-simplemde';
-import Dropzone from 'vue2-dropzone';
 import 'mavon-editor/dist/css/index.css';
 import AsyncButton from '../common/AsyncButton';
 import ImageUploader from './ImageUploader';
@@ -48,9 +44,7 @@ import ImageUploader from './ImageUploader';
 export default {
   data() {
     return {
-      articleId: '',
       // article: {},
-      csrfHeader: { Authorization: 'Client-ID b83be4684a2c869' },
     };
   },
   methods: {
@@ -59,44 +53,34 @@ export default {
       console.log(response);
     },
     saveArticle() {
+      console.log(this.articleId);
       this.article.lastModified = Date.now();
-      this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article }).then(
-        () => console.log('save successful'),
-      );
+      this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article });
     },
     publicArticle() {
       this.article.lastModified = Date.now();
       this.article.status = 1;
-      this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article }).then(
-        () => console.log('save successful'),
-      );
+      this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article });
     },
   },
   mounted() {
     // load data from api
-    this.articleId = this.$route.params.id;
-    this.$store.dispatch('article/readArticle', this.articleId).then(
-      (result) => {
-        if (result) {
-          // this.article = articleContent;
-        } else {
-          this.$router.push({ path: 'page-not-found' });
-        }
-      });
+    this.$store.dispatch('article/readArticle',
+      { articleId: this.$route.params.id, router: this.$router });
   },
   components: {
     AsyncButton,
     ImageUploader,
-    Dropzone,
     markdownEditor,
     mavonEditor,
   },
   computed: {
-    // ...mapGetters({ content: 'article/articleContent' }),
     ...mapGetters({ isAdmin: 'authenticate/isAdmin' }),
     ...mapGetters({ currentUserInfo: 'authenticate/currentUserInfo' }),
-    // ...mapState({ article: state => (state.article.article ? state.article.article : {}) }),
-    ...mapState('article', ['article']),
+    ...mapGetters({ isLoading: 'article/isLoading' }),
+    ...mapGetters({ articleId: 'article/articleId' }),
+    ...mapState({ article: state => (state.article.article ? state.article.article : {}) }),
+    // ...mapState('article', ['article']),
   },
 };
 </script>

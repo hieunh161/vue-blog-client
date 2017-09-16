@@ -2,7 +2,7 @@
   <div>
     <div class="ui green fixed inverted menu">
       <div class="ui container">
-        <a href="#" class="header item">
+        <a href="/" class="header item">
           <img class="logo" src="../assets/images/logo.png">
           Customer Manager
         </a>

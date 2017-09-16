@@ -10,6 +10,15 @@
       <i class="google plus icon"></i>
       Google Plus
     </div>
+    
+    <footer>
+      <nav>
+      <a href="index.html">トップページ</a> 
+      <a href="about.html">このブログについて</a> 
+      <a href="profile.html">作者の紹介</a> 
+      </nav>
+      <p>Copyright 2010</p>
+    </footer>
   </div>
 </template>
 
