@@ -10,6 +10,7 @@
           @change="filesChange($event.target.name, $event.target.files);"
           accept="image/*" class="input-file">
           <p v-if="isInitial">
+            <i class="ui icon cloud upload"></i>
             Drag your file here to begin<br> or click to browse
           </p>
           <div v-if="isSaving">
@@ -22,9 +23,6 @@
           <a href="javascript:void(0)" @click="reset()">Upload again</a>
         </p>
         <img :src="coverImage.url" class="img-responsive img-thumbnail" :alt="coverImage.originalName">
-        <!-- <div v-for="item in uploadedFiles" v-bind:key="item.id">
-          
-        </div> -->
       </div>
       <!--FAILED-->
       <div v-if="isFailed">
@@ -50,9 +48,6 @@ const STATUS_FAILED = 3;
 export default {
   data() {
     return {
-      uploadedFiles: [],
-      uploadError: null,
-      // currentStatus: null,
       uploadFieldName: 'image',
     };
   },
@@ -74,24 +69,10 @@ export default {
   },
   methods: {
     reset() {
-      // reset form to initial state
-      // this.currentStatus = STATUS_INITIAL;
-      // this.uploadedFiles = [];
       this.uploadError = null;
     },
     save(formData) {
-      // upload data to the server
-      // this.currentStatus = STATUS_SAVING;
       this.$store.dispatch('article/uploadImage', formData);
-        // .then((x) => {
-        //   console.log(x);
-        //   // this.uploadedFiles = [].concat(x);
-        //   this.currentStatus = STATUS_SUCCESS;
-        // })
-        // .catch((err) => {
-        //   this.uploadError = err.response;
-        //   this.currentStatus = STATUS_FAILED;
-        // });
     },
     filesChange(fieldName, fileList) {
       // handle file changes

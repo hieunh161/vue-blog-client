@@ -1,5 +1,5 @@
 <template>
-  <div class="ui button" :class="className" >{{text}}</div>
+  <div @click="doSomething" class="ui button" :class="className" >{{text}}</div>
 </template>
 
 <script>
@@ -17,6 +17,10 @@ export default {
     return {
       isLoading: false,
     };
+  },
+  methods: {
+    doSomething() {
+    },
   },
 };
 </script>

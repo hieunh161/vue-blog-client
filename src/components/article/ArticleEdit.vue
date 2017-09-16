@@ -3,13 +3,6 @@
     <div class="ui active inverted dimmer" v-if="isLoading">
       <div class="ui text loader">Loading Article...</div>
     </div>
-    <!--
-    <mavon-editor
-      v-model="article.content"
-      value="# Write your story..."
-      language="en"
-      style="height: 100%"></mavon-editor>
-      -->
     <div class="ui transparent massive left input fluid large-font">
       <input type="text" 
       v-model="article.title"
@@ -23,13 +16,19 @@
       <async-button 
         :text="'Async Button'"
         :className="'basic positive'"></async-button>
-      <br>
     </div>
+    <br>
     <markdown-editor
       language="en" 
       value="write a story"
       v-model="article.content">
     </markdown-editor>
+    <!-- <mavon-editor
+      v-model="article.content"
+      value="# Write your story..."
+      language="en"
+      style="height: 100%"></mavon-editor> -->
+     
   </div>
 </template>
 
@@ -75,12 +74,9 @@ export default {
     mavonEditor,
   },
   computed: {
-    ...mapGetters({ isAdmin: 'authenticate/isAdmin' }),
-    ...mapGetters({ currentUserInfo: 'authenticate/currentUserInfo' }),
-    ...mapGetters({ isLoading: 'article/isLoading' }),
-    ...mapGetters({ articleId: 'article/articleId' }),
-    ...mapState({ article: state => (state.article.article ? state.article.article : {}) }),
-    // ...mapState('article', ['article']),
+    ...mapGetters('authenticate', ['isAdmin', 'currentUserInfo']),
+    ...mapGetters('article', ['isLoading', 'articleId']),
+    ...mapState('article', ['article']),
   },
 };
 </script>

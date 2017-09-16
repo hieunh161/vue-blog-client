@@ -3,15 +3,20 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
       isCreating: false,
     };
   },
+  computed: {
+    ...mapGetters({ user: 'authenticate/currentUser' }),
+  },
   methods: {
     createTemplateArticle() {
-      this.$store.dispatch('article/createTemplateArticle')
+      this.$store.dispatch('article/createTemplateArticle', this.user)
       .then((articleId) => {
         // redirect to edit page with created id
         console.log((`done create template Article ${articleId}`));

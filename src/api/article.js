@@ -4,14 +4,14 @@ import * as uuidv4 from 'uuid/v4';
 
 const createTemplateArticle = (metaData) => {
   console.log(metaData);
-  const articleContent = {
+  const content = {
     author: {
-      id: 'id',
-      photoURL: 'photoUrl',
-      displayName: 'displayName',
+      id: metaData.uid,
+      photoURL: metaData.photoURL,
+      displayName: metaData.displayName,
     },
     title: 'Article Title',
-    coverImage: null,
+    coverImage: '',
     content: 'Write an article',
     slugify: '',
     category: [''],
@@ -24,7 +24,7 @@ const createTemplateArticle = (metaData) => {
     likes: 0,
   };
   const articleId = uuidv4();
-  return firebase.database().ref('article').child(articleId).set(articleContent)
+  return firebase.database().ref('article').child(articleId).set(content)
   .then(() => articleId);
 };
 
@@ -66,9 +66,6 @@ const uploadImage = (formData) => {
 };
 
 export default {
-  loadArticles() {
-    return Promise.resolve([]);
-  },
   uploadImage,
   readArticle,
   readArticlesByUser,

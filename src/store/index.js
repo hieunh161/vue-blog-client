@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import authenticate from './authenticate';
+import authenticate from './modules/authenticate';
 import customer from './customer';
 import counter from './counter';
 import article from './modules/article';

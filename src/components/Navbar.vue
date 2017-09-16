@@ -4,10 +4,10 @@
       <div class="ui container">
         <a href="/" class="header item">
           <img class="logo" src="../assets/images/logo.png">
-          Customer Manager
+          Home
         </a>
-        <router-link class="nav-link item"  to="/">Home</router-link>
-        <router-link class="nav-link item"  to="/customer">Customer</router-link>
+        <!-- <router-link class="nav-link item"  to="/">Home</router-link>
+        <router-link class="nav-link item"  to="/customer">Customer</router-link> -->
         <div class="right menu">
           <router-link to="/article/create" class="nav-link item">
             <i class="write icon"></i>
