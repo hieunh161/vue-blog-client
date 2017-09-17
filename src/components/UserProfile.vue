@@ -55,6 +55,6 @@ export default {
 
 <style scoped>
 #user-profile {
-  text-align: "center";
+  text-align: center;
 }
 </style>

@@ -8,7 +8,7 @@ import Customer from '@/components/Customer';
 import Article from '@/components/Article';
 import ArticeCreate from '@/components/ArticeCreate';
 import ArticleList from '@/components/ArticleList';
-import ArticleDetail from '@/components/ArticleDetail';
+import ArticleDetail from '@/components/article/ArticleDetail';
 import ArticleEdit from '@/components/article/ArticleEdit';
 import ArtileUserList from '@/components/article/ArtileUserList';
 import PageNotFound from '@/components/PageNotFound';
@@ -65,6 +65,10 @@ export default new Router({
       beforeEnter: requireAuth,
     },
     {
+      path: '/article/:id/view',
+      component: ArticleDetail,
+    },
+    {
       path: '/article/:id/edit',
       component: ArticleEdit,
     },
@@ -85,10 +89,6 @@ export default new Router({
         {
           path: 'list',
           component: ArticleList,
-        },
-        {
-          path: ':id',
-          component: ArticleDetail,
         },
         {
           path: '',

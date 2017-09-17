@@ -36,7 +36,12 @@ const readArticlesByUser = (userId) => {
   const ref = firebase.database().ref('article').orderByChild('author/id').equalTo(userId);
   return ref.once('value').then((snapshot) => {
     const result = [];
-    snapshot.forEach(item => result.push(item.val()));
+    snapshot.forEach((item) => {
+      let article = {};
+      article = item.val();
+      article.id = item.key;
+      result.push(article);
+    });
     return Promise.resolve(result);
   });
 };

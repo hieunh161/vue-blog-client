@@ -9,14 +9,16 @@ const STATUS = {
   FAILED: 3,
 };
 
-// initial state
-const state = {
+const INITIAL_STATE = {
   articleId: '',
   article: {},
   userArticles: [],
   isLoading: false,
   uploadStatus: STATUS.INITIAL,
 };
+
+// initial state
+const state = INITIAL_STATE;
 
 // getters
 const getters = {
@@ -32,7 +34,6 @@ const getters = {
 const mutations = {
   [types.READ_USER_ARTICLES](s, articles) {
     s.userArticles = articles;
-    console.log(s.userArticles[0].title);
   },
   [types.SAVE_ARTICLE](s, { data }) {
     s.article.articleId = data;
@@ -54,6 +55,11 @@ const mutations = {
   [types.UPDATE_UPLOADING_STATUS](s, status) {
     s.uploadStatus = status;
   },
+  [types.RESET_ARTICLE_STATE](s) {
+    /* eslint-disable no-undef */
+    Object.assign(s, INITIAL_STATE);
+    console.log(s);
+  },
 };
 
 // actions
@@ -62,6 +68,7 @@ const actions = {
     return articleApi.createTemplateArticle(user);
   },
   readArticle(context, { articleId, router }) {
+    context.commit(types.RESET_ARTICLE_STATE);
     context.commit(types.UPDATE_LOADING_FLAG, true);
     context.commit(types.SET_ARTICLE_ID, articleId);
     return articleApi.readArticle(articleId).then(

@@ -20,7 +20,7 @@ export default {
       .then((articleId) => {
         // redirect to edit page with created id
         console.log((`done create template Article ${articleId}`));
-        this.$router.push({ path: `article/${articleId}/edit` });
+        this.$router.push({ path: `/article/${articleId}/edit` });
       });
     },
   },

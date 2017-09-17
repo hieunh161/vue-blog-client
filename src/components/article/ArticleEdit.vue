@@ -93,7 +93,7 @@ export default {
 }
 
 #article-edit-page {
-  margin: 70px 20px 0px 20px;
+  margin: 0px 20px 0px 20px;
 }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="ui green fixed inverted menu">
+    <div class="ui green inverted menu attached" id="nav-bar">
       <div class="ui container">
         <a href="/" class="header item">
           <img class="logo" src="../assets/images/logo.png">
@@ -9,12 +9,12 @@
         <!-- <router-link class="nav-link item"  to="/">Home</router-link>
         <router-link class="nav-link item"  to="/customer">Customer</router-link> -->
         <div class="right menu">
-          <router-link to="/article/create" class="nav-link item">
+          <!-- <router-link to="/article/create" class="nav-link item">
             <i class="write icon"></i>
             Write a story
-          </router-link>
+          </router-link> -->
           <div class="ui simple dropdown item">
-            <i class="write icon"></i>Article <i class="dropdown icon"></i>
+            Article <i class="dropdown icon"></i>
             <div class="menu">
               <template-article></template-article>
               <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> My Articles</router-link>
@@ -58,6 +58,9 @@ export default {
 </script>
 
 <style scoped>
+#nav-bar {
+  margin-top: 0px;
+}
   .ui.menu .item img.logo {
     margin-right: 1.5em;
   }

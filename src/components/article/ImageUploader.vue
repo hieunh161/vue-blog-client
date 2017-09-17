@@ -22,7 +22,7 @@
         <p>
           <a href="javascript:void(0)" @click="reset()">Upload again</a>
         </p>
-        <img :src="coverImage.url" class="img-responsive img-thumbnail" :alt="coverImage.originalName">
+        <img :src="coverImage.url" class="ui centered medium image" :alt="coverImage.originalName">
       </div>
       <!--FAILED-->
       <div v-if="isFailed">
@@ -69,7 +69,6 @@ export default {
   },
   methods: {
     reset() {
-      this.uploadError = null;
     },
     save(formData) {
       this.$store.dispatch('article/uploadImage', formData);
