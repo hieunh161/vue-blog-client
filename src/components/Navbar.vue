@@ -17,12 +17,13 @@
             <i class="write icon"></i>Article <i class="dropdown icon"></i>
             <div class="menu">
               <template-article></template-article>
+              <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> My Articles</router-link>
             </div>
           </div>
           <router-link class="nav-link item"  to="/login" v-if="!isLoggedIn" ><i class="ui icon sign in"></i> Login</router-link>
           <div class="ui simple dropdown item" v-if="isLoggedIn">
             <img class="ui avatar image" :src= "avatar"/>
-            <span>{{displayName}}</span> <i class="dropdown icon"></i>
+            <span>{{currentUser.displayName}}</span> <i class="dropdown icon"></i>
             <div class="menu">
               <router-link class="nav-link item"  to="/user"><i class="user icon"></i> User Profile</router-link>
               <div class="divider"></div>
@@ -43,10 +44,7 @@ import TemplateArticle from './article/TemplateArticle';
 export default {
   name: 'navbar',
   computed: {
-    ...mapGetters({ isLoggedIn: 'authenticate/isLoggedIn' }),
-    ...mapGetters({ avatar: 'authenticate/avatar' }),
-    ...mapGetters({ displayName: 'authenticate/displayName' }),
-    ...mapGetters({ isAdmin: 'authenticate/isAdmin' }),
+    ...mapGetters('authenticate', ['isLoggedIn', 'avatar', 'currentUser', 'isAdmin']),
   },
   methods: {
     logout() {

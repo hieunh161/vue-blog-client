@@ -10,6 +10,7 @@ import ArticeCreate from '@/components/ArticeCreate';
 import ArticleList from '@/components/ArticleList';
 import ArticleDetail from '@/components/ArticleDetail';
 import ArticleEdit from '@/components/article/ArticleEdit';
+import ArtileUserList from '@/components/article/ArtileUserList';
 import PageNotFound from '@/components/PageNotFound';
 import * as firebase from 'firebase';
 
@@ -66,6 +67,10 @@ export default new Router({
     {
       path: '/article/:id/edit',
       component: ArticleEdit,
+    },
+    {
+      path: '/user/:id/article',
+      component: ArtileUserList,
     },
     {
       path: '/article/', 

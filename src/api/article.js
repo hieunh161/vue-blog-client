@@ -3,7 +3,6 @@ import * as axios from 'axios';
 import * as uuidv4 from 'uuid/v4';
 
 const createTemplateArticle = (metaData) => {
-  console.log(metaData);
   const content = {
     author: {
       id: metaData.uid,
@@ -34,11 +33,12 @@ const readArticle = (articleId) => {
 };
 
 const readArticlesByUser = (userId) => {
-  const ref = firebase.database().ref('article');
-  return ref.orderByChild('author/id')
-    .equalTo(userId)
-    .on('child_added')
-    .then(snapshot => Promise.resolve(snapshot.val()));
+  const ref = firebase.database().ref('article').orderByChild('author/id').equalTo(userId);
+  return ref.once('value').then((snapshot) => {
+    const result = [];
+    snapshot.forEach(item => result.push(item.val()));
+    return Promise.resolve(result);
+  });
 };
 
 const updateArticle = data => firebase.database().ref('article').child(data.articleId).set(data.article);

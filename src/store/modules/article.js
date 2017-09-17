@@ -13,6 +13,7 @@ const STATUS = {
 const state = {
   articleId: '',
   article: {},
+  userArticles: [],
   isLoading: false,
   uploadStatus: STATUS.INITIAL,
 };
@@ -24,10 +25,15 @@ const getters = {
   uploadStatus: s => s.uploadStatus,
   coverImage: s => s.article.coverImage,
   article: s => s.article,
+  userArticles: s => s.userArticles,
 };
 
 // mutations
 const mutations = {
+  [types.READ_USER_ARTICLES](s, articles) {
+    s.userArticles = articles;
+    console.log(s.userArticles[0].title);
+  },
   [types.SAVE_ARTICLE](s, { data }) {
     s.article.articleId = data;
   },
@@ -70,6 +76,10 @@ const actions = {
           router.push({ path: 'page-not-found' });
         }
       });
+  },
+  readArticlesByUser(context, userId) {
+    articleApi.readArticlesByUser(userId)
+    .then(articles => context.commit(types.READ_USER_ARTICLES, articles));
   },
   updateArticle(context, updateData) {
     articleApi.updateArticle(updateData);
