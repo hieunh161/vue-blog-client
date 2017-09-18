@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <article-list></article-list>
     <counter></counter>
     <div class="ui divider"></div>
     <h2>Essential Links</h2>
@@ -25,6 +26,7 @@
 
 <script>
 import Counter from './Counter';
+import ArticleList from './article/ArticleList';
 import AppFooter from './AppFooter';
 
 export default {
@@ -36,6 +38,7 @@ export default {
   },
   components: {
     Counter,
+    ArticleList,
     AppFooter,
   },
 };

@@ -4,7 +4,6 @@ import Router from 'vue-router';
 import Hello from '@/components/Hello';
 import Login from '@/components/Login';
 import UserProfile from '@/components/UserProfile';
-import Customer from '@/components/Customer';
 import Article from '@/components/Article';
 import ArticeCreate from '@/components/ArticeCreate';
 import ArticleList from '@/components/ArticleList';
@@ -59,13 +58,7 @@ export default new Router({
       beforeEnter: requireAuth,
     },
     {
-      path: '/customer',
-      name: 'Customer',
-      component: Customer,
-      beforeEnter: requireAuth,
-    },
-    {
-      path: '/article/:id/view',
+      path: '/article/:id',
       component: ArticleDetail,
     },
     {

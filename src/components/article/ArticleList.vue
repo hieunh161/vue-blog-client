@@ -1,6 +1,5 @@
 <template>
   <div class="ui container">
-    <h1>User Articles</h1>
     <!-- <ul>
       <li v-for="item in userArticles" v-bind:key="item.title">
         <router-link :to="`/article/${item.id}/view`">{{ item.title }}</router-link>
@@ -9,8 +8,8 @@
         <router-link class="ui green basic horizontal label" :to="`/article/${item.id}/edit`">Edit</router-link>
       </li>
     </ul> -->
-    <div class="ui relaxed divided list">
-      <div class="item" v-for="item in userArticles" v-bind:key="item.title">
+    <div class="ui relaxed divided list" id="article-list">
+      <div class="item" v-for="item in allArticles" v-bind:key="item.key">
         <!-- <i class="large github middle aligned icon"></i> -->
         <img class="ui avatar image" :src="item.coverImage.url">
         <div class="content">
@@ -31,14 +30,16 @@ import { mapGetters } from 'vuex';
 
 export default {
   mounted() {
-    this.$store.dispatch('article/readArticlesByUser', this.$route.params.id);
+    this.$store.dispatch('article/readAllArticles');
   },
   computed: {
-    ...mapGetters('article', ['userArticles']),
+    ...mapGetters('article', ['allArticles']),
   },
 };
 </script>
 
 <style scoped>
-
+#article-list {
+  text-align: left;
+}
 </style>

@@ -34,21 +34,30 @@ const readArticle = (articleId) => {
   return ref.once('value').then(snapshot => Promise.resolve(snapshot.val()));
 };
 
+const getListArticleFromSnap = (snapshot) => {
+  const result = [];
+  snapshot.forEach((item) => {
+    let article = {};
+    article = item.val();
+    article.id = item.key;
+    result.push(article);
+  });
+  return Promise.resolve(result);
+};
+
+const readAllArticles = () => {
+  const ref = firebase.database().ref('article').orderByChild('views');
+  return ref.once('value').then(snapshot => getListArticleFromSnap(snapshot));
+};
+
 const readArticlesByUser = (userId) => {
   const ref = firebase.database().ref('article').orderByChild('author/id').equalTo(userId);
-  return ref.once('value').then((snapshot) => {
-    const result = [];
-    snapshot.forEach((item) => {
-      let article = {};
-      article = item.val();
-      article.id = item.key;
-      result.push(article);
-    });
-    return Promise.resolve(result);
-  });
+  return ref.once('value').then(snapshot => getListArticleFromSnap(snapshot));
 };
 
 const updateArticle = data => firebase.database().ref('article').child(data.articleId).set(data.article);
+
+const updateArticleProperty = (articleId, data) => firebase.database().ref('article').child(articleId).update(data);
 
 const setArticleCoverImage = (articleId, img) => firebase.database().ref('article').child(articleId).child('coverImage')
 .set(img);
@@ -75,8 +84,10 @@ const uploadImage = (formData) => {
 export default {
   uploadImage,
   readArticle,
+  readAllArticles,
   readArticlesByUser,
   updateArticle,
+  updateArticleProperty,
   deleteArticle,
   createTemplateArticle,
   setArticleCoverImage,

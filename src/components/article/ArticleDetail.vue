@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="ui container">
-      <div class="article">
+      <loader v-if="!article.content"></loader>
+      <div class="article" v-if="article.content">
         <div class="meta-header">
           <div class="ui items">
             <div class="item">
@@ -25,8 +26,8 @@
           <div class="coverImage">
             <img class="ui medium centered image" :src="article.coverImage ? article.coverImage.url : ''"></img>
           </div>
-          <div v-html="compiledMarkdown"></div>
-          {{article.content | parseMarked}}
+          <span v-html="article.content ? marked(article.content) : ''"></span>
+          <div>Views : {{article.views}} Likes: {{article.likes}}</div>
         </div>
       </div>
     </div>
@@ -34,6 +35,8 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex';
+import Loader from '../common/Loader';
+
 // import marked from 'marked';
 const marked = require('marked');
 
@@ -46,10 +49,12 @@ export default {
   computed: {
     ...mapState('article', ['article']),
     ...mapGetters('authenticate', ['currentUser', 'currentUserInfo']),
-    compiledMarkdown: () => {
-      console.log(this.article);
-      return (this.article ? marked(this.article.content, { sanitize: true }) : '');
-    },
+  },
+  methods: {
+    marked: input => marked(input),
+  },
+  components: {
+    Loader,
   },
 };
 </script>

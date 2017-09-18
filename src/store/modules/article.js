@@ -12,6 +12,7 @@ const STATUS = {
 const INITIAL_STATE = {
   articleId: '',
   article: {},
+  allArticles: [],
   userArticles: [],
   isLoading: false,
   uploadStatus: STATUS.INITIAL,
@@ -27,6 +28,7 @@ const getters = {
   uploadStatus: s => s.uploadStatus,
   coverImage: s => s.article.coverImage,
   article: s => s.article,
+  allArticles: s => s.allArticles,
   userArticles: s => s.userArticles,
 };
 
@@ -34,6 +36,9 @@ const getters = {
 const mutations = {
   [types.READ_USER_ARTICLES](s, articles) {
     s.userArticles = articles;
+  },
+  [types.READ_ALL_ARTICLES](s, articles) {
+    s.allArticles = articles;
   },
   [types.SAVE_ARTICLE](s, { data }) {
     s.article.articleId = data;
@@ -78,10 +83,17 @@ const actions = {
           if (articleContent.coverImage.url) {
             context.commit(types.UPDATE_UPLOADING_STATUS, STATUS.SUCCESS);
           }
+          // increase number of views by one
+          const views = articleContent.views + 1;
+          articleApi.updateArticleProperty(context.state.articleId, { views });
         } else {
           router.push({ path: 'page-not-found' });
         }
       });
+  },
+  readAllArticles(context) {
+    articleApi.readAllArticles()
+    .then(articles => context.commit(types.READ_ALL_ARTICLES, articles));
   },
   readArticlesByUser(context, userId) {
     articleApi.readArticlesByUser(userId)
