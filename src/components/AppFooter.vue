@@ -1,5 +1,5 @@
 <template>
-  <div class="ui inverted green vertical footer segment">
+  <div class="ui inverted green vertical footer segment" id="app-footer">
     <div class="ui container">
       <div class="ui stackable inverted divided equal height stackable grid">
         <div class="three wide column">
@@ -36,5 +36,7 @@ export default {
 </script>
 
 <style>
-
+#app-footer{
+  margin-top: 30px;
+}
 </style>

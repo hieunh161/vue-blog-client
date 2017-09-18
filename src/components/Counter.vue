@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Loader from './Loader';
+import Loader from './common/Loader';
 
 export default {
   name: 'counter',

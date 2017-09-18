@@ -58,7 +58,6 @@ const mutations = {
   [types.RESET_ARTICLE_STATE](s) {
     /* eslint-disable no-undef */
     Object.assign(s, INITIAL_STATE);
-    console.log(s);
   },
 };
 

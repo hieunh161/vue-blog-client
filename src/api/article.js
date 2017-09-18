@@ -10,7 +10,9 @@ const createTemplateArticle = (metaData) => {
       displayName: metaData.displayName,
     },
     title: 'Article Title',
-    coverImage: '',
+    coverImage: {
+      url: 'https://i.imgur.com/rrldhV3.png',
+    },
     content: 'Write an article',
     slugify: '',
     category: [''],

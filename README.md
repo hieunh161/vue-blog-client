@@ -31,5 +31,9 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 
 ### TODO
 
-[ ] Fix bug upload image to imgur -> add link vào article
-[ ] Create async button component
+[x] Fix bug upload image to imgur -> add link vào article
+[x] Create async button component
+[ ] Create detail page with nice css
+[ ] Add homepage
+[ ] Add footer
+[ ] Tag + Category

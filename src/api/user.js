@@ -32,6 +32,7 @@ const getLocalUserInfo = (user) => {
   return userRef.child(user.uid).transaction((currentUserData) => {
     if (currentUserData === null) {
       return {
+        description: 'A member of sharing community',
         name: user.displayName,
         role: 0,
       };

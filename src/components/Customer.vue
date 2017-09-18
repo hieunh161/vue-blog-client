@@ -103,7 +103,7 @@
 import { mapGetters } from 'vuex';
 // import * as d3 from 'd3';
 import * as $ from 'jquery';
-import Loader from './Loader';
+import Loader from './common/Loader';
 import CustomerTable from './CustomerTable';
 import CustomerForm from './CustomerForm';
 import CustomerChart from './CustomerChart';

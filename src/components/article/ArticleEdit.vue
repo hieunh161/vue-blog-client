@@ -23,6 +23,9 @@
       value="write a story"
       v-model="article.content">
     </markdown-editor>
+    <br>
+    <article-tag :on-change="onChangeTags" :tags="article.tags" placeholder="Add Tag"></article-tag>
+    <div class="page-footer"></div>
     <!-- <mavon-editor
       v-model="article.content"
       value="# Write your story..."
@@ -39,6 +42,7 @@ import { markdownEditor } from 'vue-simplemde';
 import 'mavon-editor/dist/css/index.css';
 import AsyncButton from '../common/AsyncButton';
 import ImageUploader from './ImageUploader';
+import ArticleTag from './ArticleTag';
 
 export default {
   data() {
@@ -52,7 +56,6 @@ export default {
       console.log(response);
     },
     saveArticle() {
-      console.log(this.articleId);
       this.article.lastModified = Date.now();
       this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article });
     },
@@ -60,6 +63,9 @@ export default {
       this.article.lastModified = Date.now();
       this.article.status = 1;
       this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article });
+    },
+    onChangeTags() {
+      console.log(this.article.tags);
     },
   },
   mounted() {
@@ -72,6 +78,7 @@ export default {
     ImageUploader,
     markdownEditor,
     mavonEditor,
+    ArticleTag,
   },
   computed: {
     ...mapGetters('authenticate', ['isAdmin', 'currentUserInfo']),
@@ -94,6 +101,10 @@ export default {
 
 #article-edit-page {
   margin: 0px 20px 0px 20px;
+}
+
+.page-footer {
+  height: 30px;
 }
 
 </style>
