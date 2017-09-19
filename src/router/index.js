@@ -1,7 +1,7 @@
 /* eslint-disable no-trailing-spaces */
 import Vue from 'vue';
 import Router from 'vue-router';
-import Hello from '@/components/Hello';
+import Home from '@/components/Home';
 import Login from '@/components/Login';
 import UserProfile from '@/components/UserProfile';
 import Article from '@/components/Article';
@@ -42,8 +42,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Hello',
-      component: Hello,
+      name: 'Home',
+      component: Home,
     },
     {
       path: '/login',

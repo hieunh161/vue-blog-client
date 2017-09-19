@@ -1,13 +1,15 @@
 <template>
   <div id="app">
-    <navbar></navbar>
-    <router-view v-if="user !== null"></router-view>
+    <navbar class="page-header"></navbar>
+    <router-view class="page-content"></router-view>
+    <app-footer class="page-footer"></app-footer>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import Navbar from '@/components/Navbar';
+import AppFooter from '@/components/AppFooter';
 import Firebase from 'firebase';
 
 export default {
@@ -17,6 +19,7 @@ export default {
   },
   components: {
     Navbar,
+    AppFooter,
   },
   beforeCreate() {
     Firebase.auth().onAuthStateChanged((user) => {
@@ -37,13 +40,24 @@ export default {
 
 <style>
 /* @import '../node_modules/bulma/css/bulma.css'; */
-
+body {
+  height: 100%;
+}
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  /* margin-top: 60px; */
 }
+
+a {
+  color: #42b983;
+}
+
+.page-footer {
+  position:absolute; 
+  bottom:0;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
   background-color: #f7f7f7;

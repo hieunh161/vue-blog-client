@@ -1,24 +1,15 @@
 <template>
   <div class="ui container" id="login-page">
     <h1><i class="ui icon sign in"></i>SignIn</h1>
-    <div @click="facebookLogin" class="ui fluid large facebook button">
+    <div @click="facebookLogin" class="ui fluid large facebook button circular">
       <i class="facebook icon"></i>
       Facebook
     </div>
     <div class="ui horizontal divider">OR</div>
-    <div @click="googleLogin" class="ui fluid large google plus button">
+    <div @click="googleLogin" class="ui fluid large google plus button circular">
       <i class="google plus icon"></i>
       Google Plus
     </div>
-    
-    <footer>
-      <nav>
-      <a href="index.html">トップページ</a> 
-      <a href="about.html">このブログについて</a> 
-      <a href="profile.html">作者の紹介</a> 
-      </nav>
-      <p>Copyright 2010</p>
-    </footer>
   </div>
 </template>
 

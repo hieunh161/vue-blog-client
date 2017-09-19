@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="ui container">
+    <div class="ui main container">
       <loader v-if="!article.content"></loader>
       <div class="article ui segment" v-if="article.content">
         <div class="meta-header">
