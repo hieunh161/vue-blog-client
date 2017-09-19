@@ -2,7 +2,7 @@
   <div>
     <div class="ui container">
       <loader v-if="!article.content"></loader>
-      <div class="article" v-if="article.content">
+      <div class="article ui segment" v-if="article.content">
         <div class="meta-header">
           <div class="ui items">
             <div class="item">
@@ -26,28 +26,37 @@
           <div class="coverImage">
             <img class="ui medium centered image" :src="article.coverImage ? article.coverImage.url : ''"></img>
           </div>
-          <span v-html="article.content ? marked(article.content) : ''"></span>
+          <div class="mrkdwn-body">
+            <span v-html="article.content ? marked(article.content) : ''"></span>
+          </div>
           <div>Views : {{article.views}} Likes: {{article.likes}}</div>
+          <social-network :pageUrl="`https://medium.com/js-dojo/react-or-vue-which-javascript-ui-library-should-you-be-using-543a383608d`"></social-network>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
+import hljs from 'highlight.js';
+import marked from 'marked';
 import Loader from '../common/Loader';
-
-// import marked from 'marked';
-const marked = require('marked');
+import SocialNetwork from '../common/SocialNetwork';
+// const marked = require('marked');
 
 export default {
+  created() {
+    marked.setOptions({
+      highlight: (code, lang) => hljs.highlightAuto(code, [lang]).value,
+    });
+  },
   mounted() {
     // load data from api
     this.$store.dispatch('article/readArticle',
       { articleId: this.$route.params.id, router: this.$router });
   },
   computed: {
-    ...mapState('article', ['article']),
+    ...mapGetters('article', ['article', 'articleId']),
     ...mapGetters('authenticate', ['currentUser', 'currentUserInfo']),
   },
   methods: {
@@ -55,12 +64,16 @@ export default {
   },
   components: {
     Loader,
+    SocialNetwork,
   },
 };
 </script>
-<style>
+<style scoped>
+@import '../../assets/css/markdown.style.css';
+@import '../../assets/css/atom-one-dark.css';
+
 .coverImage {
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .header {
@@ -71,8 +84,10 @@ export default {
   font-size: 3rem;
 }
 
-.article{
-  margin: 20px 140px 20px 140px;
+.article.ui.segment{
+  margin: 24px;
+  padding: 48px;
   text-align: left;
 }
+
 </style>

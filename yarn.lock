@@ -1149,6 +1149,10 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
+bulma@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/bulma/-/bulma-0.5.3.tgz#be93afb6246192505c30df3f9c1c29a97d319a13"
+
 bytes@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-2.4.0.tgz#7d97196f9d5baf7f6935e25985549edd2a6c2339"
@@ -2724,6 +2728,10 @@ estraverse@^4.0.0, estraverse@^4.1.0, estraverse@^4.1.1, estraverse@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-4.2.0.tgz#0dee3fed31fcd469618ce7342099fc1afa0bdb13"
 
+estree-walker@^0.3.0:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/estree-walker/-/estree-walker-0.3.1.tgz#e6b1a51cf7292524e7237c312e5fe6660c1ce1aa"
+
 esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
@@ -3844,7 +3852,7 @@ highlight.js-async-webpack@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/highlight.js-async-webpack/-/highlight.js-async-webpack-1.0.4.tgz#c06b67bf99f049045d62b756e5855b0912ec616c"
 
-highlight.js@^9.11.0, highlight.js@^9.9.0:
+highlight.js@^9.11.0, highlight.js@^9.12.0, highlight.js@^9.9.0:
   version "9.12.0"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.12.0.tgz#e6d9dbe57cbefe60751f02af336195870c90c01e"
 
@@ -6898,6 +6906,19 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^2.0.0"
     inherits "^2.0.1"
 
+rollup-plugin-json@^2.1.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-json/-/rollup-plugin-json-2.3.0.tgz#3c07a452c1b5391be28006fbfff3644056ce0add"
+  dependencies:
+    rollup-pluginutils "^2.0.1"
+
+rollup-pluginutils@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/rollup-pluginutils/-/rollup-pluginutils-2.0.1.tgz#7ec95b3573f6543a46a6461bd9a7c544525d0fc0"
+  dependencies:
+    estree-walker "^0.3.0"
+    micromatch "^2.3.11"
+
 rtlcss@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/rtlcss/-/rtlcss-2.2.0.tgz#134415254d0c26b5c403e2ead2c1b8bf4fc000dd"
@@ -8003,6 +8024,12 @@ vue-simplemde@^0.3.8:
   dependencies:
     highlight.js "^9.9.0"
     simplemde "^1.11.2"
+
+vue-social-sharing@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/vue-social-sharing/-/vue-social-sharing-2.2.5.tgz#366892638748b8abfa8d4377a20e10b29493b937"
+  dependencies:
+    rollup-plugin-json "^2.1.0"
 
 vue-style-loader@^3.0.0, vue-style-loader@^3.0.1:
   version "3.0.1"

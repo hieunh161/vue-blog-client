@@ -1,31 +1,31 @@
 <template>
   <div id="article-edit-page">
-    <div class="ui active inverted dimmer" v-if="isLoading">
-      <div class="ui text loader">Loading Article...</div>
+    <loader v-if="isLoading"></loader>
+    <div v-if="!isLoading">
+      <div class="ui transparent massive left input fluid large-font">
+        <input type="text" 
+        v-model="article.title"
+        placeholder="Title...">
+      </div>
+      <image-uploader></image-uploader>
+      <br>
+      <div>
+        <div class="ui button basic" @click="saveArticle">Save Draft</div>
+        <div class="ui button basic positive" @click="publicArticle">Public Article</div>
+        <async-button 
+          :text="'Async Button'"
+          :className="'basic positive'"></async-button>
+      </div>
+      <br>
+      <markdown-editor
+        language="en" 
+        value="write a story"
+        v-model="article.content">
+      </markdown-editor>
+      <br>
+      <article-tag :on-change="onChangeTags" :tags="article.tags" placeholder="Add Tag"></article-tag>
+      <div class="page-footer"></div>
     </div>
-    <div class="ui transparent massive left input fluid large-font">
-      <input type="text" 
-      v-model="article.title"
-      placeholder="Title...">
-    </div>
-    <image-uploader></image-uploader>
-    <br>
-    <div>
-      <div class="ui button basic" @click="saveArticle">Save Draft</div>
-      <div class="ui button basic positive" @click="publicArticle">Public Article</div>
-      <async-button 
-        :text="'Async Button'"
-        :className="'basic positive'"></async-button>
-    </div>
-    <br>
-    <markdown-editor
-      language="en" 
-      value="write a story"
-      v-model="article.content">
-    </markdown-editor>
-    <br>
-    <article-tag :on-change="onChangeTags" :tags="article.tags" placeholder="Add Tag"></article-tag>
-    <div class="page-footer"></div>
     <!-- <mavon-editor
       v-model="article.content"
       value="# Write your story..."
@@ -43,6 +43,26 @@ import 'mavon-editor/dist/css/index.css';
 import AsyncButton from '../common/AsyncButton';
 import ImageUploader from './ImageUploader';
 import ArticleTag from './ArticleTag';
+import Loader from '../common/Loader';
+
+const slugifyUrl = (str, separator) => {
+  const slug = str
+    .toLowerCase()
+    .replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a')
+    .replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e')
+    .replace(/ì|í|ị|ỉ|ĩ/g, 'i')
+    .replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o')
+    .replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u')
+    .replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y')
+    .replace(/đ/g, 'd')
+    .replace(/\s+/g, '-')
+    .replace(/[^A-Za-z0-9_-]/g, '')
+    .replace(/-+/g, '-');
+  if (separator) {
+    return slug.replace(/-/g, separator);
+  }
+  return slug;
+};
 
 export default {
   data() {
@@ -57,11 +77,12 @@ export default {
     },
     saveArticle() {
       this.article.lastModified = Date.now();
+      this.article.slugify = slugifyUrl(this.article.title);
       this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article });
     },
     publicArticle() {
-      this.article.lastModified = Date.now();
       this.article.status = 1;
+      this.article.lastModified = Date.now();
       this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article });
     },
     onChangeTags() {
@@ -79,6 +100,7 @@ export default {
     markdownEditor,
     mavonEditor,
     ArticleTag,
+    Loader,
   },
   computed: {
     ...mapGetters('authenticate', ['isAdmin', 'currentUserInfo']),

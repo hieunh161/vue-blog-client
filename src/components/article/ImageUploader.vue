@@ -69,6 +69,7 @@ export default {
   },
   methods: {
     reset() {
+      this.$store.dispatch('article/updateUploadStatus', STATUS_INITIAL);
     },
     save(formData) {
       this.$store.dispatch('article/uploadImage', formData);

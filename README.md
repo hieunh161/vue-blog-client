@@ -34,6 +34,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [x] Fix bug upload image to imgur -> add link vào article
 [x] Create async button component
 [ ] Create detail page with nice css
-[ ] Add homepage
-[ ] Add footer
+[x] Add homepage
+[x] Add footer
 [ ] Tag + Category
+[ ] add hightlight or prismjs + markdown css

@@ -36,6 +36,8 @@ export default {
 </script>
 
 <style>
+/* @import '../node_modules/bulma/css/bulma.css'; */
+
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -44,5 +46,6 @@ export default {
 }
 body {
   font-family: 'Roboto', sans-serif;
+  background-color: #f7f7f7;
 }
 </style>

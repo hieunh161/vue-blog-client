@@ -107,6 +107,9 @@ const actions = {
     articleApi.uploadImage(formData)
       .then(img => context.dispatch('setArticleCoverImage', img));
   },
+  updateUploadStatus(context, uploadStatus) {
+    context.commit(types.UPDATE_UPLOADING_STATUS, uploadStatus);
+  },
   setArticleCoverImage(context, img) {
     articleApi.setArticleCoverImage(context.state.articleId, img).then(
       () => {

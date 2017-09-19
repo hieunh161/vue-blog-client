@@ -1,8 +1,7 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div class="hello container">
     <article-list></article-list>
-    <counter></counter>
+    <!-- <counter></counter> -->
     <div class="ui divider"></div>
     <h2>Essential Links</h2>
     <ul>
@@ -33,7 +32,6 @@ export default {
   name: 'hello',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
     };
   },
   components: {

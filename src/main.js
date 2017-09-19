@@ -4,9 +4,11 @@ import * as firebase from 'firebase';
 // import { mapState } from 'vuex';
 import Vue from 'vue';
 import VueProgressiveImage from 'vue-progressive-image';
+import SocialSharing from 'vue-social-sharing';
 import App from './App';
 import router from './router';
 import store from './store';
+import directive from './directive';
 
 import '../semantic/dist/semantic.css';
 import '../semantic/dist/semantic';
@@ -14,6 +16,7 @@ import './filter';
 
 Vue.config.productionTip = false;
 Vue.use(VueProgressiveImage);
+Vue.use(SocialSharing);
 
 // allows usage of firebase in your vue components by using this.$firebase
 Vue.prototype.$firebase = firebase.initializeApp({
@@ -31,6 +34,7 @@ const unsubscribe = firebase.auth().onAuthStateChanged(() => {
     el: '#app',
     router,
     store,
+    directive,
     template: '<App/>',
     components: { App },
   });
