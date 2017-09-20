@@ -6,7 +6,7 @@
         <div class="column cards"  v-for="item in allArticles" v-bind:key="item.key">
           <div class="ui fluid card">
             <div class="content">
-              <div class="right floated meta">14h</div>
+              <div class="right floated meta">{{item.createdDate | fromNow}}</div>
               <img class="ui avatar image" :src="item.author.photoURL"> {{item.author.displayName}}
             </div>
             <div class="image medium">
