@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import userApi from '../../api/user';
+import userService from '../../services/user';
 
 /* eslint-disable no-param-reassign */
 const state = {
@@ -22,7 +22,7 @@ const mutations = {
 
 const actions = {
   loginWithFacebook: (context) => {
-    userApi.signInWithFacebook()
+    userService.signInWithFacebook()
     .then((result) => {
       context.commit('setUser', result.user);
       context.dispatch('getUserInfo', result.user);
@@ -31,7 +31,7 @@ const actions = {
     });
   },
   loginWithGoogle: (context) => {
-    userApi.signInWithGoogle()
+    userService.signInWithGoogle()
     .then((result) => {
       context.commit('setUser', result.user);
       context.dispatch('getUserInfo', result.user);
@@ -40,7 +40,7 @@ const actions = {
     });
   },
   getUserInfo: (context, user) => {
-    userApi.getLocalUserInfo(user)
+    userService.getLocalUserInfo(user)
     .then(userInfo => context.commit('setUserInfo', userInfo));
   },
   logOut: (context) => {

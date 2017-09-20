@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <navbar class="page-header"></navbar>
+    <!-- <navbar class="page-header"></navbar> -->
     <router-view class="page-content"></router-view>
-    <app-footer class="page-footer"></app-footer>
+    <!-- <app-footer class="page-footer"></app-footer> -->
   </div>
 </template>
 
@@ -55,7 +55,7 @@ a {
 
 .page-footer {
   position:absolute; 
-  bottom:0;
+  bottom: 0px;
 }
 
 body {

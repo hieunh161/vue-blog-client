@@ -10,6 +10,7 @@ import ArticleList from '@/components/ArticleList';
 import ArticleDetail from '@/components/article/ArticleDetail';
 import ArticleEdit from '@/components/article/ArticleEdit';
 import ArtileUserList from '@/components/article/ArtileUserList';
+import DemoPage from '@/components/demo/DemoPage';
 import PageNotFound from '@/components/PageNotFound';
 import * as firebase from 'firebase';
 
@@ -50,6 +51,11 @@ export default new Router({
       name: 'Login',
       component: Login,
       beforeEnter: isLoggedIn,
+    },
+    {
+      path: '/demo',
+      name: 'DemoPage',
+      component: DemoPage,
     },
     {
       path: '/user',

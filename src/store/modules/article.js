@@ -1,5 +1,5 @@
 import * as types from '../mutation-types';
-import articleApi from '../../api/article';
+import articleService from '../../services/article';
 
 /* eslint-disable no-param-reassign */
 const STATUS = {
@@ -69,13 +69,13 @@ const mutations = {
 // actions
 const actions = {
   createTemplateArticle(context, user) {
-    return articleApi.createTemplateArticle(user);
+    return articleService.createTemplateArticle(user);
   },
   readArticle(context, { articleId, router }) {
     context.commit(types.RESET_ARTICLE_STATE);
     context.commit(types.UPDATE_LOADING_FLAG, true);
     context.commit(types.SET_ARTICLE_ID, articleId);
-    return articleApi.readArticle(articleId).then(
+    return articleService.readArticle(articleId).then(
       (articleContent) => {
         context.commit(types.UPDATE_LOADING_FLAG, false);
         if (articleContent) {
@@ -85,33 +85,33 @@ const actions = {
           }
           // increase number of views by one
           const views = articleContent.views + 1;
-          articleApi.updateArticleProperty(context.state.articleId, { views });
+          articleService.updateArticleProperty(context.state.articleId, { views });
         } else {
           router.push({ path: 'page-not-found' });
         }
       });
   },
   readAllArticles(context) {
-    articleApi.readAllArticles()
+    articleService.readAllArticles()
     .then(articles => context.commit(types.READ_ALL_ARTICLES, articles));
   },
   readArticlesByUser(context, userId) {
-    articleApi.readArticlesByUser(userId)
+    articleService.readArticlesByUser(userId)
     .then(articles => context.commit(types.READ_USER_ARTICLES, articles));
   },
   updateArticle(context, updateData) {
-    articleApi.updateArticle(updateData);
+    articleService.updateArticle(updateData);
   },
   uploadImage(context, formData) {
     context.commit(types.UPDATE_UPLOADING_STATUS, STATUS.SAVING);
-    articleApi.uploadImage(formData)
+    articleService.uploadImage(formData)
       .then(img => context.dispatch('setArticleCoverImage', img));
   },
   updateUploadStatus(context, uploadStatus) {
     context.commit(types.UPDATE_UPLOADING_STATUS, uploadStatus);
   },
   setArticleCoverImage(context, img) {
-    articleApi.setArticleCoverImage(context.state.articleId, img).then(
+    articleService.setArticleCoverImage(context.state.articleId, img).then(
       () => {
         context.commit(types.UPDATE_UPLOADING_STATUS, STATUS.SUCCESS);
         context.commit(types.UPDATE_COVER_IMAGE, img);
