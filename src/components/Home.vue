@@ -1,6 +1,6 @@
 <template>
-  <div class="ui container">
-    <article-list></article-list>
+  <div>
+    <article-list class="ui container"></article-list>
     <!-- <counter></counter> -->
     <!-- <div class="ui divider"></div>
     <h2>Ecosystem</h2>
