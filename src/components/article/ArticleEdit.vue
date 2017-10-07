@@ -17,20 +17,20 @@
           :className="'basic positive'"></async-button>
       </div>
       <br>
-      <markdown-editor
+      <!-- <markdown-editor
         language="en" 
         value="write a story"
         v-model="article.content">
-      </markdown-editor>
+      </markdown-editor> -->
       <br>
       <article-tag :on-change="onChangeTags" :tags="article.tags" placeholder="Add Tag"></article-tag>
       <div class="page-footer"></div>
     </div>
-    <!-- <mavon-editor
+    <mavon-editor
       v-model="article.content"
       value="# Write your story..."
       language="en"
-      style="height: 100%"></mavon-editor> -->
+      style="height: 95%"></mavon-editor>
      
   </div>
 </template>

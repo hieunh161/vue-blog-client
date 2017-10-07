@@ -114,7 +114,7 @@
 /* .mrkdwn-body .pl-mi2 {
   color: #f6f8fa;
   background-color: #005cc5;
-} */
+} */  
 
 .mrkdwn-body .pl-mdr {
   font-weight: bold;
@@ -409,7 +409,7 @@
 .mrkdwn-body table,
 .mrkdwn-body pre {
   margin-top: 0;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
 }
 
 .mrkdwn-body hr {
