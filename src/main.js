@@ -29,14 +29,14 @@ Vue.prototype.$firebase = firebase.initializeApp({
 });
 
 /* eslint-disable no-new */
-const unsubscribe = firebase.auth().onAuthStateChanged(() => {
-  new Vue({
-    el: '#app',
-    router,
-    store,
-    directive,
-    template: '<App/>',
-    components: { App },
-  });
-  unsubscribe();
+// const unsubscribe = firebase.auth().onAuthStateChanged(() => {
+new Vue({
+  el: '#app',
+  router,
+  store,
+  directive,
+  template: '<App/>',
+  components: { App },
 });
+  // unsubscribe();
+// });

@@ -23,15 +23,15 @@
                   <i class="heart outline red like icon"></i>
                   {{item.likes}} likes
                 </span>
-                <i class="comment icon"></i>
-                {{item.comments.length}} comments
+                <i class="unhide icon"></i>
+                {{item.views}} views
               </div>
             </div>
             <div class="extra content">
-              <div class="ui large transparent left icon input">
+              <!-- <div class="ui large transparent left icon input">
                 <i class="heart outline icon"></i>
                 <input type="text" placeholder="Add Comment...">
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

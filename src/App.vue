@@ -31,7 +31,7 @@ export default {
       if (user && this.$route.path === '/login') {
         this.$router.replace('/');
       } else if (!user && this.$route.path !== '/login') {
-        this.$router.replace('/login');
+        // this.$router.replace('/login');
       }
     });
   },
@@ -59,7 +59,7 @@ a {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;
   background-color: #f7f7f7;
 }
 </style>

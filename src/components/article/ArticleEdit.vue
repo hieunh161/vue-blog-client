@@ -2,36 +2,32 @@
   <div id="article-edit-page">
     <loader v-if="isLoading"></loader>
     <div v-if="!isLoading">
-      <div class="ui transparent massive left input fluid large-font">
+      <div class="ui transparent massive left input fluid large-font article-title">
         <input type="text" 
         v-model="article.title"
         placeholder="Title...">
       </div>
-      <image-uploader></image-uploader>
-      <br>
-      <div>
+      <image-uploader class="article-cover-image"></image-uploader>
+      <article-tag class="article-tag" :on-change="onChangeTags" :tags="article.tags" placeholder="Add Tag"></article-tag>
+      <markdown-editor
+        language="en" 
+        value="write a story"
+        v-model="article.content">
+      </markdown-editor>
+      <!-- <mavon-editor
+        v-model="article.content"
+        value="# Write your story..."
+        language="en"
+        style="height: 95%"></mavon-editor> -->
+      <div class="article-action">
         <div class="ui button basic" @click="saveArticle">Save Draft</div>
         <div class="ui button basic positive" @click="publicArticle">Public Article</div>
         <async-button 
           :text="'Async Button'"
           :className="'basic positive'"></async-button>
       </div>
-      <br>
-      <!-- <markdown-editor
-        language="en" 
-        value="write a story"
-        v-model="article.content">
-      </markdown-editor> -->
-      <br>
-      <article-tag :on-change="onChangeTags" :tags="article.tags" placeholder="Add Tag"></article-tag>
       <div class="page-footer"></div>
     </div>
-    <mavon-editor
-      v-model="article.content"
-      value="# Write your story..."
-      language="en"
-      style="height: 95%"></mavon-editor>
-     
   </div>
 </template>
 
@@ -117,12 +113,29 @@ export default {
   height: 580px;
 }
 
+.auto-textarea-wrapper .auto-textarea-input {
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif !important;
+}
+
 .large-font {
   font-size: 40px !important;
 }
 
+.article-title {
+  margin: 8px 0px;
+}
+
+.article-tag,
+.article-cover-image {
+  margin: 8px 0px;
+}
+
+.article-action{
+  margin-bottom: 20px;
+}
+
 #article-edit-page {
-  margin: 0px 20px 0px 20px;
+  margin: 0px 20px 0px 24px;
 }
 
 .page-footer {

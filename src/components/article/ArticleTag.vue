@@ -1,11 +1,13 @@
 
 <template>
-  <div @click="focusNewTag()" v-bind:class="{'read-only': readOnly}" class="vue-input-tag-wrapper">
-    <span v-for="(tag, index) in tags" v-bind:key="index" class="input-tag">
+  <div @click="focusNewTag()" v-bind:class="{'read-only': readOnly}" class="ui small input ">
+    <span v-for="(tag, index) in tags" v-bind:key="index" class="ui label  basic article-tag">
       <span>{{ tag }}</span>
-      <a v-if="!readOnly" @click.prevent.stop="remove(index)" class="remove"></a>
+      <i class="delete icon" v-if="!readOnly" @click.prevent.stop="remove(index)"></i>
     </span>
-    <input v-if="!readOnly" v-bind:placeholder="placeholder" type="text" v-model="newTag" v-on:keydown.delete.stop="removeLastTag()" v-on:keydown.enter.188.tab.prevent.stop="addNew(newTag)" class="new-tag"/>
+    <input v-if="!readOnly" v-bind:placeholder="placeholder" class="article-new-tag"
+    type="text" v-model="newTag" v-on:keydown.delete.stop="removeLastTag()" 
+    v-on:keydown.enter.188.tab.prevent.stop="addNew(newTag)"/>
   </div>
 </template>
 
@@ -50,7 +52,7 @@ export default {
   methods: {
     focusNewTag() {
       if (!this.readOnly) {
-        this.$el.querySelector('.new-tag').focus();
+        this.$el.querySelector('.article-new-tag').focus();
       }
     },
     addNew(tag) {
@@ -87,54 +89,11 @@ export default {
 };
 </script>
 
-<style>
-  .vue-input-tag-wrapper {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    overflow: hidden;
-    padding-left: 4px;
-    padding-top: 4px;
-    cursor: text;
-    text-align: left;
-    -webkit-appearance: textfield;
-  }
-  .vue-input-tag-wrapper .input-tag {
-    background-color: #cde69c;
-    border-radius: 2px;
-    border: 1px solid #a5d24a;
-    color: #638421;
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 400;
-    margin-bottom: 4px;
-    margin-right: 4px;
-    padding: 3px;
-  }
-  .vue-input-tag-wrapper .input-tag .remove {
-    cursor: pointer;
-    font-weight: bold;
-    color: #638421;
-  }
-  .vue-input-tag-wrapper .input-tag .remove:hover {
-    text-decoration: none;
-  }
-  .vue-input-tag-wrapper .input-tag .remove::before {
-    content: " x";
-  }
-  .vue-input-tag-wrapper .new-tag {
-    background: transparent;
-    border: 0;
-    color: #777;
-    font-size: 13px;
-    font-weight: 400;
-    margin-bottom: 6px;
-    margin-top: 1px;
-    outline: none;
-    padding: 4px;
-    padding-left: 0;
-    width: 80px;
-  }
-  .vue-input-tag-wrapper.read-only {
-    cursor: default;
-  }
+<style scoped>
+.article-tag {
+  margin-right: 4px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: normal;
+}
 </style>
