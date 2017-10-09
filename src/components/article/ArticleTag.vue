@@ -7,8 +7,7 @@
     </span>
     <input v-if="!readOnly" 
       v-bind:placeholder="placeholder" class="article-new-tag"
-      type="text" v-model="newTag" 
-      v-on:keydown.delete.stop="removeLastTag()" 
+      type="text" v-model="newTag"
       v-on:keydown.enter.188.tab.prevent.stop="addNew(newTag)"/>
   </div>
 </template>
@@ -52,7 +51,9 @@ export default {
   data() {
     return {
       newTag: '',
+      firstChange: true,
       tags: this.initTags,
+      initialTags: {},
     };
   },
   methods: {
@@ -61,10 +62,17 @@ export default {
         this.$el.querySelector('.article-new-tag').focus();
       }
     },
+    saveInitState() {
+      if (this.firstChange) {
+        this.firstChange = false;
+        this.initialTags = _.cloneDeep(this.tags);
+      }
+    },
     addNew(tag) {
       if (!this.tags) {
         this.tags = {};
       }
+      this.saveInitState();
       const isValid = tag && !_.has(this.tags, tag) && this.validateIfNeeded(tag);
       if (isValid) {
         Vue.set(this.tags, tag, true);
@@ -81,17 +89,19 @@ export default {
       return true;
     },
     remove(tag) {
+      this.saveInitState();
       Vue.delete(this.tags, tag);
-      this.tagChange();
-    },
-    removeLastTag() {
-      if (this.newTag) { return; }
       this.tagChange();
     },
     tagChange() {
       if (this.onChange) {
-        // avoid passing the observer
-        this.onChange(this.tags);
+        // console.log(this.initTags);
+        // // avoid passing the observer
+        const addTags = _.difference(Object.keys(this.tags), Object.keys(this.initialTags));
+        const deleteTags = _.difference(Object.keys(this.initialTags), Object.keys(this.tags));
+        // console.log(addTags);
+        // console.log(deleteTags);
+        this.onChange(this.tags, addTags, deleteTags);
       }
     },
   },

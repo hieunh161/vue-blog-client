@@ -20,11 +20,13 @@
         language="en"
         style="height: 95%"></mavon-editor> -->
       <div class="article-action">
-        <div class="ui button basic" @click="saveArticle">Save Draft</div>
-        <div class="ui button basic positive" @click="publicArticle">Public Article</div>
-        <async-button 
+        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveArticle">Save Draft</div>
+        <div class="ui button basic positive" v-if="article.status === 0" :class='{loading:isPublishingArticle}' @click="publishArticle">Publish Article</div>
+        <div class="ui button basic positive" v-if="article.status !== 0" :class='{loading:isPublishingArticle}' @click="privateArticle">Private Article</div>
+        <div class="ui button basic positive" v-if="article.status !== 0" @click="viewArticle">View Article</div>
+        <!-- <async-button 
           :text="'Async Button'"
-          :className="'basic positive'"></async-button>
+          :className="'basic positive'"></async-button> -->
       </div>
       <div class="page-footer"></div>
     </div>
@@ -33,8 +35,8 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-// import { mavonEditor } from 'mavon-editor';
 import { markdownEditor } from 'vue-simplemde';
+// import { mavonEditor } from 'mavon-editor';
 // import 'mavon-editor/dist/css/index.css';
 import AsyncButton from '../common/AsyncButton';
 import ImageUploader from './ImageUploader';
@@ -74,22 +76,34 @@ export default {
     saveArticle() {
       this.article.lastModified = Date.now();
       this.article.slugify = slugifyUrl(this.article.title);
-      this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article });
+      this.$store.dispatch('article/saveDraft', { articleId: this.articleId, article: this.article });
     },
-    publicArticle() {
+    publishArticle() {
       this.article.status = 1;
       this.article.lastModified = Date.now();
-      this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article });
+      this.$store.dispatch('article/publishArticle', { articleId: this.articleId, article: this.article });
     },
-    onChangeTags(tags) {
+    privateArticle() {
+      this.article.status = 0;
+      this.article.lastModified = Date.now();
+      this.$store.dispatch('article/publishArticle', { articleId: this.articleId, article: this.article });
+    },
+    viewArticle() {
+      if (this.article.status === 1) {
+        // redirect to detail page
+        this.$router.push(`/article/${this.articleId}`);
+      }
+    },
+    onChangeTags(tags, addTags, deleteTags) {
       this.article.tags = tags;
       console.log(this.article.tags);
+      console.log(addTags);
+      console.log(deleteTags);
     },
   },
   mounted() {
     // load data from api
-    this.$store.dispatch('article/readArticle',
-      { articleId: this.$route.params.id, router: this.$router });
+    this.$store.dispatch('article/readArticle', { articleId: this.$route.params.id, router: this.$router });
   },
   components: {
     AsyncButton,
@@ -101,7 +115,7 @@ export default {
   },
   computed: {
     ...mapGetters('authenticate', ['isAdmin', 'currentUserInfo']),
-    ...mapGetters('article', ['isLoading', 'articleId']),
+    ...mapGetters('article', ['isLoading', 'articleId', 'isSavingDraft', 'isPublishingArticle']),
     ...mapState('article', ['article']),
   },
 };

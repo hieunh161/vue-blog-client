@@ -11,9 +11,10 @@ const updateTag = (tag) => {
       };
     }
     return Object.assign({}, currentTag, { count: currentTag.count + 1, modified: Date.now() });
-  }, (err, committed, snapshot) => {
-    console.log(`data: ${snapshot.val()}`);
-    console.log(`committed: ${committed}`);
+  }, (err) => {
+    if (err) {
+      console.log(err);
+    }
   });
 };
 

@@ -15,8 +15,11 @@ const INITIAL_STATE = {
   article: {},
   allArticles: [],
   userArticles: [],
-  isLoading: false,
   uploadStatus: STATUS.INITIAL,
+  // loading status
+  isLoading: false,
+  isSavingDraft: false,
+  isPublishingArticle: false,
 };
 
 // initial state
@@ -25,12 +28,15 @@ const state = INITIAL_STATE;
 // getters
 const getters = {
   articleId: s => s.articleId,
-  isLoading: s => s.isLoading,
   uploadStatus: s => s.uploadStatus,
   coverImage: s => s.article.coverImage,
   article: s => s.article,
   allArticles: s => s.allArticles,
   userArticles: s => s.userArticles,
+  // loading status
+  isLoading: s => s.isLoading,
+  isSavingDraft: s => s.isSavingDraft,
+  isPublishingArticle: s => s.isPublishingArticle,
 };
 
 // mutations
@@ -61,6 +67,14 @@ const mutations = {
   [types.UPDATE_UPLOADING_STATUS](s, status) {
     s.uploadStatus = status;
   },
+  // edit article
+  [types.ARTICLE_UPDATE_SAVING_DRAFT](s, status) {
+    s.isSavingDraft = status;
+  },
+  [types.ARTICLE_UPDATE_PUBLISH](s, status) {
+    s.isPublishingArticle = status;
+  },
+  // reset state
   [types.RESET_ARTICLE_STATE](s) {
     /* eslint-disable no-undef */
     Object.assign(s, INITIAL_STATE);
@@ -102,9 +116,19 @@ const actions = {
   },
   updateArticle(context, updateData) {
     // update tags
-    console.log(context.state.article);
-    tagService.insertTags(context.state.article.tags).then(() => {
-      articleService.updateArticle(updateData);
+    return tagService.insertTags(context.state.article.tags)
+    .then(() => articleService.updateArticle(updateData));
+  },
+  saveDraft(context, updateData) {
+    context.commit(types.ARTICLE_UPDATE_SAVING_DRAFT, true);
+    context.dispatch('updateArticle', updateData).then(() => {
+      context.commit(types.ARTICLE_UPDATE_SAVING_DRAFT, false);
+    });
+  },
+  publishArticle(context, updateData) {
+    context.commit(types.ARTICLE_UPDATE_PUBLISH, true);
+    context.dispatch('updateArticle', updateData).then(() => {
+      context.commit(types.ARTICLE_UPDATE_PUBLISH, false);
     });
   },
   uploadImage(context, formData) {
