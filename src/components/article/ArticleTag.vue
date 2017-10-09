@@ -1,17 +1,22 @@
 
 <template>
   <div @click="focusNewTag()" v-bind:class="{'read-only': readOnly}" class="ui small input ">
-    <span v-for="(tag, index) in tags" v-bind:key="index" class="ui label  basic article-tag">
+    <span v-for="(value, tag, index) in tags" v-bind:key="tag" class="ui label  basic article-tag">
       <span>{{ tag }}</span>
-      <i class="delete icon" v-if="!readOnly" @click.prevent.stop="remove(index)"></i>
+      <i class="delete icon" v-if="!readOnly" @click.prevent.stop="remove(tag)"></i>
     </span>
-    <input v-if="!readOnly" v-bind:placeholder="placeholder" class="article-new-tag"
-    type="text" v-model="newTag" v-on:keydown.delete.stop="removeLastTag()" 
-    v-on:keydown.enter.188.tab.prevent.stop="addNew(newTag)"/>
+    <input v-if="!readOnly" 
+      v-bind:placeholder="placeholder" class="article-new-tag"
+      type="text" v-model="newTag" 
+      v-on:keydown.delete.stop="removeLastTag()" 
+      v-on:keydown.enter.188.tab.prevent.stop="addNew(newTag)"/>
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import _ from 'lodash';
+
 /*eslint-disable*/
 const validators = {
   email: new RegExp(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
@@ -24,9 +29,9 @@ const validators = {
 export default {
   name: 'InputTag',
   props: {
-    tags: {
-      type: Array,
-      default: () => [],
+    initTags: {
+      type: Object,
+      default: () => {},
     },
     placeholder: {
       type: String,
@@ -47,6 +52,7 @@ export default {
   data() {
     return {
       newTag: '',
+      tags: this.initTags,
     };
   },
   methods: {
@@ -56,8 +62,12 @@ export default {
       }
     },
     addNew(tag) {
-      if (tag && this.tags.indexOf(tag) === -1 && this.validateIfNeeded(tag)) {
-        this.tags.push(tag);
+      if (!this.tags) {
+        this.tags = {};
+      }
+      const isValid = tag && !_.has(this.tags, tag) && this.validateIfNeeded(tag);
+      if (isValid) {
+        Vue.set(this.tags, tag, true);
         this.tagChange();
       }
       this.newTag = '';
@@ -70,19 +80,18 @@ export default {
       }
       return true;
     },
-    remove(index) {
-      this.tags.splice(index, 1);
+    remove(tag) {
+      Vue.delete(this.tags, tag);
       this.tagChange();
     },
     removeLastTag() {
       if (this.newTag) { return; }
-      this.tags.pop();
       this.tagChange();
     },
     tagChange() {
       if (this.onChange) {
         // avoid passing the observer
-        this.onChange(JSON.parse(JSON.stringify(this.tags)));
+        this.onChange(this.tags);
       }
     },
   },

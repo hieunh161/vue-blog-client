@@ -1,5 +1,6 @@
 import * as types from '../mutation-types';
 import articleService from '../../services/article';
+import tagService from '../../services/tag';
 
 /* eslint-disable no-param-reassign */
 const STATUS = {
@@ -91,16 +92,20 @@ const actions = {
         }
       });
   },
-  readAllArticles(context) {
+  readAllArticles({ commit }) {
     articleService.readAllArticles()
-    .then(articles => context.commit(types.READ_ALL_ARTICLES, articles));
+    .then(articles => commit(types.READ_ALL_ARTICLES, articles));
   },
   readArticlesByUser(context, userId) {
     articleService.readArticlesByUser(userId)
     .then(articles => context.commit(types.READ_USER_ARTICLES, articles));
   },
   updateArticle(context, updateData) {
-    articleService.updateArticle(updateData);
+    // update tags
+    console.log(context.state.article);
+    tagService.insertTags(context.state.article.tags).then(() => {
+      articleService.updateArticle(updateData);
+    });
   },
   uploadImage(context, formData) {
     context.commit(types.UPDATE_UPLOADING_STATUS, STATUS.SAVING);

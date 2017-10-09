@@ -11,18 +11,18 @@ const createTemplateArticle = (metaData) => {
     },
     title: 'Article Title',
     coverImage: {
-      url: 'https://i.imgur.com/rrldhV3.png',
+      url: 'https://i.imgur.com/7ik1rK1.jpg',
     },
     content: 'Write an article',
     slugify: '',
-    category: [],
-    tags: [],
+    category: {},
+    tags: {},
     createdDate: Date.now(),
     lastModified: Date.now(),
     status: 0,
-    comments: [],
+    comments: {},
     views: 0,
-    likes: 0,
+    likes: {},
   };
   const articleId = uuidv4();
   return firebase.database().ref('article').child(articleId).set(content)

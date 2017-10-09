@@ -4,11 +4,8 @@ import Router from 'vue-router';
 import Home from '@/components/Home';
 import Login from '@/components/Login';
 import UserProfile from '@/components/UserProfile';
-import Article from '@/components/Article';
-import ArticeCreate from '@/components/ArticeCreate';
-import ArticleList from '@/components/ArticleList';
 import ArticleDetail from '@/components/article/ArticleDetail';
-import ArticleEdit from '@/components/article/ArticleEdit';
+import ArticleEditor from '@/components/article/ArticleEditor';
 import ArtileUserList from '@/components/article/ArtileUserList';
 import DemoPage from '@/components/demo/DemoPage';
 import PageNotFound from '@/components/PageNotFound';
@@ -69,32 +66,32 @@ export default new Router({
     },
     {
       path: '/article/:id/edit',
-      component: ArticleEdit,
+      component: ArticleEditor,
     },
     {
       path: '/user/:id/article',
       component: ArtileUserList,
     },
-    {
-      path: '/article/', 
-      component: Article,
-      children: [
-        {
-          // UserProfile will be rendered inside User's <router-view>
-          // when /user/:id/profile is matched
-          path: 'create',
-          component: ArticeCreate,
-        },
-        {
-          path: 'list',
-          component: ArticleList,
-        },
-        {
-          path: '',
-          component: ArticleList,
-        },
-      ],
-    },
+    // {
+    //   path: '/article/', 
+    //   component: Article,
+    //   children: [
+    //     {
+    //       // UserProfile will be rendered inside User's <router-view>
+    //       // when /user/:id/profile is matched
+    //       path: 'create',
+    //       component: ArticeCreate,
+    //     },
+    //     {
+    //       path: 'list',
+    //       component: ArticleList,
+    //     },
+    //     {
+    //       path: '',
+    //       component: ArticleList,
+    //     },
+    //   ],
+    // },
     {
       path: '*',
       name: 'PageNotFound',

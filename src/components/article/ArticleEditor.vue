@@ -8,7 +8,7 @@
         placeholder="Title...">
       </div>
       <image-uploader class="article-cover-image"></image-uploader>
-      <article-tag class="article-tag" :on-change="onChangeTags" :tags="article.tags" placeholder="Add Tag"></article-tag>
+      <article-tag class="article-tag" :on-change="onChangeTags" :initTags="article.tags" placeholder="Add Tag"></article-tag>
       <markdown-editor
         language="en" 
         value="write a story"
@@ -33,9 +33,9 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { mavonEditor } from 'mavon-editor';
+// import { mavonEditor } from 'mavon-editor';
 import { markdownEditor } from 'vue-simplemde';
-import 'mavon-editor/dist/css/index.css';
+// import 'mavon-editor/dist/css/index.css';
 import AsyncButton from '../common/AsyncButton';
 import ImageUploader from './ImageUploader';
 import ArticleTag from './ArticleTag';
@@ -81,7 +81,8 @@ export default {
       this.article.lastModified = Date.now();
       this.$store.dispatch('article/updateArticle', { articleId: this.articleId, article: this.article });
     },
-    onChangeTags() {
+    onChangeTags(tags) {
+      this.article.tags = tags;
       console.log(this.article.tags);
     },
   },
@@ -94,7 +95,7 @@ export default {
     AsyncButton,
     ImageUploader,
     markdownEditor,
-    mavonEditor,
+    // mavonEditor,
     ArticleTag,
     Loader,
   },
@@ -111,10 +112,6 @@ export default {
   margin: auto;
   width: 95%;
   height: 580px;
-}
-
-.auto-textarea-wrapper .auto-textarea-input {
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif !important;
 }
 
 .large-font {
