@@ -11,10 +11,12 @@ const STATUS = {
 };
 
 const INITIAL_STATE = {
+  // article
   articleId: '',
   article: {},
   allArticles: [],
   userArticles: [],
+  // image uploading
   uploadStatus: STATUS.INITIAL,
   // loading status
   isLoading: false,
@@ -77,13 +79,17 @@ const mutations = {
   // reset state
   [types.RESET_ARTICLE_STATE](s) {
     /* eslint-disable no-undef */
-    Object.assign(s, INITIAL_STATE);
+    console.log('reset article');
+    s = Object.assign(s, INITIAL_STATE);
+    console.log(s);
   },
 };
 
 // actions
 const actions = {
   createTemplateArticle(context, user) {
+    // reset all article data to default
+    context.commit(types.RESET_ARTICLE_STATE);
     return articleService.createTemplateArticle(user);
   },
   readArticle(context, { articleId, router }) {
@@ -116,7 +122,8 @@ const actions = {
   },
   updateArticle(context, updateData) {
     // update tags
-    return tagService.insertTags(context.state.article.tags)
+    return tagService.updateTags(updateData.addTags)
+    .then(() => tagService.removeTags(updateData.deleteTags))
     .then(() => articleService.updateArticle(updateData));
   },
   saveDraft(context, updateData) {

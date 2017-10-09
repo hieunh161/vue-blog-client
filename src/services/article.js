@@ -11,7 +11,7 @@ const createTemplateArticle = (metaData) => {
     },
     title: 'Article Title',
     coverImage: {
-      url: 'https://i.imgur.com/7ik1rK1.jpg',
+      url: 'https://i.imgur.com/I3QyKzY.png',
     },
     content: 'Write an article',
     slugify: '',

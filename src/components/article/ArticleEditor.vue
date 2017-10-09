@@ -2,14 +2,22 @@
   <div id="article-edit-page">
     <loader v-if="isLoading"></loader>
     <div v-if="!isLoading">
-      <div class="ui transparent massive left input fluid large-font article-title">
+      <div class="ui transparent massive left input fluid article-title">
         <input type="text" 
         v-model="article.title"
         placeholder="Title...">
       </div>
       <image-uploader class="article-cover-image"></image-uploader>
       <article-tag class="article-tag" :on-change="onChangeTags" :initTags="article.tags" placeholder="Add Tag"></article-tag>
+      <div class="article-action">
+        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveArticle">Save Draft</div>
+        <div class="ui button basic positive" v-if="article.status === 0" :class='{loading:isPublishingArticle}' @click="() => publishArticle(1)">Publish Article</div>
+        <div class="ui button basic positive" v-if="article.status !== 0" :class='{loading:isPublishingArticle}' @click="() => publishArticle(0)">Private Article</div>
+        <div class="ui button basic positive" v-if="article.status !== 0" @click="viewArticle">View Article</div>
+        <div class="ui button basic positive" @click="showUploadModal">Upload Image</div>
+      </div>
       <markdown-editor
+        class="article-editor"
         language="en" 
         value="write a story"
         v-model="article.content">
@@ -19,15 +27,8 @@
         value="# Write your story..."
         language="en"
         style="height: 95%"></mavon-editor> -->
-      <div class="article-action">
-        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveArticle">Save Draft</div>
-        <div class="ui button basic positive" v-if="article.status === 0" :class='{loading:isPublishingArticle}' @click="publishArticle">Publish Article</div>
-        <div class="ui button basic positive" v-if="article.status !== 0" :class='{loading:isPublishingArticle}' @click="privateArticle">Private Article</div>
-        <div class="ui button basic positive" v-if="article.status !== 0" @click="viewArticle">View Article</div>
-        <!-- <async-button 
-          :text="'Async Button'"
-          :className="'basic positive'"></async-button> -->
-      </div>
+      <!-- modal upload file -->
+      <image-upload-modal :initImgs="article.images"></image-upload-modal>
       <div class="page-footer"></div>
     </div>
   </div>
@@ -42,6 +43,7 @@ import AsyncButton from '../common/AsyncButton';
 import ImageUploader from './ImageUploader';
 import ArticleTag from './ArticleTag';
 import Loader from '../common/Loader';
+import ImageUploadModal from './ImageUploadModal';
 
 const slugifyUrl = (str, separator) => {
   const slug = str
@@ -66,39 +68,44 @@ export default {
   data() {
     return {
       // article: {},
+      message: 'from parent',
+      addTags: [],
+      deleteTags: [],
     };
   },
   methods: {
-    showSuccess(file, response) {
-      console.log('A file was successfully uploaded');
-      console.log(response);
-    },
     saveArticle() {
       this.article.lastModified = Date.now();
       this.article.slugify = slugifyUrl(this.article.title);
-      this.$store.dispatch('article/saveDraft', { articleId: this.articleId, article: this.article });
+      this.$store.dispatch('article/saveDraft', { articleId: this.articleId, article: this.article, addTags: this.addTags, deleteTags: this.deleteTags });
     },
-    publishArticle() {
-      this.article.status = 1;
+    publishArticle(status) {
+      this.article.status = status;
       this.article.lastModified = Date.now();
-      this.$store.dispatch('article/publishArticle', { articleId: this.articleId, article: this.article });
-    },
-    privateArticle() {
-      this.article.status = 0;
-      this.article.lastModified = Date.now();
-      this.$store.dispatch('article/publishArticle', { articleId: this.articleId, article: this.article });
+      this.article.slugify = slugifyUrl(this.article.title);
+      this.$store.dispatch('article/publishArticle', { articleId: this.articleId, article: this.article, addTags: this.addTags, deleteTags: this.deleteTags });
     },
     viewArticle() {
+      // view article when article in publish state only
       if (this.article.status === 1) {
-        // redirect to detail page
         this.$router.push(`/article/${this.articleId}`);
       }
     },
+    showUploadModal() {
+      // console.log($('.ui.modal').modal('is active'));
+      // $('.ui.modal').modal('show');
+      this.$emit('showUploadModal');
+    },
+    // closeUploadModal() {
+    //   $('.ui.modal').modal('hide');
+    // },
+    // uploadImageToImgur() {
+    //   this.message = 'uploading...';
+    // },
     onChangeTags(tags, addTags, deleteTags) {
       this.article.tags = tags;
-      console.log(this.article.tags);
-      console.log(addTags);
-      console.log(deleteTags);
+      this.addTags = addTags;
+      this.deleteTags = deleteTags;
     },
   },
   mounted() {
@@ -108,6 +115,7 @@ export default {
   components: {
     AsyncButton,
     ImageUploader,
+    ImageUploadModal,
     markdownEditor,
     // mavonEditor,
     ArticleTag,
@@ -128,12 +136,13 @@ export default {
   height: 580px;
 }
 
-.large-font {
-  font-size: 40px !important;
+.article-editor {
+  margin-bottom: 24px;
 }
 
 .article-title {
   margin: 8px 0px;
+  font-size: 40px !important;
 }
 
 .article-tag,
@@ -142,7 +151,7 @@ export default {
 }
 
 .article-action{
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 
 #article-edit-page {

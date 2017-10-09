@@ -5,8 +5,8 @@
     <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
       <div class="dropbox">
         <input type="file"
-          :name="uploadFieldName" 
           :disabled="isSaving" 
+          name="image"
           @change="filesChange($event.target.name, $event.target.files);"
           accept="image/*" class="input-file">
           <p v-if="isInitial">
@@ -20,7 +20,7 @@
     </form>
       <div v-if="isSuccess">
         <p>
-          <a href="javascript:void(0)" @click="reset()">Upload again</a>
+          <a href="javascript:void(0)" @click="reset()">Change Cover Image</a>
         </p>
         <img :src="coverImage.url" class="ui centered medium image" :alt="coverImage.originalName">
       </div>
