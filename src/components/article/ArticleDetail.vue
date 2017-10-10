@@ -11,7 +11,9 @@
             <span class="meta-attribute"><i class="ui icon calendar"></i>{{article.lastModified | formatDate}}</span>
             <span class="meta-attribute"><i class="ui icon wait"></i>{{article.content | minToRead}} min read</span>
             <span class="meta-attribute"><i class="ui icon unhide"></i> {{article.views}}</span>
-            <span class="meta-attribute"><i class="ui icon heart red"></i> {{article.likes}}</span>
+            <span class="meta-attribute">
+              <i class="ui icon heart" :class="{red:isLiked}" @click="likeArticle"></i>
+              {{numberLiked}}</span>
           </p>
         </div>
         <div class="content">
@@ -48,6 +50,7 @@
 import { mapGetters } from 'vuex';
 import hljs from 'highlight.js';
 import marked from 'marked';
+import _ from 'lodash';
 import Loader from '../common/Loader';
 import SocialNetwork from '../common/SocialNetwork';
 
@@ -66,9 +69,25 @@ export default {
   computed: {
     ...mapGetters('article', ['article', 'articleId']),
     ...mapGetters('authenticate', ['currentUser', 'currentUserInfo']),
+    isLiked() {
+      return this.article.likes ? this.article.likes[this.currentUser.uid] : false;
+    },
+    numberLiked() {
+      if (this.article.likes) {
+        // return default value when liked number is undefined
+        return _.countBy(Object.values(this.article.likes)).true || 0;
+      }
+      return 0;
+    },
   },
   methods: {
     marked: input => marked(input),
+    likeArticle() {
+      this.$store.dispatch('article/likeArticle', { articleId: this.articleId, userId: this.currentUser.uid });
+    },
+    unlikeArticle() {
+      this.$store.dispatch('article/unlikeArticle', { articleId: this.articleId, userId: this.currentUser.uid });
+    },
   },
   components: {
     Loader,

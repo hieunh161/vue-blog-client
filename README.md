@@ -36,7 +36,9 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [x] Create detail page with nice css
 [x] Add homepage
 [x] Add footer
-[ ] Tag + Category
+[x] Tag + Category
 [ ] add hightlight or prismjs + markdown css
 [ ] add facebook comments to site
+[ ] add related article
+[ ] paging data of home page based on category
 

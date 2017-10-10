@@ -18,7 +18,7 @@
             <img class="ui avatar image" :src= "avatar"/>
             <span>{{currentUser.displayName}}</span> <i class="dropdown icon"></i>
             <div class="menu">
-              <router-link class="nav-link item"  to="/user"><i class="user icon"></i> User Profile</router-link>
+              <router-link class="nav-link item"  to="/user"><i class="user icon"></i> My Profile</router-link>
               <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> My Articles</router-link>
               <div class="divider"></div>
               <router-link class="nav-link item"  to="/user" v-if="isAdmin"><i class="user icon"></i> Admin</router-link>

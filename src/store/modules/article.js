@@ -77,11 +77,12 @@ const mutations = {
     s.isPublishingArticle = status;
   },
   // reset state
-  [types.RESET_ARTICLE_STATE](s) {
-    /* eslint-disable no-undef */
-    console.log('reset article');
-    s = Object.assign(s, INITIAL_STATE);
-    console.log(s);
+  [types.ARTICLE_UPDATE_DEFAULT_STATE](s) {
+    Object.assign(s, INITIAL_STATE);
+  },
+  // update state of likes when user click like
+  [types.ARTICLE_UPDATE_LIKE_STATE](s, updateData) {
+    Object.assign(s.article.likes, updateData);
   },
 };
 
@@ -89,11 +90,11 @@ const mutations = {
 const actions = {
   createTemplateArticle(context, user) {
     // reset all article data to default
-    context.commit(types.RESET_ARTICLE_STATE);
+    context.commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
     return articleService.createTemplateArticle(user);
   },
   readArticle(context, { articleId, router }) {
-    context.commit(types.RESET_ARTICLE_STATE);
+    context.commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
     context.commit(types.UPDATE_LOADING_FLAG, true);
     context.commit(types.SET_ARTICLE_ID, articleId);
     return articleService.readArticle(articleId).then(
@@ -157,6 +158,22 @@ const actions = {
       context.commit(types.UPDATE_UPLOADING_STATUS, STATUS.FAILED);
     });
   },
+  // like article
+  likeArticle: (context, { articleId, userId }) => {
+    const likedArticle = {};
+    if (!context.state.article.likes[userId]) {
+      likedArticle[userId] = true;
+      context.commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);
+      console.log(context.state.article.likes[userId]);
+      return articleService.likeArticle(articleId, userId);
+    }
+    likedArticle[userId] = false;
+    context.commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);
+    console.log(context.state.article.likes[userId]);
+    return articleService.unlikeArticle(articleId, userId);
+  },
+  unlikeArticle: (context, { articleId, userId }) =>
+    articleService.unlikeArticle(articleId, userId),
 };
 
 export default {

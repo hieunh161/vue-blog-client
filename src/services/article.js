@@ -81,6 +81,29 @@ const uploadImage = (formData) => {
     });
 };
 
+// Likes
+const likeArticle = (articleId, userId) => {
+  const likedUser = {};
+  likedUser[userId] = true;
+  const likedArticle = {};
+  likedArticle[userId] = true;
+  return firebase.database().ref('article').child(articleId).child('likes')
+  .update(likedUser)
+  .then(() => firebase.database().ref('user').child(userId).child('likes')
+  .update(likedArticle));
+};
+
+const unlikeArticle = (articleId, userId) => {
+  const likedUser = {};
+  likedUser[userId] = false;
+  const likedArticle = {};
+  likedArticle[userId] = false;
+  return firebase.database().ref('article').child(articleId).child('likes')
+  .update(likedUser)
+  .then(() => firebase.database().ref('user').child(userId).child('likes')
+  .update(likedArticle));
+};
+
 export default {
   uploadImage,
   readArticle,
@@ -91,4 +114,6 @@ export default {
   deleteArticle,
   createTemplateArticle,
   setArticleCoverImage,
+  likeArticle,
+  unlikeArticle,
 };
