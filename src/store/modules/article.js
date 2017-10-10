@@ -82,6 +82,11 @@ const mutations = {
   },
   // update state of likes when user click like
   [types.ARTICLE_UPDATE_LIKE_STATE](s, updateData) {
+    // console.log(s.article.likes);
+    if (!s.article.likes) {
+      // this.$vm.set(s.article.likes, updateData);
+      s.article.likes = updateData;
+    }
     Object.assign(s.article.likes, updateData);
   },
 };
@@ -123,8 +128,9 @@ const actions = {
   },
   updateArticle(context, updateData) {
     // update tags
-    return tagService.updateTags(updateData.addTags)
-    .then(() => tagService.removeTags(updateData.deleteTags))
+    const { addTags, deleteTags, articleId } = updateData;
+    return tagService.updateTags(addTags, articleId, true)
+    .then(() => tagService.updateTags(deleteTags, articleId, false))
     .then(() => articleService.updateArticle(updateData));
   },
   saveDraft(context, updateData) {
@@ -160,20 +166,12 @@ const actions = {
   },
   // like article
   likeArticle: (context, { articleId, userId }) => {
+    const isLiked = !context.state.article.likes || !context.state.article.likes[userId];
     const likedArticle = {};
-    if (!context.state.article.likes[userId]) {
-      likedArticle[userId] = true;
-      context.commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);
-      console.log(context.state.article.likes[userId]);
-      return articleService.likeArticle(articleId, userId);
-    }
-    likedArticle[userId] = false;
+    likedArticle[userId] = isLiked;
     context.commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);
-    console.log(context.state.article.likes[userId]);
-    return articleService.unlikeArticle(articleId, userId);
+    return articleService.likeArticle(articleId, userId, isLiked);
   },
-  unlikeArticle: (context, { articleId, userId }) =>
-    articleService.unlikeArticle(articleId, userId),
 };
 
 export default {

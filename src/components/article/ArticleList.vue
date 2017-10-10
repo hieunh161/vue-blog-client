@@ -21,7 +21,7 @@
               <div>
                 <span class="right floated">
                   <i class="heart outline red like icon"></i>
-                  {{item.likes}} likes
+                  {{ getLikeNumber(item.likes) }} likes
                 </span>
                 <i class="unhide icon"></i>
                 {{item.views}} views
@@ -42,11 +42,21 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import _ from 'lodash';
 import Loader from '../common/Loader';
 
 export default {
   mounted() {
     this.$store.dispatch('article/readAllArticles');
+  },
+  methods: {
+    getLikeNumber(likes) {
+      if (likes) {
+        // return default value when liked number is undefined
+        return _.countBy(Object.values(likes)).true || 0;
+      }
+      return 0;
+    },
   },
   computed: {
     ...mapGetters('article', ['allArticles']),

@@ -1,16 +1,20 @@
 import * as firebase from 'firebase';
 
-const updateTag = (tag) => {
+const updateTag = (tag, articleId, isAdded) => {
   const tagRef = firebase.database().ref('tags');
   // update transaction and create data if not exist
   return tagRef.child(tag).transaction((currentTag) => {
+    // default value
     if (currentTag === null) {
-      return {
-        count: 1,
-        modified: Date.now(),
-      };
+      const articles = {};
+      articles[articleId] = isAdded;
+      return { count: 1, modified: Date.now(), articles };
     }
-    return Object.assign({}, currentTag, { count: currentTag.count + 1, modified: Date.now() });
+    // update value if exist
+    const articles = currentTag.articles;
+    if (articles) articles[articleId] = isAdded;
+    const count = isAdded ? currentTag.count + 1 : currentTag.count - 1;
+    return { count, modified: Date.now(), articles };
   }, (err) => {
     if (err) {
       console.log(err);
@@ -19,41 +23,14 @@ const updateTag = (tag) => {
 };
 
 // insert tag if not exist else update existing tag counter and last updated
-const updateTags = (tags) => {
+const updateTags = (tags, articleId, isAdded) => {
   const promises = [];
   tags.forEach((tag) => {
-    promises.push(updateTag(tag));
-  });
-  return Promise.all(promises);
-};
-
-const removeTag = (tag) => {
-  const tagRef = firebase.database().ref('tags');
-  // update transaction and create data if not exist
-  return tagRef.child(tag).transaction((currentTag) => {
-    if (currentTag === null) {
-      return {
-        count: 1,
-        modified: Date.now(),
-      };
-    }
-    return Object.assign({}, currentTag, { count: currentTag.count - 1, modified: Date.now() });
-  }, (err) => {
-    if (err) {
-      console.log(err);
-    }
-  });
-};
-
-const removeTags = (tags) => {
-  const promises = [];
-  tags.forEach((tag) => {
-    promises.push(removeTag(tag));
+    promises.push(updateTag(tag, articleId, isAdded));
   });
   return Promise.all(promises);
 };
 
 export default {
   updateTags,
-  removeTags,
 };

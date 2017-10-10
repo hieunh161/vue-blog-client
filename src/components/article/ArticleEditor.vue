@@ -14,7 +14,7 @@
         <div class="ui button basic positive" v-if="article.status === 0" :class='{loading:isPublishingArticle}' @click="() => publishArticle(1)">Publish Article</div>
         <div class="ui button basic positive" v-if="article.status !== 0" :class='{loading:isPublishingArticle}' @click="() => publishArticle(0)">Private Article</div>
         <div class="ui button basic positive" v-if="article.status !== 0" @click="viewArticle">View Article</div>
-        <div class="ui button basic positive" @click="showUploadModal">Upload Image</div>
+        <div class="ui button basic positive" @click="showUploadModal">Upload Image To Imgur</div>
       </div>
       <markdown-editor
         class="article-editor"
@@ -77,12 +77,14 @@ export default {
     saveArticle() {
       this.article.lastModified = Date.now();
       this.article.slugify = slugifyUrl(this.article.title);
+      this.$emit('uploadArticleToServer');
       this.$store.dispatch('article/saveDraft', { articleId: this.articleId, article: this.article, addTags: this.addTags, deleteTags: this.deleteTags });
     },
     publishArticle(status) {
       this.article.status = status;
       this.article.lastModified = Date.now();
       this.article.slugify = slugifyUrl(this.article.title);
+      this.$emit('uploadArticleToServer');
       this.$store.dispatch('article/publishArticle', { articleId: this.articleId, article: this.article, addTags: this.addTags, deleteTags: this.deleteTags });
     },
     viewArticle() {
@@ -92,16 +94,8 @@ export default {
       }
     },
     showUploadModal() {
-      // console.log($('.ui.modal').modal('is active'));
-      // $('.ui.modal').modal('show');
       this.$emit('showUploadModal');
     },
-    // closeUploadModal() {
-    //   $('.ui.modal').modal('hide');
-    // },
-    // uploadImageToImgur() {
-    //   this.message = 'uploading...';
-    // },
     onChangeTags(tags, addTags, deleteTags) {
       this.article.tags = tags;
       this.addTags = addTags;

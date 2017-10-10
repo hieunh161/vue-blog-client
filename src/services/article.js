@@ -2,35 +2,50 @@ import * as firebase from 'firebase';
 import * as axios from 'axios';
 import * as uuidv4 from 'uuid/v4';
 
+const ARTICLE_REF = 'articles';
+const USER_REF = 'users';
+
 const createTemplateArticle = (metaData) => {
   const content = {
     author: {
-      id: metaData.uid,
+      uid: metaData.uid,
       photoURL: metaData.photoURL,
       displayName: metaData.displayName,
     },
     title: 'Article Title',
     coverImage: {
+      height: 400,
+      width: 800,
+      type: 'image/png',
+      link: 'https://i.imgur.com/I3QyKzY.png',
+      name: '',
+      size: 37490,
       url: 'https://i.imgur.com/I3QyKzY.png',
     },
     content: 'Write an article',
     slugify: '',
+    createdDate: Date.now(),
+    modified: Date.now(),
+    published: false,
+    status: 0,
+    views: 0,
+    // {} will not be insert to firebase
     category: {},
     tags: {},
-    createdDate: Date.now(),
-    lastModified: Date.now(),
-    status: 0,
     comments: {},
-    views: 0,
     likes: {},
   };
   const articleId = uuidv4();
-  return firebase.database().ref('article').child(articleId).set(content)
+  const userArticle = {};
+  userArticle[articleId] = true;
+  return firebase.database().ref(ARTICLE_REF).child(articleId).set(content)
+  .then(() => firebase.database().ref(USER_REF).child(metaData.uid).child('aricles')
+  .update(userArticle))
   .then(() => articleId);
 };
 
 const readArticle = (articleId) => {
-  const ref = firebase.database().ref('article').child(articleId);
+  const ref = firebase.database().ref(ARTICLE_REF).child(articleId);
   return ref.once('value').then(snapshot => Promise.resolve(snapshot.val()));
 };
 
@@ -46,23 +61,26 @@ const getListArticleFromSnap = (snapshot) => {
 };
 
 const readAllArticles = () => {
-  const ref = firebase.database().ref('article').orderByChild('views');
+  const ref = firebase.database().ref(ARTICLE_REF).orderByChild('views');
   return ref.once('value').then(snapshot => getListArticleFromSnap(snapshot));
 };
 
 const readArticlesByUser = (userId) => {
-  const ref = firebase.database().ref('article').orderByChild('author/id').equalTo(userId);
+  const ref = firebase.database().ref(ARTICLE_REF).orderByChild('author/uid').equalTo(userId);
   return ref.once('value').then(snapshot => getListArticleFromSnap(snapshot));
 };
 
-const updateArticle = data => firebase.database().ref('article').child(data.articleId).set(data.article);
+const updateArticle = ({ articleId, article }) =>
+firebase.database().ref(ARTICLE_REF).child(articleId).update(article);
 
-const updateArticleProperty = (articleId, data) => firebase.database().ref('article').child(articleId).update(data);
+const updateArticleProperty = (articleId, data) =>
+firebase.database().ref(ARTICLE_REF).child(articleId).update(data);
 
-const setArticleCoverImage = (articleId, img) => firebase.database().ref('article').child(articleId).child('coverImage')
+const setArticleCoverImage = (articleId, img) =>
+firebase.database().ref(ARTICLE_REF).child(articleId).child('coverImage')
 .set(img);
 
-const deleteArticle = articleId => firebase.database().ref('article').child(articleId).remove();
+const deleteArticle = articleId => firebase.database().ref(ARTICLE_REF).child(articleId).remove();
 
 const uploadImage = (formData) => {
   const config = {
@@ -82,25 +100,14 @@ const uploadImage = (formData) => {
 };
 
 // Likes
-const likeArticle = (articleId, userId) => {
+const likeArticle = (articleId, userId, liked) => {
   const likedUser = {};
-  likedUser[userId] = true;
+  likedUser[userId] = liked;
   const likedArticle = {};
-  likedArticle[userId] = true;
-  return firebase.database().ref('article').child(articleId).child('likes')
+  likedArticle[userId] = liked;
+  return firebase.database().ref(ARTICLE_REF).child(articleId).child('likes')
   .update(likedUser)
-  .then(() => firebase.database().ref('user').child(userId).child('likes')
-  .update(likedArticle));
-};
-
-const unlikeArticle = (articleId, userId) => {
-  const likedUser = {};
-  likedUser[userId] = false;
-  const likedArticle = {};
-  likedArticle[userId] = false;
-  return firebase.database().ref('article').child(articleId).child('likes')
-  .update(likedUser)
-  .then(() => firebase.database().ref('user').child(userId).child('likes')
+  .then(() => firebase.database().ref(USER_REF).child(userId).child('likes')
   .update(likedArticle));
 };
 
@@ -115,5 +122,4 @@ export default {
   createTemplateArticle,
   setArticleCoverImage,
   likeArticle,
-  unlikeArticle,
 };

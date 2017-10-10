@@ -42,3 +42,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [ ] add related article
 [ ] paging data of home page based on category
 
+## Problem
+1. Order in add item in firebase (not in date order but in id order)
+2. 
+

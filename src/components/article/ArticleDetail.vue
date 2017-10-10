@@ -85,9 +85,6 @@ export default {
     likeArticle() {
       this.$store.dispatch('article/likeArticle', { articleId: this.articleId, userId: this.currentUser.uid });
     },
-    unlikeArticle() {
-      this.$store.dispatch('article/unlikeArticle', { articleId: this.articleId, userId: this.currentUser.uid });
-    },
   },
   components: {
     Loader,

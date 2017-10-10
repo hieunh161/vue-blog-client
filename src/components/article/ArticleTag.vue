@@ -95,15 +95,17 @@ export default {
     },
     tagChange() {
       if (this.onChange) {
-        // console.log(this.initTags);
-        // // avoid passing the observer
         const addTags = _.difference(Object.keys(this.tags), Object.keys(this.initialTags));
         const deleteTags = _.difference(Object.keys(this.initialTags), Object.keys(this.tags));
-        // console.log(addTags);
-        // console.log(deleteTags);
         this.onChange(this.tags, addTags, deleteTags);
       }
     },
+    resetFirstChange() {
+      this.firstChange = true;
+    },
+  },
+  created() {
+    this.$parent.$on('uploadArticleToServer', this.resetFirstChange);
   },
 };
 </script>
@@ -111,7 +113,7 @@ export default {
 <style scoped>
 .article-tag {
   margin-right: 4px;
-  font-size: 14px;
+  font-size: 14px !important;
   font-style: normal;
   font-weight: normal;
 }
