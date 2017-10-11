@@ -29,13 +29,16 @@
             <div class="ui items">
               <div class="item">
                 <a class="ui tiny image avatar">
-                  <img :src="currentUser.photoURL">
+                  <img :src="article.author.photoURL">
                 </a>
                 <div class="content">
-                  <a class="header">{{currentUser.displayName}}</a>
-                  <div @click="followUser" class="follow ui small button basic green circular">Follow</div>
+                  <a class="header">{{article.author.displayName}}</a>
+                  <div v-if="!isMyArticle">
+                    <div @click="followUser" v-if="!isFollowed" class="follow ui mini button basic green circular"><i class="user icon"></i>Follow</div>
+                    <div @click="unfollowUser" v-if="isFollowed" class="follow ui mini button green circular"><i class="user icon"></i>Unfollow</div>
+                  </div>
                   <div class="description">
-                    <p>{{currentUserInfo ? currentUserInfo.description : ''}}</p>
+                    <p>{{article.author.description}}</p>
                   </div>
                 </div>
               </div>
@@ -73,6 +76,16 @@ export default {
     isLiked() {
       return this.article.likes ? this.article.likes[this.currentUser.uid] : false;
     },
+    isMyArticle() {
+      if (this.article && this.currentUser) {
+        return this.article.author.uid === this.currentUser.uid;
+      }
+      return true;
+    },
+    isFollowed() {
+      return this.currentUserInfo.followings ?
+      this.currentUserInfo.followings[this.article.author.uid] : false;
+    },
     numberLiked() {
       if (this.article.likes) {
         // return default value when liked number is undefined
@@ -88,7 +101,11 @@ export default {
     },
     followUser() {
       // follow article author
-      this.$store.dispatch('user/folloUser', { follower: this.currentUser.uid, followee: this.article.author.uid });
+      this.$store.dispatch('user/followUser', { follower: this.currentUser.uid, following: this.article.author.uid, isFollowed: true });
+    },
+    unfollowUser() {
+      // follow article author
+      this.$store.dispatch('user/followUser', { follower: this.currentUser.uid, following: this.article.author.uid, isFollowed: false });
     },
   },
   components: {

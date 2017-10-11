@@ -1,5 +1,6 @@
 
 // import Vue from 'vue';
+import _ from 'lodash';
 import * as types from '../mutation-types';
 import articleService from '../../services/article';
 import tagService from '../../services/tag';
@@ -27,7 +28,7 @@ const INITIAL_STATE = {
 };
 
 // initial state
-const state = INITIAL_STATE;
+const state = _.cloneDeep(INITIAL_STATE);
 
 // getters
 const getters = {
@@ -80,7 +81,7 @@ const mutations = {
   },
   // reset state
   [types.ARTICLE_UPDATE_DEFAULT_STATE](s) {
-    Object.assign(s, INITIAL_STATE);
+    Object.assign(s, _.cloneDeep(INITIAL_STATE));
   },
   // update state of likes when user click like
   [types.ARTICLE_UPDATE_LIKE_STATE](s, updateData) {

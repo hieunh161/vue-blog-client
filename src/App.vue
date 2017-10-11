@@ -15,7 +15,7 @@ import Firebase from 'firebase';
 export default {
   name: 'app',
   computed: {
-    ...mapState('authenticate', ['user']),
+    ...mapState('user', ['user']),
   },
   components: {
     Navbar,
@@ -24,9 +24,9 @@ export default {
   beforeCreate() {
     Firebase.auth().onAuthStateChanged((user) => {
       // initially user = null, after auth it will be either <fb_user> or false
-      this.$store.commit('authenticate/setUser', user || false);
+      this.$store.dispatch('user/setCurrentUser', user || false);
       if (user) {
-        this.$store.dispatch('authenticate/getUserInfo', user);
+        this.$store.dispatch('user/getUserInfo', user);
       }
       if (user && this.$route.path === '/login') {
         this.$router.replace('/');

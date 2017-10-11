@@ -31,9 +31,21 @@ const signInWithGoogle = () => {
   return firebase.auth().signInWithPopup(provider);
 };
 
+// follow service
+const followUser = (follower, following, isFollowed) => {
+  const followerUser = {};
+  followerUser[following] = isFollowed;
+  const followingUser = {};
+  followingUser[follower] = isFollowed;
+  const userRef = firebase.database().ref(USER_REF);
+  return userRef.child(follower).child('followings').update(followerUser)
+  .then(() => userRef.child(following).child('followers').update(followingUser));
+};
+
 export default {
   getUserInfor,
   signInWithFacebook,
   signInWithGoogle,
   getLocalUserInfo,
+  followUser,
 };

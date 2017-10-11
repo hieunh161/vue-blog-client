@@ -12,11 +12,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ user: 'user/currentUser' }),
+    ...mapGetters('user', ['currentUser', 'currentUserInfo']),
   },
   methods: {
     createTemplateArticle() {
-      this.$store.dispatch('article/createTemplateArticle', this.user)
+      this.$store.dispatch('article/createTemplateArticle', {
+        uid: this.currentUser.uid,
+        photoURL: this.currentUser.photoURL,
+        displayName: this.currentUser.displayName,
+        description: this.currentUserInfo.description,
+      })
       .then((articleId) => {
         // redirect to edit page with created id
         console.log((`done create template Article ${articleId}`));

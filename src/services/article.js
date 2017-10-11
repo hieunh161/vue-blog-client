@@ -11,6 +11,7 @@ const createTemplateArticle = (metaData) => {
       uid: metaData.uid,
       photoURL: metaData.photoURL,
       displayName: metaData.displayName,
+      description: metaData.description,
     },
     title: 'Article Title',
     coverImage: {

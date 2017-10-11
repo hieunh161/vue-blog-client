@@ -1,8 +1,10 @@
 import * as firebase from 'firebase';
+import _ from 'lodash';
+import * as types from '../mutation-types';
 import userService from '../../services/user';
 
 /* eslint-disable no-param-reassign */
-const state = {
+const INITIAL_STATE = {
   facebook: {
     isLoading: false,
     result: null,
@@ -11,12 +13,30 @@ const state = {
   userInfo: null,
 };
 
+const state = _.cloneDeep(INITIAL_STATE);
+
 const mutations = {
-  setUser(s, value) {
+  [types.USER_UPDATE_DEFAULT_STATE](s) {
+    console.log(types.USER_UPDATE_DEFAULT_STATE);
+    console.log('before');
+    console.log(s);
+    Object.assign(s, _.cloneDeep(INITIAL_STATE));
+    console.log(INITIAL_STATE);
+    console.log('after');
+    console.log(s);
+  },
+  [types.USER_UPDATE_CURRENT_USER_STATE](s, value) {
     s.user = value;
   },
-  setUserInfo(s, value) {
-    s.userInfo = value;
+  [types.USER_UPDATE_INFO_STATE](s, value) {
+    s.userInfo = Object.assign({}, s.userInfo, value);
+  },
+  [types.USER_UPDATE_FOLLOW_STATE](s, updateData) {
+    if (!s.userInfo.followings) {
+      s.userInfo = Object.assign({}, s.userInfo, { followings: updateData });
+    }
+    // update likes only if likes object exist
+    s.userInfo.followings = Object.assign({}, s.userInfo.followings, updateData);
   },
 };
 
@@ -24,7 +44,7 @@ const actions = {
   loginWithFacebook: (context) => {
     userService.signInWithFacebook()
     .then((result) => {
-      context.commit('setUser', result.user);
+      context.commit(types.USER_UPDATE_CURRENT_USER_STATE, result.user);
       context.dispatch('getUserInfo', result.user);
     }).catch((error) => {
       console.log(error);
@@ -33,23 +53,32 @@ const actions = {
   loginWithGoogle: (context) => {
     userService.signInWithGoogle()
     .then((result) => {
-      context.commit('setUser', result.user);
+      context.commit(types.USER_UPDATE_CURRENT_USER_STATE, result.user);
       context.dispatch('getUserInfo', result.user);
     }).catch((error) => {
       console.log(error);
     });
   },
+  setCurrentUser: (context, user) => {
+    context.commit(types.USER_UPDATE_CURRENT_USER_STATE, user);
+  },
   getUserInfo: (context, user) => {
     userService.getLocalUserInfo(user)
-    .then(userInfo => context.commit('setUserInfo', userInfo));
+    .then(userInfo => context.commit(types.USER_UPDATE_INFO_STATE, userInfo));
   },
   logOut: (context) => {
     firebase.auth().signOut()
     .then(() => {
-      context.commit('setUser', null);
+      context.commit(types.USER_UPDATE_DEFAULT_STATE);
     }, (error) => {
       console.log(`Signout failed, ${error}!`);
     });
+  },
+  followUser(context, { follower, following, isFollowed }) {
+    const followerUser = {};
+    followerUser[following] = isFollowed;
+    context.commit(types.USER_UPDATE_FOLLOW_STATE, followerUser);
+    return userService.followUser(follower, following, isFollowed);
   },
 };
 
