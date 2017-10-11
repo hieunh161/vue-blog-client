@@ -38,11 +38,11 @@ import TemplateArticle from './article/TemplateArticle';
 export default {
   name: 'navbar',
   computed: {
-    ...mapGetters('authenticate', ['isLoggedIn', 'avatar', 'currentUser', 'isAdmin']),
+    ...mapGetters('user', ['isLoggedIn', 'avatar', 'currentUser', 'isAdmin']),
   },
   methods: {
     logout() {
-      this.$store.dispatch('authenticate/logOut');
+      this.$store.dispatch('user/logOut');
     },
   },
   components: {

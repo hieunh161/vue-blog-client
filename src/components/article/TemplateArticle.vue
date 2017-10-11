@@ -12,7 +12,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ user: 'authenticate/currentUser' }),
+    ...mapGetters({ user: 'user/currentUser' }),
   },
   methods: {
     createTemplateArticle() {

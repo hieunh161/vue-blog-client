@@ -20,10 +20,10 @@ export default {
   name: 'login',
   methods: {
     facebookLogin() {
-      this.$store.dispatch('authenticate/loginWithFacebook');
+      this.$store.dispatch('user/loginWithFacebook');
     },
     googleLogin() {
-      this.$store.dispatch('authenticate/loginWithGoogle');
+      this.$store.dispatch('user/loginWithGoogle');
     },
   },
 };

@@ -33,6 +33,7 @@
                 </a>
                 <div class="content">
                   <a class="header">{{currentUser.displayName}}</a>
+                  <div @click="followUser" class="follow ui small button basic green circular">Follow</div>
                   <div class="description">
                     <p>{{currentUserInfo ? currentUserInfo.description : ''}}</p>
                   </div>
@@ -68,7 +69,7 @@ export default {
   },
   computed: {
     ...mapGetters('article', ['article', 'articleId']),
-    ...mapGetters('authenticate', ['currentUser', 'currentUserInfo']),
+    ...mapGetters('user', ['currentUser', 'currentUserInfo']),
     isLiked() {
       return this.article.likes ? this.article.likes[this.currentUser.uid] : false;
     },
@@ -84,6 +85,10 @@ export default {
     marked: input => marked(input),
     likeArticle() {
       this.$store.dispatch('article/likeArticle', { articleId: this.articleId, userId: this.currentUser.uid });
+    },
+    followUser() {
+      // follow article author
+      this.$store.dispatch('user/folloUser', { follower: this.currentUser.uid, followee: this.article.author.uid });
     },
   },
   components: {
@@ -164,6 +169,10 @@ a.header {
   color: rgba(0,0,0,.54);
   font-size: 13px;
   line-height: 1.4;
+}
+
+.follow {
+  margin-left: 20px;
 }
 
 </style>

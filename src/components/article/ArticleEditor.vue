@@ -116,7 +116,7 @@ export default {
     Loader,
   },
   computed: {
-    ...mapGetters('authenticate', ['isAdmin', 'currentUserInfo']),
+    ...mapGetters('user', ['isAdmin', 'currentUserInfo']),
     ...mapGetters('article', ['isLoading', 'articleId', 'isSavingDraft', 'isPublishingArticle']),
     ...mapState('article', ['article']),
   },

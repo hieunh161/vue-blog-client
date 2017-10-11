@@ -84,13 +84,11 @@ const mutations = {
   },
   // update state of likes when user click like
   [types.ARTICLE_UPDATE_LIKE_STATE](s, updateData) {
-    // console.log(s.article.likes);
     if (!s.article.likes) {
-      // need vue.add for trigger reactive in vuejs
-      // Vue.$add(s.article, 'likes', updateData);
       s.article = Object.assign({}, s.article, { likes: updateData });
     }
-    Object.assign(s.article.likes, updateData);
+    // update likes only if likes object exist
+    s.article.likes = Object.assign({}, s.article.likes, updateData);
   },
 };
 

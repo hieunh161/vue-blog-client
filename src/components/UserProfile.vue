@@ -43,8 +43,8 @@ export default {
   name: 'user-profile',
   computed: {
     ...mapState(['user']),
-    ...mapGetters({ avatar: 'authenticate/avatar' }),
-    ...mapGetters({ displayName: 'authenticate/displayName' }),
+    ...mapGetters({ avatar: 'user/avatar' }),
+    ...mapGetters({ displayName: 'user/displayName' }),
   },
   mounted() {
     /* global $:true */
