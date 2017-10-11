@@ -1,3 +1,5 @@
+
+// import Vue from 'vue';
 import * as types from '../mutation-types';
 import articleService from '../../services/article';
 import tagService from '../../services/tag';
@@ -84,8 +86,9 @@ const mutations = {
   [types.ARTICLE_UPDATE_LIKE_STATE](s, updateData) {
     // console.log(s.article.likes);
     if (!s.article.likes) {
-      // this.$vm.set(s.article.likes, updateData);
-      s.article.likes = updateData;
+      // need vue.add for trigger reactive in vuejs
+      // Vue.$add(s.article, 'likes', updateData);
+      s.article = Object.assign({}, s.article, { likes: updateData });
     }
     Object.assign(s.article.likes, updateData);
   },

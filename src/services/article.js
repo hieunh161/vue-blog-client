@@ -94,7 +94,15 @@ const uploadImage = (formData) => {
   return axios(config)// get data
     .then(x => x.data)
     .then((x) => {
-      const result = Object.assign({}, x.data, { url: x.data.link });
+      const result = {
+        height: x.data.height,
+        width: x.data.width,
+        type: x.data.type,
+        link: x.data.link,
+        name: x.data.link,
+        size: x.data.size,
+        url: x.data.link,
+      };
       return Promise.resolve(result);
     });
 };
@@ -104,7 +112,7 @@ const likeArticle = (articleId, userId, liked) => {
   const likedUser = {};
   likedUser[userId] = liked;
   const likedArticle = {};
-  likedArticle[userId] = liked;
+  likedArticle[articleId] = liked;
   return firebase.database().ref(ARTICLE_REF).child(articleId).child('likes')
   .update(likedUser)
   .then(() => firebase.database().ref(USER_REF).child(userId).child('likes')

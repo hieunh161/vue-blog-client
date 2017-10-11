@@ -4,7 +4,7 @@
       <div class="ui container">
         <a href="/" class="header item">
           <img class="logo" src="../assets/images/logo.png">
-          Home
+          Dragonknight
         </a>
         <div class="right menu">
           <div class="ui simple dropdown item" v-if="isLoggedIn">

@@ -42,7 +42,15 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [ ] add related article
 [ ] paging data of home page based on category
 
-## Problem
+## Problems
 1. Order in add item in firebase (not in date order but in id order)
-2. 
+2. State ko trigger reactive khi properties ban đầu là undefined
+Sol: https://vuex.vuejs.org/en/mutations.html
+    1. Prefer initializing your store's initial state with all desired fields upfront.
+    2. When adding new properties to an Object, you should either:
+    Use Vue.set(obj, 'newProp', 123), or
+    Replace that Object with a fresh one. For example, using the stage-3 object spread syntax we can write it like this:
+    state.obj = { ...state.obj, newProp: 123 }
+
+    -> s.article = Object.assign({}, s.article, { likes: updateData });
 

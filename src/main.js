@@ -29,8 +29,9 @@ Vue.prototype.$firebase = firebase.initializeApp({
 });
 
 /* eslint-disable no-new */
+/* eslint-disable no-unused-vars */
 // const unsubscribe = firebase.auth().onAuthStateChanged(() => {
-new Vue({
+const vue = new Vue({
   el: '#app',
   router,
   store,
