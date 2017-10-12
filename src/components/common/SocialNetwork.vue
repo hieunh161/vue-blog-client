@@ -31,5 +31,7 @@ export default {
 </script>
 
 <style scoped>
-
+network {
+  margin: 10px 0;
+}
 </style>

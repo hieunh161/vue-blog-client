@@ -20,7 +20,7 @@
               </div>
               <div>
                 <span class="right floated">
-                  <i class="heart outline red like icon"></i>
+                  <i class="heart red like icon" :class="{ outline:!isLiked(item) }"></i>
                   {{ getLikeNumber(item.likes) }} likes
                 </span>
                 <i class="unhide icon"></i>
@@ -28,10 +28,10 @@
               </div>
             </div>
             <div class="extra content">
-              <!-- <div class="ui large transparent left icon input">
-                <i class="heart outline icon"></i>
-                <input type="text" placeholder="Add Comment...">
-              </div> -->
+              <!-- tag -->
+              <span v-for="(value, tag, index) in item.tags" v-bind:key="tag">
+                <span class="ui label tag mini green">{{ tag }}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -57,9 +57,16 @@ export default {
       }
       return 0;
     },
+    isLiked(item) {
+      if (item.likes && this.currentUser) {
+        return item.likes[this.currentUser.uid];
+      }
+      return false;
+    },
   },
   computed: {
     ...mapGetters('article', ['allArticles']),
+    ...mapGetters('user', ['currentUser']),
   },
   components: {
     Loader,
@@ -71,5 +78,9 @@ export default {
 #article-list {
   text-align: left;
   margin-top: 24px;
+}
+
+.ui.tag {
+  margin-right: 8px;
 }
 </style>

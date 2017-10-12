@@ -38,9 +38,12 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [x] Add footer
 [x] Tag + Category
 [ ] add hightlight or prismjs + markdown css
-[ ] add facebook comments to site
+[ ] add facebook comments or custom comment to site
 [ ] add related article
 [ ] paging data of home page based on category
+[ ] add personal page
+[ ] add multi language
+[ ] add tag page
 
 ## Problems
 1. Order in add item in firebase (not in date order but in id order)
@@ -53,4 +56,10 @@ Sol: https://vuex.vuejs.org/en/mutations.html
     state.obj = { ...state.obj, newProp: 123 }
 
     -> s.article = Object.assign({}, s.article, { likes: updateData });
+
+3. constrast color formula
+// The contrast ratio is calculated as (L1 + 0.05) / (L2 + 0.05), where
+// L1 is the: relative luminance of the lighter of the colors, and
+// L2 is the relative luminance of the darker of the colors.
+4. Get tag -> articles or query articles have tag
 

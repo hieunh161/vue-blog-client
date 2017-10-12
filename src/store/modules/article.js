@@ -167,8 +167,8 @@ const actions = {
     });
   },
   // like article
-  likeArticle: (context, { articleId, userId }) => {
-    const isLiked = !context.state.article.likes || !context.state.article.likes[userId];
+  likeArticle: (context, { articleId, userId, isLiked }) => {
+    // const isLiked = !context.state.article.likes || !context.state.article.likes[userId];
     const likedArticle = {};
     likedArticle[userId] = isLiked;
     context.commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);

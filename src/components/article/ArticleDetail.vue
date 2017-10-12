@@ -35,7 +35,7 @@
                   <a class="header">{{article.author.displayName}}</a>
                   <div v-if="!isMyArticle">
                     <div @click="followUser" v-if="!isFollowed" class="follow ui mini button basic green circular"><i class="user icon"></i>Follow</div>
-                    <div @click="unfollowUser" v-if="isFollowed" class="follow ui mini button green circular"><i class="user icon"></i>Unfollow</div>
+                    <div @click="unfollowUser" v-if="isFollowed" class="follow ui mini button green circular"><i class="user icon"></i>Following</div>
                   </div>
                   <div class="description">
                     <p>{{article.author.description}}</p>
@@ -97,7 +97,11 @@ export default {
   methods: {
     marked: input => marked(input),
     likeArticle() {
-      this.$store.dispatch('article/likeArticle', { articleId: this.articleId, userId: this.currentUser.uid });
+      this.$store.dispatch('article/likeArticle',
+        { articleId: this.articleId,
+          userId: this.currentUser.uid,
+          isLiked: !this.isLiked,
+        });
     },
     followUser() {
       // follow article author
