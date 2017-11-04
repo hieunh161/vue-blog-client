@@ -9,6 +9,7 @@ import ArticleEditor from '@/components/article/ArticleEditor';
 import ArtileUserList from '@/components/article/ArtileUserList';
 import TagArticle from '@/components/article/TagArticle';
 import DemoPage from '@/components/demo/DemoPage';
+import Dashboard from '@/components/Dashboard';
 import PageNotFound from '@/components/PageNotFound';
 import * as firebase from 'firebase';
 
@@ -51,6 +52,12 @@ export default new Router({
       beforeEnter: isLoggedIn,
     },
     {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard,
+      beforeEnter: isLoggedIn,
+    },
+    {
       path: '/demo',
       name: 'DemoPage',
       component: DemoPage,
@@ -77,26 +84,6 @@ export default new Router({
       path: '/user/:id/article',
       component: ArtileUserList,
     },
-    // {
-    //   path: '/article/', 
-    //   component: Article,
-    //   children: [
-    //     {
-    //       // UserProfile will be rendered inside User's <router-view>
-    //       // when /user/:id/profile is matched
-    //       path: 'create',
-    //       component: ArticeCreate,
-    //     },
-    //     {
-    //       path: 'list',
-    //       component: ArticleList,
-    //     },
-    //     {
-    //       path: '',
-    //       component: ArticleList,
-    //     },
-    //   ],
-    // },
     {
       path: '*',
       name: 'PageNotFound',

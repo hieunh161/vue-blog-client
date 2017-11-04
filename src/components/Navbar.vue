@@ -1,11 +1,8 @@
 <template>
   <div>
-    <div class="ui green inverted menu attached" id="nav-bar">
+    <div class="ui menu attached" id="nav-bar">
       <div class="ui container">
-        <a href="/" class="header item">
-          <img class="logo" src="../assets/images/logo.png">
-          Dragonknight
-        </a>
+        <router-link class="nav-link item"  to="/" ><img class="logo" src="../assets/images/logo.png"> Educator</router-link>
         <div class="right menu">
           <div class="ui simple dropdown item" v-if="isLoggedIn">
             Article <i class="dropdown icon"></i>
@@ -21,7 +18,7 @@
               <router-link class="nav-link item"  to="/user"><i class="user icon"></i> My Profile</router-link>
               <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> My Articles</router-link>
               <div class="divider"></div>
-              <router-link class="nav-link item"  to="/user" v-if="isAdmin"><i class="user icon"></i> Admin</router-link>
+              <router-link class="nav-link item"  to="/dashboard" v-if="isAdmin"><i class="user icon"></i> Admin</router-link>
               <a v-on:click="logout" class="nav-link item" v-if="isLoggedIn"><i class="sign out icon"></i> Logout</a>
             </div>
           </div>

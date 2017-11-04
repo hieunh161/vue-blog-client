@@ -17,13 +17,7 @@ const state = _.cloneDeep(INITIAL_STATE);
 
 const mutations = {
   [types.USER_UPDATE_DEFAULT_STATE](s) {
-    console.log(types.USER_UPDATE_DEFAULT_STATE);
-    console.log('before');
-    console.log(s);
     Object.assign(s, _.cloneDeep(INITIAL_STATE));
-    console.log(INITIAL_STATE);
-    console.log('after');
-    console.log(s);
   },
   [types.USER_UPDATE_CURRENT_USER_STATE](s, value) {
     s.user = value;

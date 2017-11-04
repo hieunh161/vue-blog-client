@@ -44,7 +44,6 @@ const getters = {
   isPublishingArticle: s => s.isPublishingArticle,
 };
 
-// mutations
 const mutations = {
   [types.READ_USER_ARTICLES](s, articles) {
     s.userArticles = articles;
@@ -93,7 +92,6 @@ const mutations = {
   },
 };
 
-// actions
 const actions = {
   createTemplateArticle(context, user) {
     // reset all article data to default

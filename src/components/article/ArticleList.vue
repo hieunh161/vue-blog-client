@@ -83,4 +83,9 @@ export default {
 .ui.tag {
   margin-right: 8px;
 }
+
+.image .medium {
+  widows: 300px;
+}
+
 </style>
