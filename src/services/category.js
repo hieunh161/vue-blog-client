@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import * as util from './util';
 
 const CATEGORY_REF = 'category';
 
@@ -8,27 +9,23 @@ const createCategory = (category) => {
     createdDate: Date.now(),
     modified: Date.now(),
   };
-  console.log(content);
   return firebase.database().ref(CATEGORY_REF).push(content);
 };
 
-const readCategory = () => firebase.database().ref(CATEGORY_REF).once('value', (snapshot) => {
-  const result = [];
-  snapshot.forEach((childSnapshot) => {
-    const childKey = childSnapshot.key;
-    const childData = childSnapshot.val();
-    result.push({ key: childKey, data: childData });
-  });
-  console.log(result);
-  return Promise.resolve(result);
-});
+const readCategory = () => firebase.database().ref(CATEGORY_REF)
+.once('value').then(snapshot => util.getItemListFromSnapshot(snapshot));
 
 const updateCategory = (category) => {
-  console.log(category);
+  const content = {
+    title: category.value.title,
+    modified: Date.now(),
+  };
+  return firebase.database().ref(CATEGORY_REF).child(category.key).update(content);
 };
 
-const deleteCategory = (category) => {
-  console.log(category);
+const deleteCategory = (categoryId) => {
+  console.log(categoryId);
+  return firebase.database().ref(CATEGORY_REF).child(categoryId).remove();
 };
 
 export default {

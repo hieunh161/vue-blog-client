@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-    <navbar class="page-header"></navbar>
-    <router-view class="page-content"></router-view>
-    <!-- <app-footer class="page-footer"></app-footer> -->
+    <div class="wrapper">
+      <notifications group="notice" />
+      <navbar class="page-header"></navbar>
+      <router-view class="page-content"></router-view>
+    </div>
   </div>
 </template>
 
@@ -40,9 +42,6 @@ export default {
 
 <style>
 /* @import '../node_modules/bulma/css/bulma.css'; */
-body {
-  height: 100%;
-}
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -57,9 +56,16 @@ a {
   position:absolute; 
   bottom: 0px;
 }
-
+html, body {
+  height: 100%;
+  margin: 0;
+}
 body {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;
   background-color: #f7f7f7;
+}
+.wrapper {
+  min-height: calc(100vh);
+  margin-bottom: -50px;
 }
 </style>

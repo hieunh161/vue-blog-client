@@ -15,7 +15,7 @@
     </div>
     <!-- <div id="content2">this is category</div> -->
     <div v-if="!isAdmin">
-      NG
+      <div class="ui active centered inline loader"></div>
     </div>
   </div>
 </template>

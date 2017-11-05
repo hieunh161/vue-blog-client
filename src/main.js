@@ -5,6 +5,7 @@ import * as firebase from 'firebase';
 import Vue from 'vue';
 import VueProgressiveImage from 'vue-progressive-image';
 import SocialSharing from 'vue-social-sharing';
+import Notifications from 'vue-notification';
 import App from './App';
 import router from './router';
 import store from './store';
@@ -17,6 +18,7 @@ import './filter';
 Vue.config.productionTip = false;
 Vue.use(VueProgressiveImage);
 Vue.use(SocialSharing);
+Vue.use(Notifications);
 
 // allows usage of firebase in your vue components by using this.$firebase
 Vue.prototype.$firebase = firebase.initializeApp({

@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import Counter from './Counter';
 import ArticleList from './article/ArticleList';
 
 export default {
@@ -15,7 +14,6 @@ export default {
     };
   },
   components: {
-    Counter,
     ArticleList,
   },
 };

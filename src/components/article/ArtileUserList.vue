@@ -1,17 +1,8 @@
 <template>
   <div class="ui container">
     <h1>User Articles</h1>
-    <!-- <ul>
-      <li v-for="item in userArticles" v-bind:key="item.title">
-        <router-link :to="`/article/${item.id}/view`">{{ item.title }}</router-link>
-        <div class="ui red basic horizontal label" v-if="item.status === 0">Draft</div>
-        <div class="ui green basic horizontal label" v-if="item.status !== 0">Public</div>
-        <router-link class="ui green basic horizontal label" :to="`/article/${item.id}/edit`">Edit</router-link>
-      </li>
-    </ul> -->
     <div class="ui relaxed divided list">
       <div class="item" v-for="item in userArticles" v-bind:key="item.title">
-        <!-- <i class="large github middle aligned icon"></i> -->
         <img class="ui small image" :src="item.coverImage.url">
         <div class="content">
           <router-link :to="`/article/${item.id}`">{{ item.title }}</router-link>
