@@ -10,7 +10,6 @@ import App from './App';
 import router from './router';
 import store from './store';
 import directive from './directive';
-
 import '../semantic/dist/semantic.css';
 import '../semantic/dist/semantic';
 import './filter';

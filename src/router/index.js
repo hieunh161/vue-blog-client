@@ -55,7 +55,7 @@ export default new Router({
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard,
-      beforeEnter: isLoggedIn,
+      beforeEnter: requireAuth,
     },
     {
       path: '/demo',

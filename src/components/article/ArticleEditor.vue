@@ -8,7 +8,12 @@
         placeholder="Title...">
       </div>
       <image-uploader class="article-cover-image"></image-uploader>
-      <article-tag class="article-tag" :on-change="onChangeTags" :initTags="article.tags" placeholder="Add Tag"></article-tag>
+      <select class="ui selection dropdown" v-model="article.category">
+        <option v-for="category in categoriesName" v-bind:key="category">{{category}}</option>
+      </select>
+      <div>
+        <article-tag class="article-tag" :on-change="onChangeTags" :initTags="article.tags" placeholder="Add Tag"></article-tag>
+      </div>
       <div class="article-action">
         <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveArticle">Save Draft</div>
         <div class="ui button basic positive" v-if="article.status === 0" :class='{loading:isPublishingArticle}' @click="() => publishArticle(1)">Publish Article</div>
@@ -65,6 +70,11 @@ const slugifyUrl = (str, separator) => {
 };
 
 export default {
+  created() {
+    // load data from api
+    this.$store.dispatch('article/readArticle', { articleId: this.$route.params.id, router: this.$router });
+    this.$store.dispatch('category/getListCategory');
+  },
   data() {
     return {
       // article: {},
@@ -102,10 +112,6 @@ export default {
       this.deleteTags = deleteTags;
     },
   },
-  mounted() {
-    // load data from api
-    this.$store.dispatch('article/readArticle', { articleId: this.$route.params.id, router: this.$router });
-  },
   components: {
     AsyncButton,
     ImageUploader,
@@ -118,6 +124,7 @@ export default {
   computed: {
     ...mapGetters('user', ['isAdmin', 'currentUserInfo']),
     ...mapGetters('article', ['isLoading', 'articleId', 'isSavingDraft', 'isPublishingArticle']),
+    ...mapGetters('category', ['categoriesName']),
     ...mapState('article', ['article']),
   },
 };

@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <div class="wrapper">
-      <notifications group="notice" />
+      <notifications group="notice" 
+        position="bottom right"
+        :duration="3000"
+        :speed="500"/>
       <navbar class="page-header"></navbar>
       <router-view class="page-content"></router-view>
     </div>

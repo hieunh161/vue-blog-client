@@ -113,7 +113,7 @@ export default {
       this.isUpdatingCategory = true;
       this.$store.dispatch('category/updateCategory', { category: this.updatedCategory })
       .then(() => { this.isUpdatingCategory = false; });
-      this.$notify({ group: 'notice', text: 'Wrong password, please try again later' });
+      this.$notify({ group: 'notice', title: 'Notification', text: 'Update category successfully', type: 'success' });
       this.isShowUpdateCategoryForm = false;
     },
     showUpdateCategory(category) {
