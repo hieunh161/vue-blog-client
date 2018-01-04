@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import * as axios from 'axios';
 import * as uuidv4 from 'uuid/v4';
+import util from './util';
 
 const ARTICLE_REF = 'articles';
 const USER_REF = 'users';
@@ -35,6 +36,7 @@ const createTemplateArticle = (metaData) => {
     tags: {},
     comments: {},
     likes: {},
+    isDelete: false,
   };
   const articleId = uuidv4();
   const userArticle = {};
@@ -45,30 +47,18 @@ const createTemplateArticle = (metaData) => {
   .then(() => articleId);
 };
 
-const readArticle = (articleId) => {
-  const ref = firebase.database().ref(ARTICLE_REF).child(articleId);
-  return ref.once('value').then(snapshot => Promise.resolve(snapshot.val()));
-};
-
-const getListArticleFromSnap = (snapshot) => {
-  const result = [];
-  snapshot.forEach((item) => {
-    let article = {};
-    article = item.val();
-    article.id = item.key;
-    result.push(article);
-  });
-  return Promise.resolve(result);
-};
+const readArticle = articleId => firebase.database().ref(ARTICLE_REF)
+  .child(articleId).once('value')
+  .then(snapshot => Promise.resolve(snapshot.val()));
 
 const readAllArticles = () => {
   const ref = firebase.database().ref(ARTICLE_REF).orderByChild('views');
-  return ref.once('value').then(snapshot => getListArticleFromSnap(snapshot));
+  return ref.once('value').then(snapshot => util.getListArticleFromSnap(snapshot));
 };
 
 const readArticlesByUser = (userId) => {
   const ref = firebase.database().ref(ARTICLE_REF).orderByChild('author/uid').equalTo(userId);
-  return ref.once('value').then(snapshot => getListArticleFromSnap(snapshot));
+  return ref.once('value').then(snapshot => util.getListArticleFromSnap(snapshot));
 };
 
 const updateArticle = ({ articleId, article }) =>

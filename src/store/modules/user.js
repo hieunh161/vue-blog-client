@@ -13,8 +13,6 @@ const INITIAL_STATE = {
   userInfo: null,
 };
 
-const state = _.cloneDeep(INITIAL_STATE);
-
 const mutations = {
   [types.USER_UPDATE_DEFAULT_STATE](s) {
     Object.assign(s, _.cloneDeep(INITIAL_STATE));
@@ -44,34 +42,34 @@ const actions = {
       console.log(error);
     });
   },
-  loginWithGoogle: (context) => {
+  loginWithGoogle: ({ commit, dispatch }) => {
     userService.signInWithGoogle()
     .then((result) => {
-      context.commit(types.USER_UPDATE_CURRENT_USER_STATE, result.user);
-      context.dispatch('getUserInfo', result.user);
+      commit(types.USER_UPDATE_CURRENT_USER_STATE, result.user);
+      dispatch('getUserInfo', result.user);
     }).catch((error) => {
       console.log(error);
     });
   },
-  setCurrentUser: (context, user) => {
-    context.commit(types.USER_UPDATE_CURRENT_USER_STATE, user);
+  setCurrentUser: ({ commit }, user) => {
+    commit(types.USER_UPDATE_CURRENT_USER_STATE, user);
   },
-  getUserInfo: (context, user) => {
+  getUserInfo: ({ commit }, user) => {
     userService.getLocalUserInfo(user)
-    .then(userInfo => context.commit(types.USER_UPDATE_INFO_STATE, userInfo));
+    .then(userInfo => commit(types.USER_UPDATE_INFO_STATE, userInfo));
   },
-  logOut: (context) => {
+  logOut: ({ commit }) => {
     firebase.auth().signOut()
     .then(() => {
-      context.commit(types.USER_UPDATE_DEFAULT_STATE);
+      commit(types.USER_UPDATE_DEFAULT_STATE);
     }, (error) => {
       console.log(`Signout failed, ${error}!`);
     });
   },
-  followUser(context, { follower, following, isFollowed }) {
+  followUser: ({ commit }, { follower, following, isFollowed }) => {
     const followerUser = {};
     followerUser[following] = isFollowed;
-    context.commit(types.USER_UPDATE_FOLLOW_STATE, followerUser);
+    commit(types.USER_UPDATE_FOLLOW_STATE, followerUser);
     return userService.followUser(follower, following, isFollowed);
   },
 };
@@ -90,6 +88,8 @@ const getters = {
     return false;
   },
 };
+
+const state = _.cloneDeep(INITIAL_STATE);
 
 export default {
   state,

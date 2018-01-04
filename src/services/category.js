@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import * as util from './util';
+import util from './util';
 
 const CATEGORY_REF = 'category';
 

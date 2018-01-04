@@ -27,9 +27,6 @@ const INITIAL_STATE = {
   isPublishingArticle: false,
 };
 
-// initial state
-const state = _.cloneDeep(INITIAL_STATE);
-
 // getters
 const getters = {
   articleId: s => s.articleId,
@@ -93,86 +90,89 @@ const mutations = {
 };
 
 const actions = {
-  createTemplateArticle(context, user) {
+  createTemplateArticle: ({ commit }, user) => {
     // reset all article data to default
-    context.commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
+    commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
     return articleService.createTemplateArticle(user);
   },
-  readArticle(context, { articleId, router }) {
-    context.commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
-    context.commit(types.UPDATE_LOADING_FLAG, true);
-    context.commit(types.SET_ARTICLE_ID, articleId);
+  readArticle: ({ commit, state }, { articleId, router }) => {
+    commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
+    commit(types.UPDATE_LOADING_FLAG, true);
+    commit(types.SET_ARTICLE_ID, articleId);
     return articleService.readArticle(articleId).then(
       (articleContent) => {
-        context.commit(types.UPDATE_LOADING_FLAG, false);
+        commit(types.UPDATE_LOADING_FLAG, false);
         if (articleContent) {
-          context.commit(types.SET_ARTICLE, articleContent);
+          commit(types.SET_ARTICLE, articleContent);
           if (articleContent.coverImage.url) {
-            context.commit(types.UPDATE_UPLOADING_STATUS, STATUS.SUCCESS);
+            commit(types.UPDATE_UPLOADING_STATUS, STATUS.SUCCESS);
           }
           // increase number of views by one
           const views = articleContent.views + 1;
-          articleService.updateArticleProperty(context.state.articleId, { views });
+          articleService.updateArticleProperty(state.articleId, { views });
         } else {
           router.push({ path: 'page-not-found' });
         }
       });
   },
-  readAllArticles({ commit }) {
+  readAllArticles: ({ commit }) => {
     articleService.readAllArticles()
     .then(articles => commit(types.READ_ALL_ARTICLES, articles));
   },
-  readArticlesByUser(context, userId) {
+  readArticlesByUser: ({ commit }, userId) => {
     articleService.readArticlesByUser(userId)
-    .then(articles => context.commit(types.READ_USER_ARTICLES, articles));
+    .then(articles => commit(types.READ_USER_ARTICLES, articles));
   },
-  updateArticle(context, updateData) {
+  updateArticle: (context, updateData) => {
     // update tags
     const { addTags, deleteTags, articleId } = updateData;
     return tagService.updateTags(addTags, articleId, true)
     .then(() => tagService.updateTags(deleteTags, articleId, false))
     .then(() => articleService.updateArticle(updateData));
   },
-  saveDraft(context, updateData) {
-    context.commit(types.ARTICLE_UPDATE_SAVING_DRAFT, true);
-    context.dispatch('updateArticle', updateData).then(() => {
-      context.commit(types.ARTICLE_UPDATE_SAVING_DRAFT, false);
+  saveDraft: ({ commit, dispatch }, updateData) => {
+    commit(types.ARTICLE_UPDATE_SAVING_DRAFT, true);
+    dispatch('updateArticle', updateData).then(() => {
+      commit(types.ARTICLE_UPDATE_SAVING_DRAFT, false);
     });
   },
-  publishArticle(context, updateData) {
-    context.commit(types.ARTICLE_UPDATE_PUBLISH, true);
-    context.dispatch('updateArticle', updateData).then(() => {
-      context.commit(types.ARTICLE_UPDATE_PUBLISH, false);
+  publishArticle: ({ commit, dispatch }, updateData) => {
+    commit(types.ARTICLE_UPDATE_PUBLISH, true);
+    dispatch('updateArticle', updateData).then(() => {
+      commit(types.ARTICLE_UPDATE_PUBLISH, false);
     });
   },
-  uploadImage(context, formData) {
-    context.commit(types.UPDATE_UPLOADING_STATUS, STATUS.SAVING);
+  uploadImage: ({ commit, dispatch }, formData) => {
+    commit(types.UPDATE_UPLOADING_STATUS, STATUS.SAVING);
     articleService.uploadImage(formData)
-      .then(img => context.dispatch('setArticleCoverImage', img));
+      .then(img => dispatch('setArticleCoverImage', img));
   },
-  updateUploadStatus(context, uploadStatus) {
-    context.commit(types.UPDATE_UPLOADING_STATUS, uploadStatus);
+  updateUploadStatus: ({ commit }, uploadStatus) => {
+    commit(types.UPDATE_UPLOADING_STATUS, uploadStatus);
   },
-  setArticleCoverImage(context, img) {
-    articleService.setArticleCoverImage(context.state.articleId, img).then(
+  setArticleCoverImage: ({ commit, state }, img) => {
+    articleService.setArticleCoverImage(state.articleId, img).then(
       () => {
-        context.commit(types.UPDATE_UPLOADING_STATUS, STATUS.SUCCESS);
-        context.commit(types.UPDATE_COVER_IMAGE, img);
+        commit(types.UPDATE_UPLOADING_STATUS, STATUS.SUCCESS);
+        commit(types.UPDATE_COVER_IMAGE, img);
       },
     ).catch((err) => {
       console.log(err);
-      context.commit(types.UPDATE_UPLOADING_STATUS, STATUS.FAILED);
+      commit(types.UPDATE_UPLOADING_STATUS, STATUS.FAILED);
     });
   },
   // like article
-  likeArticle: (context, { articleId, userId, isLiked }) => {
+  likeArticle: ({ commit }, { articleId, userId, isLiked }) => {
     // const isLiked = !context.state.article.likes || !context.state.article.likes[userId];
     const likedArticle = {};
     likedArticle[userId] = isLiked;
-    context.commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);
+    commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);
     return articleService.likeArticle(articleId, userId, isLiked);
   },
 };
+
+// initial state
+const state = _.cloneDeep(INITIAL_STATE);
 
 export default {
   namespaced: true,

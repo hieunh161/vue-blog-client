@@ -15,7 +15,7 @@
             <td>{{category.value.modified | formatDate}}</td>
             <td>
               <a @click="() => showUpdateCategory(category)"><i class="ui icon large circular edit positive"></i></a>
-              <a @click="() => deleteCategory(category)"><i class="ui icon large circular red remove"></i></a>
+              <a @click="() => showConfirmDeleteModal(category)"><i class="ui icon large circular red remove"></i></a>
             </td>
           </tr>
         </tbody>
@@ -45,7 +45,7 @@
         <div class="ui basic red deny circular button">
           Cancel
         </div>
-        <div class="ui positive circular button" @click="processDeleteCategory">
+        <div class="ui positive circular button" @click="deleteCategory">
           Yes
         </div>
       </div>
@@ -120,11 +120,11 @@ export default {
       this.isShowUpdateCategoryForm = true;
       this.updatedCategory = category;
     },
-    deleteCategory(category) {
+    showConfirmDeleteModal(category) {
       this.selectedCategory = category;
       this.openModal();
     },
-    processDeleteCategory() {
+    deleteCategory() {
       if (this.selectedCategory) {
         this.$store.dispatch('category/deleteCategory', { categoryId: this.selectedCategory.key });
       }
