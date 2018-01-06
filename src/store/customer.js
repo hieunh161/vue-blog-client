@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import * as uuidv4 from 'uuid/v4';
+// import * as uuidv4 from 'uuid/v4';
 import Vue from 'vue';
 
 /* eslint-disable no-param-reassign */
@@ -56,7 +56,7 @@ const customer = {
     },
     addCustomer: (context, c) => {
       context.commit('setUpdateFlag', true);
-      const customerId = uuidv4();
+      const customerId = 1;
       console.log(customerId);
       firebase.database().ref('customer').child(customerId).set(c)
       .then(
