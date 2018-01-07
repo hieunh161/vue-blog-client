@@ -14,13 +14,6 @@
                 {{item.title}}
               </router-link>
             </div>
-            <!-- <div>
-              <span class="right floated">
-                {{ item.content | minToRead }} min read
-              </span>
-              <i class="icon grey calendar"></i>
-              {{item.createTimestamp | readableDate}}
-            </div> -->
           </div>
           <div class="extra-content">
             <div  class="ui list">
@@ -83,6 +76,7 @@ export default {
 #article-list {
   text-align: left;
   margin-top: 24px;
+  min-height: calc(100vh);
 }
 
 .ui.tag {
@@ -119,6 +113,10 @@ ul.ui.list ul, ol.ui.list ol, .ui.list .list {
 
 .extra-content {
   padding: 0 14px 14px 14px;
+}
+
+.like {
+  color: #FF6671;
 }
 
 </style>

@@ -1,12 +1,13 @@
 <template>
   <div id="app">
-    <div class="wrapper">
+    <div class="wrapper" id="app-content">
       <notifications group="notice" 
         position="bottom right"
         :duration="3000"
         :speed="500"/>
       <navbar class="page-header"></navbar>
       <router-view class="page-content"></router-view>
+      <app-footer></app-footer>
     </div>
   </div>
 </template>
@@ -44,20 +45,16 @@ export default {
 </script>
 
 <style>
-/* @import '../node_modules/bulma/css/bulma.css'; */
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
-
-#app {
   display: flex;
-  min-height: 100vh;
+  min-height: calc(100vh);
   flex-direction: column;
 }
 
-#app-content {
+.page-content {
   flex: 1;
 }
 
@@ -69,16 +66,23 @@ a {
   position:absolute; 
   bottom: 0px;
 }
+
 html, body {
   height: 100%;
   margin: 0;
 }
+
 body {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif !important;
   background-color: #f7f7f7;
 }
+
 .wrapper {
   min-height: calc(100vh);
   margin-bottom: -50px;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif !important;
 }
 </style>

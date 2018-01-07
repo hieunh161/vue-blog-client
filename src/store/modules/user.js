@@ -2,6 +2,7 @@ import * as firebase from 'firebase';
 import _ from 'lodash';
 import * as types from '../mutation-types';
 import userService from '../../services/user';
+import { USER_ROLE } from '../../services/const';
 
 /* eslint-disable no-param-reassign */
 const INITIAL_STATE = {
@@ -83,7 +84,7 @@ const getters = {
   isAdmin: (s) => {
     if (s.userInfo) {
       // admin is 2
-      return s.userInfo.role === 2;
+      return s.userInfo.role === USER_ROLE.ADMIN;
     }
     return false;
   },

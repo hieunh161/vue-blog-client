@@ -1,20 +1,19 @@
 import * as firebase from 'firebase';
-
-const USER_REF = 'users';
+import { USER_ROLE, REF_USER } from './const';
 
 const getUserInfor = (userId) => {
-  const ref = firebase.database().ref(USER_REF).child(userId);
+  const ref = firebase.database().ref(REF_USER).child(userId);
   return ref.once('value').then(snapshot => snapshot.val());
 };
 
 const getLocalUserInfo = (user) => {
-  const userRef = firebase.database().ref(USER_REF);
+  const userRef = firebase.database().ref(REF_USER);
   return userRef.child(user.uid).transaction((currentUserData) => {
     if (currentUserData === null) {
       return {
         description: 'A member of sharing community',
         name: user.displayName,
-        role: 0,
+        role: USER_ROLE.MEMBER,
       };
     }
     return currentUserData;
@@ -37,7 +36,7 @@ const followUser = (follower, following, isFollowed) => {
   followerUser[following] = isFollowed;
   const followingUser = {};
   followingUser[follower] = isFollowed;
-  const userRef = firebase.database().ref(USER_REF);
+  const userRef = firebase.database().ref(REF_USER);
   return userRef.child(follower).child('followings').update(followerUser)
   .then(() => userRef.child(following).child('followers').update(followingUser));
 };

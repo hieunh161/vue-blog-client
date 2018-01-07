@@ -9,7 +9,14 @@ export const REF_LIKE = 'like';
 /* Article status */
 export const ARTICLE_STATUS = {
   DRAFT: 0,
-  PUBLISH: 1,
+  PUBLISH: 10,
+};
+
+/* User Role */
+export const USER_ROLE = {
+  MEMBER: 0,
+  MANAGER: 10,
+  ADMIN: 20,
 };
 
 /* External URL */

@@ -46,6 +46,7 @@
             </div>
           </div>
           <social-network :pageUrl="`https://medium.com/js-dojo/react-or-vue-which-javascript-ui-library-should-you-be-using-543a383608d`"></social-network>
+          <div class="fb-comments" data-href="my-blog-68afd.firebaseapp.com/article/-L2AhDoogBulzEAfSIoq" data-numposts="10"></div>
         </div>
       </div>
     </div>
@@ -72,11 +73,6 @@ export default {
     };
     // Set the renderer to marked.
     marked.setOptions({ renderer });
-    // marked.setOptions({
-    //   highlight: code => highlightjs.highlightAuto(code).value,
-    // });
-    console.log(marked);
-    console.log(highlightjs);
   },
   mounted() {
     // load data from api
@@ -211,7 +207,7 @@ a.header {
 }
 
 .article-detail {
-  background-color: white;
-  min-height: calc(100vh - 54px);
+  background-color: #F7F7F7;
+  min-height: calc(100vh - 144px);
 }
 </style>
