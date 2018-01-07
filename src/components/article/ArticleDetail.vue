@@ -12,8 +12,9 @@
             <span class="meta-attribute"><i class="ui icon wait"></i>{{article.content | minToRead}} min read</span>
             <span class="meta-attribute"><i class="ui icon unhide"></i> {{article.views}}</span>
             <span class="meta-attribute">
-              <i class="ui icon heart" :class="{red:isLiked}" @click="likeArticle"></i>
-              {{numberLiked}}</span>
+              <i class="ui icon thumbs up teal link" :class="{outline:!isLiked}" @click="likeArticle"></i>
+              {{numberLiked}}
+            </span>
           </p>
         </div>
         <div class="content">

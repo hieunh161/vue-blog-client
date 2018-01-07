@@ -86,6 +86,7 @@ const mutations = {
     }
     // update likes only if likes object exist
     s.article.likes = Object.assign({}, s.article.likes, updateData);
+    console.log(s.article);
   },
 };
 
