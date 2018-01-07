@@ -2,8 +2,8 @@
   <div class="article-detail">
     <div class="ui main container">
       <loader v-if="!article.content"></loader>
-      <div class="article ui" v-if="article.content">
-        <div class="article-header">
+      <div class="article" v-if="article.content">
+        <div class="article-header ui header">
           <h1 id="article-title">{{article.title}}</h1>
         </div>
         <div class="article-meta">

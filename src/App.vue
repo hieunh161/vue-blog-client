@@ -74,7 +74,7 @@ html, body {
   margin: 0;
 }
 body {
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif !important;
   background-color: #f7f7f7;
 }
 .wrapper {
