@@ -18,7 +18,7 @@
         </div>
         <div class="content">
           <div class="coverImage">
-            <img class="ui big centered image" :src="article.coverImage ? article.coverImage.url : ''"></img>
+            <img class="ui big centered image" id="coverImage" :src="article.coverImage ? article.coverImage.url : ''"/>
           </div>
           <div class="mrkdwn-body">
             <span v-html="article.content ? marked(article.content) : ''"></span>
@@ -182,6 +182,7 @@ a.header {
 .coverImage {
   margin-bottom: 32px;
 }
+
 .meta-header {
   margin: 0 0 24px 0;
 }

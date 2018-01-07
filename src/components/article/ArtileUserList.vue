@@ -3,7 +3,8 @@
     <!-- <h1>User Articles</h1> -->
     <div class="ui relaxed divided list">
       <div class="item" v-for="article in userArticles" v-bind:key="article.title">
-        <img class="ui small image" :src="article.coverImage.url">
+        <img class="ui small image" v-if="article.coverImage" :src="article.coverImage.url"/>
+        <img class="ui small image" v-if="!article.coverImage" src="https://i.imgur.com/I3QyKzY.png"/>
         <div class="content">
           <router-link :to="`/article/${article.id}`">{{ article.title }}</router-link>
           <div class="description">Updated {{article.lastModified | fromNow}}</div>

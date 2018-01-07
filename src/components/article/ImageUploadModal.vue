@@ -1,5 +1,5 @@
 <template>
-  <div class="ui modal">
+  <div class="ui modal" id="modal_image_upload">
     <i class="close icon"></i>
     <div class="header">
       Upload Image To Imgur
@@ -84,10 +84,10 @@ export default {
   },
   methods: {
     showUploadModal() {
-      $('.ui.modal').modal('show');
+      $('#modal_image_upload').modal('show');
     },
     closeUploadModal() {
-      $('.ui.modal').modal('hide');
+      $('#modal_image_upload').modal('hide');
     },
     filesChange(fieldName, fileList) {
       // handle file changes
@@ -135,7 +135,7 @@ export default {
 .dropbox {
   outline: 2px dashed grey; /* the dash box */
   outline-offset: -10px;
-  background: lightcyan;
+  /* background: lightcyan; */
   color: dimgray;
   padding: 10px 10px;
   min-height: 100px; /* minimum height */
@@ -152,11 +152,7 @@ export default {
 }
 
 .dropbox:hover {
-  background: lightblue; /* when mouse over to the drop zone, change color */
-}
-
-.dragover {
-  background: lightblue;
+  background: EAEAEA;
 }
 
 .dropbox p {

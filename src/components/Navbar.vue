@@ -14,7 +14,7 @@
             <div class="menu">
               <router-link class="nav-link item"  to="/user"><i class="user icon"></i> My Profile</router-link>
               <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> My Articles</router-link>
-              <template-article></template-article>
+              <article-template></article-template>
               <div class="divider"></div>
               <router-link class="nav-link item"  to="/dashboard" v-if="isAdmin"><i class="user icon"></i> Admin</router-link>
               <a v-on:click="logout" class="nav-link item" v-if="isLoggedIn"><i class="sign out icon"></i> Logout</a>
@@ -28,7 +28,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import TemplateArticle from './article/TemplateArticle';
+import ArticleTemplate from './article/ArticleTemplate';
 
 export default {
   name: 'navbar',
@@ -41,7 +41,7 @@ export default {
     },
   },
   components: {
-    TemplateArticle,
+    ArticleTemplate,
   },
 };
 </script>

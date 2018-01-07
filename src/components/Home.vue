@@ -8,7 +8,7 @@
 import ArticleList from './article/ArticleList';
 
 export default {
-  name: 'hello',
+  name: 'home',
   data() {
     return {
     };

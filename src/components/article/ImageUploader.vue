@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="container">
-    <!--UPLOAD-->
+    <!-- upload -->
     <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
       <div class="dropbox">
         <input type="file"
@@ -10,27 +10,42 @@
           @change="filesChange($event.target.name, $event.target.files);"
           accept="image/*" class="input-file">
           <p v-if="isInitial">
+            Add cover image to make your post more attractive<br>
             <i class="ui icon cloud upload"></i>
             Drag your file here to begin<br> or click to browse
           </p>
-          <div v-if="isSaving">
-            <div class="ui active centered inline loader">Uploading file...</div>
-          </div>
+          <p v-if="isSaving" class="ui active centered inline loader">
+            Uploading...
+          </p>
       </div>
     </form>
       <div v-if="isSuccess">
-        <p>
-          <a href="javascript:void(0)" @click="reset()">Change Cover Image</a>
-        </p>
-        <img :src="coverImage.url" class="ui centered medium image" :alt="coverImage.originalName">
+        <div class="ui medium image" id="image-dimmer">
+          <div class="ui dimmer">
+            <div class="content">
+              <div class="center">
+                <div class="ui teal button" @click="showPreviewImageModal">Preview</div>
+                <h5><a href="javascript:void(0)" @click="reset()">Change Cover Image</a></h5>
+              </div>
+            </div>
+          </div>
+          <img v-if="coverImage" class="ui image" :src="coverImage.url">
+        </div>
       </div>
-      <!--FAILED-->
+      <!-- failed -->
       <div v-if="isFailed">
         <h2>Uploaded failed.</h2>
         <p>
           <a href="javascript:void(0)" @click="reset()">Try again</a>
         </p>
         <pre>{{ uploadError }}</pre>
+      </div>
+      <div class="ui basic fullscreen modal" id="preview-image-modal">
+        <i class="close icon"></i>
+        <img class="ui centered image" v-if="coverImage" :src="coverImage.url">
+        <div class="actions">
+          <div class="ui basic orange button" @click="hidePreviewImageModal">Cancel</div>
+        </div>
       </div>
   </div>
 </div>
@@ -39,6 +54,7 @@
 <!-- Javascript -->
 <script>
 import { mapGetters } from 'vuex';
+import $ from 'jquery';
 
 const STATUS_INITIAL = 0;
 const STATUS_SAVING = 1;
@@ -84,9 +100,16 @@ export default {
         .map(x => formData.append(fieldName, fileList[x], fileList[x].name));
       this.save(formData);
     },
+    showPreviewImageModal() {
+      $('#preview-image-modal').modal('show');
+    },
+    hidePreviewImageModal() {
+      $('#preview-image-modal').modal('hide');
+    },
   },
   mounted() {
     // this.reset();
+    $('#image-dimmer').dimmer({ on: 'hover' });
   },
 };
 </script>
@@ -96,29 +119,30 @@ export default {
 .dropbox {
   outline: 2px dashed grey; /* the dash box */
   outline-offset: -10px;
-  background: lightcyan;
+  /* background: lightcyan; */
   color: dimgray;
   padding: 10px 10px;
-  min-height: 100px; /* minimum height */
+  min-height: 80px; /* minimum height */
   position: relative;
   cursor: pointer;
 }
 
 .input-file {
   opacity: 0; /* invisible but it's there! */
-  width: 100%;
-  height: 100px;
+  width: 50%;
+  height: 80px;
   position: absolute;
   cursor: pointer;
 }
 
 .dropbox:hover {
-  background: lightblue; /* when mouse over to the drop zone, change color */
+  background: #EAEAEA; /* when mouse over to the drop zone, change color */
 }
 
 .dropbox p {
   font-size: 1.2em;
   text-align: center;
-  padding: 20px 0;
+  padding: 10px 0;
 }
+
 </style>

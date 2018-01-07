@@ -1,14 +1,10 @@
 import * as firebase from 'firebase';
 import * as axios from 'axios';
 import util from './util';
-import { REF_ARTICLE, REF_USER, IMG_UPLOAD_URL, DEFAULT_COVER_IMAGE } from './const';
-
-// const REF_ARTICLE = 'articles';
-// const REF_USER = 'users';
+import { REF_ARTICLE, REF_USER, IMG_UPLOAD_URL, REF_ARTICLE_SHALLOW } from './const';
 
 const createTemplateArticle = (metaData) => {
-  const articleTitle = 'Article Title';
-  const articleContent = 'Write an article';
+  const articleContent = 'Start writing here...';
   const content = {
     // userId,
     // userPhotoURL,
@@ -20,20 +16,23 @@ const createTemplateArticle = (metaData) => {
       displayName: metaData.displayName,
       description: metaData.description,
     },
-    title: articleTitle,
-    coverImage: {
-      height: 400,
-      width: 800,
-      type: 'image/png',
-      link: DEFAULT_COVER_IMAGE,
-      name: '',
-      size: 37490,
-      url: DEFAULT_COVER_IMAGE,
-    },
+    title: '',
+    coverImage: {},
+    // {
+    //   height: 400,
+    //   width: 800,
+    //   type: 'image/png',
+    //   link: DEFAULT_COVER_IMAGE,
+    //   name: '',
+    //   size: 37490,
+    //   url: DEFAULT_COVER_IMAGE,
+    // },
     content: articleContent,
-    slugify: util.slugify(articleTitle),
+    slugify: '',
     createTimestamp: Date.now(),
     modifyTemestamp: Date.now(),
+    createUser: metaData.uid,
+    updateUser: metaData.uid,
     published: false,
     status: 0,
     views: 0,
@@ -47,11 +46,13 @@ const createTemplateArticle = (metaData) => {
   return firebase.database().ref(REF_ARTICLE).push(content)
   .then((result) => {
     const articleId = result.key;
-    const userArticle = {};
-    userArticle[articleId] = true;
+    const articleObject = {};
+    articleObject[articleId] = true;
     firebase.database().ref(REF_USER)
     .child(metaData.uid).child(REF_ARTICLE)
-    .update(userArticle);
+    .update(articleObject);
+    firebase.database().ref(REF_ARTICLE_SHALLOW)
+    .update(articleObject);
     return Promise.resolve(articleId);
   })
   .then(articleId => articleId);
@@ -71,8 +72,11 @@ const readArticlesByUser = (userId) => {
   return ref.once('value').then(snapshot => util.getListArticleFromSnap(snapshot));
 };
 
-const updateArticle = ({ articleId, article }) =>
-firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
+const updateArticle = ({ articleId, article }) => {
+  console.log(article);
+  console.log(articleId);
+  firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
+};
 
 const updateArticleProperty = (articleId, data) =>
 firebase.database().ref(REF_ARTICLE).child(articleId).update(data);

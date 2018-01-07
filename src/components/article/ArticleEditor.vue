@@ -5,21 +5,22 @@
       <div class="ui transparent massive left input fluid article-title">
         <input type="text" 
         v-model="article.title"
-        placeholder="Title...">
+        v-on:keyup="updateTextEmptyWarning"
+        placeholder="Untitled Post">
+      </div>
+      <div class="ui warning message" v-if="isShowTextEmptyWarning">
+        <i class="close icon" @click="isShowTextEmptyWarning = false"></i>
+        <div>
+          Title is empty. Please add title before publish!
+        </div>
       </div>
       <image-uploader class="article-cover-image"></image-uploader>
-      <select class="ui selection dropdown" v-model="article.category">
-        <option v-for="category in categoriesName" v-bind:key="category">{{category}}</option>
-      </select>
-      <div>
-        <article-tag class="article-tag" :on-change="onChangeTags" :initTags="article.tags" placeholder="Add Tag"></article-tag>
-      </div>
       <div class="article-action">
-        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveArticle">Save Draft</div>
-        <div class="ui button basic positive" v-if="article.status === 0" :class='{loading:isPublishingArticle}' @click="() => publishArticle(1)">Publish Article</div>
-        <div class="ui button basic positive" v-if="article.status !== 0" :class='{loading:isPublishingArticle}' @click="() => publishArticle(0)">Private Article</div>
+        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveDraftArticle">Save Draft</div>
+        <div class="ui button basic positive" v-if="article.status === 0" :class='{loading:isPublishingArticle}' @click="() => showPublishModal()">Publish</div>
+        <div class="ui button basic positive" v-if="article.status !== 0" :class='{loading:isPublishingArticle}' @click="() => privateArticle()">Private</div>
         <div class="ui button basic positive" v-if="article.status !== 0" @click="viewArticle">View Article</div>
-        <div class="ui button basic positive" @click="showUploadModal">Upload Image To Imgur</div>
+        <div class="ui button basic positive" @click="showUploadModal">Upload Image</div>
       </div>
       <markdown-editor
         class="article-editor"
@@ -32,8 +33,28 @@
         value="# Write your story..."
         language="en"
         style="height: 95%"></mavon-editor> -->
-      <!-- modal upload file -->
+      <!-- Image Upload Modal -->
       <image-upload-modal :initImgs="article.images"></image-upload-modal>
+      <!-- Publish Modal -->
+      <div class="ui modal" id="publish-modal">
+        <i class="close icon"></i>
+        <div class="header">
+          Ready to publish?
+        </div>
+        <div class="content">
+          <p>Select category</p>
+          <select class="ui selection dropdown article-category" v-model="article.category">
+            <option v-for="category in categoriesName" v-bind:key="category">{{category}}</option>
+          </select>
+          <br>
+          <p>Add Tag</p>
+          <article-tag class="article-tag" :on-change="onChangeTags" :initTags="article.tags" placeholder="Add Tag"></article-tag>
+        </div>
+        <div class="actions">
+          <div class="ui basic button orange" @click="hidePublishModal">Cancel</div>
+          <div class="ui basic button positive" @click="publishArticle">Publish</div>
+        </div>
+      </div>
       <div class="page-footer"></div>
     </div>
   </div>
@@ -42,6 +63,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { markdownEditor } from 'vue-simplemde';
+import $ from 'jquery';
 // import { mavonEditor } from 'mavon-editor';
 // import 'mavon-editor/dist/css/index.css';
 import AsyncButton from '../common/AsyncButton';
@@ -49,25 +71,8 @@ import ImageUploader from './ImageUploader';
 import ArticleTag from './ArticleTag';
 import Loader from '../common/Loader';
 import ImageUploadModal from './ImageUploadModal';
-
-const slugifyUrl = (str, separator) => {
-  const slug = str
-    .toLowerCase()
-    .replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a')
-    .replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e')
-    .replace(/ì|í|ị|ỉ|ĩ/g, 'i')
-    .replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o')
-    .replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u')
-    .replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y')
-    .replace(/đ/g, 'd')
-    .replace(/\s+/g, '-')
-    .replace(/[^A-Za-z0-9_-]/g, '')
-    .replace(/-+/g, '-');
-  if (separator) {
-    return slug.replace(/-/g, separator);
-  }
-  return slug;
-};
+import util from '../../services/util';
+import { ARTICLE_STATUS } from '../../services/const';
 
 export default {
   created() {
@@ -77,25 +82,51 @@ export default {
   },
   data() {
     return {
-      // article: {},
       message: 'from parent',
       addTags: [],
       deleteTags: [],
+      isShowTextEmptyWarning: false,
     };
   },
   methods: {
+    showPublishModal() {
+      // $('.ui.sidebar').sidebar('toggle');
+      if (this.article.title) {
+        $('#publish-modal').modal('show');
+      } else {
+        this.isShowTextEmptyWarning = true;
+      }
+    },
+    updateTextEmptyWarning() {
+      if (this.article.title) {
+        this.isShowTextEmptyWarning = false;
+      }
+    },
+    privateArticle() {
+      this.article.status = 0;
+      this.saveArticle();
+    },
+    publishArticle() {
+      this.article.status = 1;
+      this.saveArticle();
+    },
     saveArticle() {
-      this.article.lastModified = Date.now();
-      this.article.slugify = slugifyUrl(this.article.title);
+      this.updateArticle();
+      this.$emit('uploadArticleToServer');
+      this.$store.dispatch('article/publishArticle', { articleId: this.articleId, article: this.article, addTags: this.addTags, deleteTags: this.deleteTags });
+    },
+    saveDraftArticle() {
+      this.updateArticle();
       this.$emit('uploadArticleToServer');
       this.$store.dispatch('article/saveDraft', { articleId: this.articleId, article: this.article, addTags: this.addTags, deleteTags: this.deleteTags });
     },
-    publishArticle(status) {
-      this.article.status = status;
-      this.article.lastModified = Date.now();
-      this.article.slugify = slugifyUrl(this.article.title);
-      this.$emit('uploadArticleToServer');
-      this.$store.dispatch('article/publishArticle', { articleId: this.articleId, article: this.article, addTags: this.addTags, deleteTags: this.deleteTags });
+    updateArticle() {
+      this.article.updateTimestamp = Date.now();
+      this.article.updateUser = this.currentUser.uid;
+      this.article.slugify = util.slugify(this.article.title);
+      if (!this.article.category) {
+        this.article.category = {};
+      }
     },
     viewArticle() {
       // view article when article in publish state only
@@ -105,6 +136,9 @@ export default {
     },
     showUploadModal() {
       this.$emit('showUploadModal');
+    },
+    hidePublishModal() {
+      $('#publish-modal').modal('hide');
     },
     onChangeTags(tags, addTags, deleteTags) {
       this.article.tags = tags;
@@ -122,10 +156,13 @@ export default {
     Loader,
   },
   computed: {
-    ...mapGetters('user', ['isAdmin', 'currentUserInfo']),
+    ...mapGetters('user', ['isAdmin', 'currentUserInfo', 'currentUser']),
     ...mapGetters('article', ['isLoading', 'articleId', 'isSavingDraft', 'isPublishingArticle']),
     ...mapGetters('category', ['categoriesName']),
     ...mapState('article', ['article']),
+    isPublished() {
+      return this.article.status === ARTICLE_STATUS.PUBLISH;
+    },
   },
 };
 </script>
@@ -143,10 +180,11 @@ export default {
 
 .article-title {
   margin: 8px 0px;
-  font-size: 40px !important;
+  font-size: 36px !important;
 }
 
 .article-tag,
+.article-category,
 .article-cover-image {
   margin: 8px 0px;
 }
@@ -163,4 +201,11 @@ export default {
   height: 30px;
 }
 
+.ui.selection.dropdown {
+  padding: 5px 11px;
+}
+
+.content p {
+  margin: 0;
+}
 </style>

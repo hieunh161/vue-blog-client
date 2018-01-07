@@ -104,7 +104,7 @@ const actions = {
         commit(types.UPDATE_LOADING_FLAG, false);
         if (articleContent) {
           commit(types.SET_ARTICLE, articleContent);
-          if (articleContent.coverImage.url) {
+          if (articleContent.coverImage) {
             commit(types.UPDATE_UPLOADING_STATUS, STATUS.SUCCESS);
           }
           // increase number of views by one
@@ -126,6 +126,7 @@ const actions = {
   updateArticle: (context, updateData) => {
     // update tags
     const { addTags, deleteTags, articleId } = updateData;
+    console.log(updateData);
     return tagService.updateTags(addTags, articleId, true)
     .then(() => tagService.updateTags(deleteTags, articleId, false))
     .then(() => articleService.updateArticle(updateData));

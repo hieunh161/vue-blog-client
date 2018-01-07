@@ -7,7 +7,6 @@ import UserProfile from '@/components/UserProfile';
 import ArticleDetail from '@/components/article/ArticleDetail';
 import ArticleEditor from '@/components/article/ArticleEditor';
 import ArtileUserList from '@/components/article/ArtileUserList';
-import TagArticle from '@/components/article/TagArticle';
 import DemoPage from '@/components/demo/DemoPage';
 import Dashboard from '@/components/Dashboard';
 import PageNotFound from '@/components/PageNotFound';
@@ -75,10 +74,6 @@ export default new Router({
     {
       path: '/article/:id/edit',
       component: ArticleEditor,
-    },
-    {
-      path: 'article/tag/:tag',
-      component: TagArticle,
     },
     {
       path: '/user/:id/article',
