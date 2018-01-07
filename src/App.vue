@@ -51,6 +51,16 @@ export default {
   color: #2c3e50;
 }
 
+#app {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+#app-content {
+  flex: 1;
+}
+
 a {
   color: #42b983;
 }

@@ -72,11 +72,9 @@ const readArticlesByUser = (userId) => {
   return ref.once('value').then(snapshot => util.getListArticleFromSnap(snapshot));
 };
 
-const updateArticle = ({ articleId, article }) => {
-  console.log(article);
-  console.log(articleId);
-  firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
-};
+const updateArticle = ({ articleId, article }) =>
+firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
+
 
 const updateArticleProperty = (articleId, data) =>
 firebase.database().ref(REF_ARTICLE).child(articleId).update(data);

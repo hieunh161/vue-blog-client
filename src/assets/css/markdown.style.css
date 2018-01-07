@@ -585,6 +585,8 @@
   max-width: 100%;
   box-sizing: content-box;
   background-color: #fff;
+  display: block !important;
+  margin: auto !important;
 }
 
 .mrkdwn-body code {
@@ -632,7 +634,7 @@
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
-  background-color: #f6f8fa;
+  background-color: #282c34;
   border-radius: 3px;
 }
 

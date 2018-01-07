@@ -33,7 +33,6 @@
     "vue-router": "^2.6.0",
     "vue-simplemde": "^0.3.8",
     "vue-social-sharing": "^2.2.5",
-    "vuefire": "^1.4.3",
     "vuex": "^2.3.1",
     "vuex-i18n": "^1.9.0"
   },

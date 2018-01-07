@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="article-detail">
     <div class="ui main container">
       <loader v-if="!article.content"></loader>
-      <div class="article ui segment" v-if="article.content">
+      <div class="article ui" v-if="article.content">
         <div class="article-header">
           <h1 id="article-title">{{article.title}}</h1>
         </div>
@@ -12,14 +12,14 @@
             <span class="meta-attribute"><i class="ui icon wait"></i>{{article.content | minToRead}} min read</span>
             <span class="meta-attribute"><i class="ui icon unhide"></i> {{article.views}}</span>
             <span class="meta-attribute">
-              <i class="ui icon thumbs up teal link" :class="{outline:!isLiked}" @click="likeArticle"></i>
+              <i class="ui icon heart orange link" :class="{outline:!isLiked}" @click="likeArticle"></i>
               {{numberLiked}}
             </span>
           </p>
         </div>
         <div class="content">
           <div class="coverImage">
-            <img class="ui big centered image" id="coverImage" :src="article.coverImage ? article.coverImage.url : ''"/>
+            <img class="ui centered image" id="coverImage" :src="article.coverImage ? article.coverImage.url : ''"/>
           </div>
           <div class="mrkdwn-body">
             <span v-html="article.content ? marked(article.content) : ''"></span>
@@ -34,10 +34,10 @@
                 </a>
                 <div class="content">
                   <a class="header">{{article.author.displayName}}</a>
-                  <div v-if="!isMyArticle">
-                    <div @click="followUser" v-if="!isFollowed" class="follow ui mini button basic green circular"><i class="user icon"></i>Follow</div>
-                    <div @click="unfollowUser" v-if="isFollowed" class="follow ui mini button green circular"><i class="user icon"></i>Following</div>
-                  </div>
+                  <span v-if="!isMyArticle">
+                    <span @click="followUser" v-if="!isFollowed" class="follow ui mini button basic green circular"><i class="user icon"></i>Follow</span>
+                    <span @click="unfollowUser" v-if="isFollowed" class="follow ui mini button green circular"><i class="user icon"></i>Following</span>
+                  </span>
                   <div class="description">
                     <p>{{article.author.description}}</p>
                   </div>
@@ -53,18 +53,30 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import hljs from 'highlight.js';
-import marked from 'marked';
+import marked, { Renderer } from 'marked';
+import highlightjs from 'highlight.js';
 import _ from 'lodash';
 import Loader from '../common/Loader';
 import SocialNetwork from '../common/SocialNetwork';
 
-marked.setOptions({
-  highlight: code => hljs.highlightAuto(code).value,
-});
-
 export default {
   created() {
+    const renderer = new Renderer();
+    renderer.code = (code, language) => {
+      // Check whether the given language is valid for highlight.js.
+      const validLang = !!(language && highlightjs.getLanguage(language));
+      // Highlight only if the language is valid.
+      const highlighted = validLang ? highlightjs.highlight(language, code).value : code;
+      // Render the highlighted code with `hljs` class.
+      return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`;
+    };
+    // Set the renderer to marked.
+    marked.setOptions({ renderer });
+    // marked.setOptions({
+    //   highlight: code => highlightjs.highlightAuto(code).value,
+    // });
+    console.log(marked);
+    console.log(highlightjs);
   },
   mounted() {
     // load data from api
@@ -84,7 +96,7 @@ export default {
       return true;
     },
     isFollowed() {
-      return this.currentUserInfo.followings ?
+      return this.currentUserInfo && this.currentUserInfo.followings ?
       this.currentUserInfo.followings[this.article.author.uid] : false;
     },
     numberLiked() {
@@ -198,4 +210,8 @@ a.header {
   margin-left: 20px;
 }
 
+.article-detail {
+  background-color: white;
+  min-height: calc(100vh - 54px);
+}
 </style>
