@@ -45,9 +45,6 @@ const getters = {
 
 const mutations = {
   [types.READ_USER_ARTICLES](s, articles) {
-    if (!articles || articles.length === 0) {
-      console.log(articles);
-    }
     s.userArticles = articles;
   },
   [types.READ_ALL_ARTICLES](s, articles) {

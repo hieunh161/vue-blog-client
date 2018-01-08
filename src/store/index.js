@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import customer from './customer';
 import user from './modules/user';
 import article from './modules/article';
 import category from './modules/category';
@@ -12,7 +11,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     user,
-    customer,
     article,
     category,
   },

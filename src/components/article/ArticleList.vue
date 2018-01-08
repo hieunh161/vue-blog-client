@@ -26,7 +26,7 @@
                 <img class="ui large avatar image" :src="item.author.photoURL">
                 <div class="content">
                   <a class="author">{{item.author.displayName}}</a>
-                  <div class="infor description">{{item.createTimestamp | readableDate}}・{{ item.content | minToRead }} min read</div>
+                  <div class="infor description">{{item.createTimestamp | readableDate}}・{{ item.content | minToRead }} {{ $t('message.article_list.min_read') }}</div>
                 </div>
               </div>
               </div>

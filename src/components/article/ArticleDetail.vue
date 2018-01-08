@@ -6,7 +6,7 @@
       <!-- article content -->
       <div class="article" v-if="!isLoadingArtice && article">
         <div class="article-header ui header">
-          <h1 id="article-title">{{article.title}}</h1>
+          <h1 class="article-title">{{article.title}}</h1>
         </div>
         <div class="article-meta">
           <p>
@@ -20,8 +20,15 @@
           </p>
         </div>
         <div class="content">
+          <!-- cover image -->
           <div class="coverImage">
             <img class="ui centered image" id="coverImage" :src="article.coverImage ? article.coverImage.url : ''"/>
+          </div>
+          <!-- article tag -->
+          <div class="ui tiny horizontal list" v-if="article.tags">
+            <div class="item" v-for="tag in Object.keys(article.tags)" v-bind:key="tag" >
+              <div class="ui  label">{{tag}}</div>
+            </div>
           </div>
           <div class="mrkdwn-body">
             <span v-html="article.content ? marked(article.content) : ''"></span>
@@ -47,7 +54,8 @@
               </div>
             </div>
           </div>
-          <social-network :pageUrl="`https://medium.com/js-dojo/react-or-vue-which-javascript-ui-library-should-you-be-using-543a383608d`"></social-network>
+          <social-network :pageUrl="getPageUrl"></social-network>
+          <!-- facebook comment -->
           <div class="fb-comments" data-href="my-blog-68afd.firebaseapp.com/article/-L2AhDoogBulzEAfSIoq" data-numposts="10"></div>
         </div>
       </div>
@@ -65,6 +73,7 @@ import nprogress from 'nprogress';
 import Loader from '../common/Loader';
 import PageNotFound from '../PageNotFound';
 import SocialNetwork from '../common/SocialNetwork';
+import { baseUrl } from '../../config';
 
 export default {
   data() {
@@ -94,6 +103,7 @@ export default {
       });
   },
   mounted() {
+    console.log(this.$route.path);
   },
   computed: {
     ...mapGetters('article', ['article', 'articleId']),
@@ -117,6 +127,9 @@ export default {
         return _.countBy(Object.values(this.article.likes)).true || 0;
       }
       return 0;
+    },
+    getPageUrl() {
+      return `${baseUrl}${this.$route.path}`;
     },
   },
   methods: {
@@ -192,7 +205,7 @@ a.header {
 }
 
 .article-meta{
-  margin: 0 0 24px 0;
+  margin: 0 0 16px 0;
 }
 
 .meta-attribute {
@@ -201,12 +214,14 @@ a.header {
   font-size: 13px;
   line-height: 1.4;
 }
-#article-title {
+
+.article-title {
+  margin-top: 1rem; 
   font-size: 3rem;
 }
 
 .coverImage {
-  margin-bottom: 32px;
+  margin-bottom: 0px;
 }
 
 .meta-header {

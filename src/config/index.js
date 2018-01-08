@@ -1,3 +1,5 @@
+export const baseUrl = 'https://my-blog-68afd.firebaseapp.com';
+
 export const firebaseConfig = {
   apiKey: 'AIzaSyD6QnbW4Sk4kZuWdGzO2BkIKtHj9n4CxHg',
   authDomain: 'my-blog-68afd.firebaseapp.com',

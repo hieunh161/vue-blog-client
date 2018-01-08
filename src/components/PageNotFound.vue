@@ -1,11 +1,10 @@
 <template>
   <div class="container page-not-found">
-    <div class="not-found header">404</div>
-    <div class="not-found content">Page Not Found</div>
+    <div class="not-found header">{{ $t('message.page_not_found.error') }}</div>
+    <div class="not-found content">{{ $t('message.page_not_found.title') }}</div>
     <div class="ui horizontal divider"> <i class="ui icon meh"></i>
     </div>
-    <div class="not-found detail">We are sorry but the page you are looking for does not exist.</div>
-    <div class="not-found detail">Click <a href="/">here</a> to back to main menu</div>
+    <div class="not-found detail" v-html="$t('message.page_not_found.content')"></div>
   </div>
 </template>
 
@@ -22,11 +21,12 @@ export default {
 
 .not-found.header {
   margin-top: 120px;
-  font-size: 100px;
+  font-size: 140px;
+  font-weight: 600;
 }
 
 .not-found.content {
-  margin: 60px;
+  margin: 80px 0 30px 0;
   font-size: 36px;
 }
 

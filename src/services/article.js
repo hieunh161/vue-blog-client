@@ -6,6 +6,7 @@ import { imgUrlConfig } from '../config';
 
 const createTemplateArticle = (metaData) => {
   const articleContent = 'Start writing here...';
+  console.log(metaData);
   const content = {
     // userId,
     // userPhotoURL,

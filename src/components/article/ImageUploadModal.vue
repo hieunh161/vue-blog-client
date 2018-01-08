@@ -1,9 +1,7 @@
 <template>
   <div class="ui modal" id="modal_image_upload">
     <i class="close icon"></i>
-    <div class="header">
-      Upload Image To Imgur
-    </div>
+    <div class="header">{{ $t('message.upload_image.upload_modal_title') }}</div>
     <div class="content">
       <form enctype="multipart/form-data" id="theform" novalidate v-if="!isSaving">
         <div class="dropbox" :class="{dragover:isDragOver}">
@@ -16,10 +14,7 @@
             @dragleave="() => onDragOver(false)"
             @dragend="() => onDragOver(false)"
             accept="image/*" class="input-file">
-            <p v-if="isInitial">
-              <i class="ui icon cloud upload"></i>
-              Drag your file here to upload<br> or click to browse
-            </p>
+            <p v-if="isInitial" v-html="$t('message.upload_image.upload_modal_hint')"></p>
         </div>
       </form>
       <!-- <div class="progressbar" v-if="isSaving">
@@ -33,7 +28,7 @@
       </div>
     </div>
     <div class="actions">
-      <div class="ui red basic button" @click="closeUploadModal">Close</div>
+      <div class="ui red basic button" @click="closeUploadModal">{{ $t('button.common.close') }}</div>
     </div>
   </div>
 </template>

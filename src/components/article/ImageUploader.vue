@@ -9,13 +9,9 @@
           name="image"
           @change="filesChange($event.target.name, $event.target.files);"
           accept="image/*" class="input-file">
-          <p v-if="isInitial">
-            Add cover image to make your post more attractive<br>
-            <i class="ui icon cloud upload"></i>
-            Drag your file here to begin<br> or click to browse
-          </p>
+          <p v-if="isInitial" class="hint-message" v-html="$t('message.upload_image.upload_hint')"></p>
           <p v-if="isSaving" class="ui active centered inline loader">
-            Uploading...
+            {{ $t('message.upload_image.uploading') }}
           </p>
       </div>
     </form>
@@ -24,8 +20,8 @@
           <div class="ui dimmer">
             <div class="content">
               <div class="center">
-                <div class="ui teal button" @click="showPreviewImageModal">Preview</div>
-                <h5><a href="javascript:void(0)" @click="reset()">Change Cover Image</a></h5>
+                <div class="ui teal button" @click="showPreviewImageModal">{{ $t('button.upload_image.preview') }}</div>
+                <h5><a href="javascript:void(0)" @click="reset()">{{ $t('message.upload_image.change_cover_image') }}</a></h5>
               </div>
             </div>
           </div>
@@ -34,9 +30,9 @@
       </div>
       <!-- failed -->
       <div v-if="isFailed">
-        <h2>Uploaded failed.</h2>
+        <h2>{{ $t('message.upload_image.upload_failed') }}</h2>
         <p>
-          <a href="javascript:void(0)" @click="reset()">Try again</a>
+          <a href="javascript:void(0)" @click="reset()">{{ $t('message.upload_image.try_again') }}</a>
         </p>
         <pre>{{ uploadError }}</pre>
       </div>
@@ -44,7 +40,7 @@
         <i class="close icon"></i>
         <img class="ui centered image" v-if="coverImage" :src="coverImage.url">
         <div class="actions">
-          <div class="ui basic orange button" @click="hidePreviewImageModal">Cancel</div>
+          <div class="ui basic orange button" @click="hidePreviewImageModal">{{ $t('button.common.cancel') }}</div>
         </div>
       </div>
   </div>
@@ -143,6 +139,10 @@ export default {
   font-size: 1.2em;
   text-align: center;
   padding: 10px 0;
+}
+
+.hint-message {
+  font-size: 15px !important;
 }
 
 </style>

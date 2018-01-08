@@ -1,7 +1,9 @@
 <template>
   <div id="article-edit-page">
-    <loader v-if="isLoading"></loader>
-    <div v-if="!isLoading">
+    <!-- loading -->
+    <loader v-if="isLoadingArticle"></loader>
+    <!-- article content -->
+    <div v-if="!isLoadingArticle && article">
       <div class="ui transparent massive left input fluid article-title">
         <input type="text" 
         v-model="article.title"
@@ -10,17 +12,15 @@
       </div>
       <div class="ui warning message" v-if="isShowTextEmptyWarning">
         <i class="close icon" @click="isShowTextEmptyWarning = false"></i>
-        <div>
-          Title is empty. Please add title before publish!
-        </div>
+        <div>{{ $t('warning.article_edit.empty_title') }}</div>
       </div>
       <image-uploader class="article-cover-image"></image-uploader>
       <div class="article-action">
-        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveDraftArticle">Save Draft</div>
-        <div class="ui button basic positive" v-if="article.status === 0" :class='{loading:isPublishingArticle}' @click="() => showPublishModal()">Publish</div>
-        <div class="ui button basic positive" v-if="article.status !== 0" :class='{loading:isPublishingArticle}' @click="() => privateArticle()">Private</div>
-        <div class="ui button basic positive" v-if="article.status !== 0" @click="viewArticle">View Article</div>
-        <div class="ui button basic positive" @click="showUploadModal">Upload Image</div>
+        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveDraftArticle">{{ $t('button.article_edit.save_draft') }}</div>
+        <div class="ui button basic positive" v-if="!isPublishingArticle" :class='{loading:isPublishingArticle}' @click="() => showPublishModal()">{{ $t('button.article_edit.publish') }}</div>
+        <div class="ui button basic positive" v-if="isPublishingArticle" :class='{loading:isPublishingArticle}' @click="() => privateArticle()">{{ $t('button.article_edit.private') }}</div>
+        <div class="ui button basic positive" v-if="isPublishingArticle" @click="viewArticle">{{ $t('button.article_edit.view_article') }}</div>
+        <div class="ui button basic positive" @click="showUploadModal">{{ $t('button.article_edit.upload_image') }}</div>
       </div>
       <markdown-editor
         class="article-editor"
@@ -38,25 +38,25 @@
       <!-- Publish Modal -->
       <div class="ui modal" id="publish-modal">
         <i class="close icon"></i>
-        <div class="header">
-          Ready to publish?
-        </div>
+        <div class="header">{{ $t('message.article_edit.publish_header') }}</div>
         <div class="content">
-          <p>Select category</p>
+          <p>{{ $t('message.article_edit.select_category') }}</p>
           <select class="ui selection dropdown article-category" v-model="article.category">
             <option v-for="category in categoriesName" v-bind:key="category">{{category}}</option>
           </select>
           <br>
-          <p>Add Tag</p>
+          <p>{{ $t('message.article_edit.add_tag') }}</p>
           <article-tag class="article-tag" :on-change="onChangeTags" :initTags="article.tags" placeholder="Add Tag"></article-tag>
         </div>
         <div class="actions">
-          <div class="ui basic button orange" @click="hidePublishModal">Cancel</div>
-          <div class="ui basic button positive" @click="publishArticle">Publish</div>
+          <div class="ui basic button orange" @click="hidePublishModal">{{ $t('button.common.cancel') }}</div>
+          <div class="ui basic button positive" @click="publishArticle">{{ $t('button.article_edit.publish') }}</div>
         </div>
       </div>
-      <div class="page-footer"></div>
     </div>
+    <!-- fallback when no items found -->
+    <!-- fallback when content not found -->
+    <page-not-found v-if="!isLoadingArtice && !article"></page-not-found>
   </div>
 </template>
 
@@ -64,6 +64,7 @@
 import { mapGetters, mapState } from 'vuex';
 import { markdownEditor } from 'vue-simplemde';
 import $ from 'jquery';
+import nprogress from 'nprogress';
 // import { mavonEditor } from 'mavon-editor';
 // import 'mavon-editor/dist/css/index.css';
 import AsyncButton from '../common/AsyncButton';
@@ -71,18 +72,25 @@ import ImageUploader from './ImageUploader';
 import ArticleTag from './ArticleTag';
 import Loader from '../common/Loader';
 import ImageUploadModal from './ImageUploadModal';
+import PageNotFound from '../PageNotFound';
 import util from '../../services/util';
 import { ARTICLE_STATUS } from '../../services/const';
 
 export default {
   created() {
     // load data from api
-    this.$store.dispatch('article/readArticle', { articleId: this.$route.params.id, router: this.$router });
+    nprogress.start();
+    this.isLoadingArticle = true;
+    this.$store.dispatch('article/readArticleById', { articleId: this.$route.params.id, router: this.$router })
+      .then(() => {
+        nprogress.done();
+        this.isLoadingArticle = false;
+      });
     this.$store.dispatch('category/getListCategory');
   },
   data() {
     return {
-      message: 'from parent',
+      isLoadingArticle: false,
       addTags: [],
       deleteTags: [],
       isShowTextEmptyWarning: false,
@@ -154,6 +162,7 @@ export default {
     // mavonEditor,
     ArticleTag,
     Loader,
+    PageNotFound,
   },
   computed: {
     ...mapGetters('user', ['isAdmin', 'currentUserInfo', 'currentUser']),
@@ -195,10 +204,6 @@ export default {
 
 #article-edit-page {
   margin: 0px 20px 0px 24px;
-}
-
-.page-footer {
-  height: 30px;
 }
 
 .ui.selection.dropdown {
