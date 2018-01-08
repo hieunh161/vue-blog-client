@@ -121,14 +121,32 @@ const actions = {
         }
       });
   },
+  readArticleById: ({ commit, state }, { articleId }) => {
+    commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
+    commit(types.UPDATE_LOADING_FLAG, true);
+    commit(types.SET_ARTICLE_ID, articleId);
+    return articleService.readArticle(articleId)
+    .then(content => commit(types.SET_ARTICLE, content));
+  },
+  readArticleByIdWithViewUpdate: ({ commit, state }, { articleId }) => {
+    commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
+    commit(types.UPDATE_LOADING_FLAG, true);
+    commit(types.SET_ARTICLE_ID, articleId);
+    return articleService.readArticle(articleId)
+    .then((content) => {
+      if (content) {
+        const views = content.views + 1;
+        articleService.updateArticleProperty(state.articleId, { views });
+      }
+      return commit(types.SET_ARTICLE, content);
+    });
+  },
   readAllArticles: ({ commit }) => {
     articleService.readAllArticles()
     .then(articles => commit(types.READ_ALL_ARTICLES, articles));
   },
-  readArticlesByUser: ({ commit }, userId) => {
-    articleService.readArticlesByUser(userId)
-    .then(articles => commit(types.READ_USER_ARTICLES, articles));
-  },
+  readArticlesByUser: ({ commit }, userId) => articleService.readArticlesByUser(userId)
+    .then(articles => commit(types.READ_USER_ARTICLES, articles)),
   updateArticle: (context, updateData) => {
     // update tags
     const { addTags, deleteTags, articleId } = updateData;

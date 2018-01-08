@@ -13,6 +13,7 @@ import store from './store';
 import messages from './message';
 import '../semantic/dist/semantic.css';
 import '../semantic/dist/semantic';
+import './assets/css/nprogress.css';
 import './filter';
 import { firebaseConfig } from './config';
 

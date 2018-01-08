@@ -22,15 +22,6 @@
           1,048
         </a>
       </div>
-      <div class="ui yellow progress" data-percent="60">
-        <div class="bar"></div>
-      </div>
-      <div class="ui olive progress" data-percent="30">
-        <div class="bar"></div>
-      </div>
-      <div class="ui green progress" data-percent="85">
-        <div class="bar"></div>
-      </div>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="ui container user-article">
     <!-- <h1>User Articles</h1> -->
-    <div class="ui relaxed divided list">
+    <div class="ui relaxed divided list" v-if="!isLoadingArtices">
       <div class="item" v-for="article in userArticles" v-bind:key="article.title">
         <img class="ui small image" v-if="article.coverImage" :src="article.coverImage.url"/>
         <img class="ui small image" v-if="!article.coverImage" src="https://i.imgur.com/I3QyKzY.png"/>
@@ -37,7 +37,8 @@
       </div>
     </div>
     <!-- fallback when no items found -->
-    <div class="ui message" v-if="!userArticles || userArticles.length === 0">
+    <loader v-if="isLoadingArtices"></loader>
+    <div class="ui message" v-if="!isLoadingArtices && !userArticles || userArticles.length === 0">
       <div class="header">
         No items found
       </div>
@@ -49,7 +50,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import * as $ from 'jquery';
-import NprogressContainer from 'vue-nprogress/src/NprogressContainer';
+import nprogress from 'nprogress';
 import Loader from '../common/Loader';
 import { ARTICLE_STATUS } from '../../services/const';
 
@@ -57,10 +58,17 @@ export default {
   data() {
     return {
       selectedArticle: null,
+      isLoadingArtices: false,
     };
   },
-  mounted() {
-    this.$store.dispatch('article/readArticlesByUser', this.$route.params.id);
+  created() {
+    nprogress.start();
+    this.isLoadingArtices = true;
+    this.$store.dispatch('article/readArticlesByUser', this.$route.params.id)
+    .then(() => {
+      nprogress.done();
+      this.isLoadingArtices = false;
+    });
   },
   computed: {
     ...mapGetters('article', ['userArticles']),
@@ -80,7 +88,6 @@ export default {
   },
   components: {
     Loader,
-    NprogressContainer,
   },
 };
 </script>

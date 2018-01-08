@@ -1,8 +1,10 @@
 <template>
   <div class="article-detail">
     <div class="ui main container">
-      <loader v-if="!article.content"></loader>
-      <div class="article" v-if="article.content">
+      <!-- progress bar -->
+      <loader v-if="isLoadingArtice && !article"></loader>
+      <!-- article content -->
+      <div class="article" v-if="!isLoadingArtice && article">
         <div class="article-header ui header">
           <h1 id="article-title">{{article.title}}</h1>
         </div>
@@ -49,6 +51,8 @@
           <div class="fb-comments" data-href="my-blog-68afd.firebaseapp.com/article/-L2AhDoogBulzEAfSIoq" data-numposts="10"></div>
         </div>
       </div>
+      <!-- fallback when content not found -->
+      <page-not-found v-if="!isLoadingArtice && !article"></page-not-found>
     </div>
   </div>
 </template>
@@ -57,10 +61,17 @@ import { mapGetters } from 'vuex';
 import marked, { Renderer } from 'marked';
 import highlightjs from 'highlight.js';
 import _ from 'lodash';
+import nprogress from 'nprogress';
 import Loader from '../common/Loader';
+import PageNotFound from '../PageNotFound';
 import SocialNetwork from '../common/SocialNetwork';
 
 export default {
+  data() {
+    return {
+      isLoadingArtice: false,
+    };
+  },
   created() {
     const renderer = new Renderer();
     renderer.code = (code, language) => {
@@ -73,11 +84,16 @@ export default {
     };
     // Set the renderer to marked.
     marked.setOptions({ renderer });
+    // load data from api
+    nprogress.start();
+    this.isLoadingArtice = true;
+    this.$store.dispatch('article/readArticleByIdWithViewUpdate', { articleId: this.$route.params.id })
+      .then(() => {
+        this.isLoadingArtice = false;
+        nprogress.done();
+      });
   },
   mounted() {
-    // load data from api
-    this.$store.dispatch('article/readArticle',
-      { articleId: this.$route.params.id, router: this.$router });
   },
   computed: {
     ...mapGetters('article', ['article', 'articleId']),
@@ -124,6 +140,7 @@ export default {
   components: {
     Loader,
     SocialNetwork,
+    PageNotFound,
   },
 };
 </script>

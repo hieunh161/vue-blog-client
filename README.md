@@ -63,3 +63,4 @@ Sol: https://vuex.vuejs.org/en/mutations.html
 // L2 is the relative luminance of the darker of the colors.
 4. Get tag -> articles or query articles have tag
 
+5. Khi page not found thì nên redirect về page not found hay hiển thị inline?
