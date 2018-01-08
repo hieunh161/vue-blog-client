@@ -25,6 +25,7 @@ const INITIAL_STATE = {
   isLoading: false,
   isSavingDraft: false,
   isPublishingArticle: false,
+  isLoadingArticlesByUser: false,
 };
 
 // getters
@@ -39,10 +40,14 @@ const getters = {
   isLoading: s => s.isLoading,
   isSavingDraft: s => s.isSavingDraft,
   isPublishingArticle: s => s.isPublishingArticle,
+  isLoadingArticlesByUser: s => s.isLoadingArticlesByUser,
 };
 
 const mutations = {
   [types.READ_USER_ARTICLES](s, articles) {
+    if (!articles || articles.length === 0) {
+      console.log(articles);
+    }
     s.userArticles = articles;
   },
   [types.READ_ALL_ARTICLES](s, articles) {

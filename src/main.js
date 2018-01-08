@@ -14,6 +14,7 @@ import messages from './message';
 import '../semantic/dist/semantic.css';
 import '../semantic/dist/semantic';
 import './filter';
+import { firebaseConfig } from './config';
 
 Vue.config.productionTip = false;
 Vue.use(VueProgressiveImage);
@@ -27,14 +28,7 @@ const i18n = new VueI18n({
 });
 
 // allows usage of firebase in your vue components by using this.$firebase
-Vue.prototype.$firebase = firebase.initializeApp({
-  apiKey: 'AIzaSyD6QnbW4Sk4kZuWdGzO2BkIKtHj9n4CxHg',
-  authDomain: 'my-blog-68afd.firebaseapp.com',
-  databaseURL: 'https://my-blog-68afd.firebaseio.com',
-  projectId: 'my-blog-68afd',
-  storageBucket: '',
-  messagingSenderId: '157291960262',
-});
+Vue.prototype.$firebase = firebase.initializeApp(firebaseConfig);
 
 /* eslint-disable no-new */
 /* eslint-disable no-unused-vars */

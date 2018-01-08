@@ -7,10 +7,10 @@
         <img class="ui small image" v-if="!article.coverImage" src="https://i.imgur.com/I3QyKzY.png"/>
         <div class="content">
           <router-link :to="`/article/${article.id}`">{{ article.title }}</router-link>
-          <div class="description">Updated {{article.lastModified | fromNow}}</div>
+          <div class="description">Updated {{article.modifyTimestamp | fromNow}}</div>
           <br/>
-          <div class="ui brown basic horizontal label small" v-if="article.status === 0">Draft</div>
-          <div class="ui green basic horizontal label small" v-if="article.status !== 0">Public</div>
+          <div class="ui brown basic horizontal label small" v-if="!isPublished(article.status)">Draft</div>
+          <div class="ui green basic horizontal label small" v-if="isPublished(article.status)">Public</div>
           <router-link class="ui green basic horizontal label small" :to="`/article/${article.id}/edit`">Edit</router-link>
           <div class="ui button red basic horizontal label small" @click="() => showConfirmDeleteModal(article)">Delete</div>
         </div>
@@ -36,13 +36,22 @@
         </div>
       </div>
     </div>
+    <!-- fallback when no items found -->
+    <div class="ui message" v-if="!userArticles || userArticles.length === 0">
+      <div class="header">
+        No items found
+      </div>
+      <p>You haven't written any posts yet. Select 'Create New' from the menu to start one.</p>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import * as $ from 'jquery';
+import NprogressContainer from 'vue-nprogress/src/NprogressContainer';
 import Loader from '../common/Loader';
+import { ARTICLE_STATUS } from '../../services/const';
 
 export default {
   data() {
@@ -65,15 +74,13 @@ export default {
       // delete physical
       // this.$store.dispatch('article/readArticlesByUser', this.$route.params.id);
     },
-    openModal() {
-      $('.modal').modal('show');
-    },
-    closeModal() {
-      $('.modal').modal('close');
-    },
+    openModal: () => $('.modal').modal('show'),
+    closeModal: () => $('.modal').modal('close'),
+    isPublished: articleStatus => articleStatus === ARTICLE_STATUS.PUBLISH,
   },
   components: {
     Loader,
+    NprogressContainer,
   },
 };
 </script>

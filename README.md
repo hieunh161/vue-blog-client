@@ -37,13 +37,13 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [x] Add homepage
 [x] Add footer
 [x] Tag + Category
-[ ] add hightlight or prismjs + markdown css
+[x] add hightlight or prismjs + markdown css
 [ ] add facebook comments or custom comment to site
 [ ] add related article
 [ ] paging data of home page based on category
 [ ] add personal page
 [ ] add multi language
-[ ] add tag page
+[ ] add tag/category page
 
 ## Problems
 1. Order in add item in firebase (not in date order but in id order)

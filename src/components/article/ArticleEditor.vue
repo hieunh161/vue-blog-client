@@ -103,11 +103,11 @@ export default {
       }
     },
     privateArticle() {
-      this.article.status = 0;
+      this.article.status = ARTICLE_STATUS.DRAFT;
       this.saveArticle();
     },
     publishArticle() {
-      this.article.status = 1;
+      this.article.status = ARTICLE_STATUS.PUBLISH;
       this.saveArticle();
     },
     saveArticle() {

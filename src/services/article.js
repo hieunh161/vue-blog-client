@@ -2,6 +2,7 @@ import * as firebase from 'firebase';
 import * as axios from 'axios';
 import util from './util';
 import { REF_ARTICLE, REF_USER, IMG_UPLOAD_URL, REF_ARTICLE_SHALLOW } from './const';
+import { imgUrlConfig } from '../config';
 
 const createTemplateArticle = (metaData) => {
   const articleContent = 'Start writing here...';
@@ -68,7 +69,7 @@ const readAllArticles = () => {
 };
 
 const readArticlesByUser = (userId) => {
-  const ref = firebase.database().ref(REF_ARTICLE).orderByChild('author/uid').equalTo(userId);
+  const ref = firebase.database().ref(REF_ARTICLE).orderByChild('createUser').equalTo(userId);
   return ref.once('value').then(snapshot => util.getListArticleFromSnap(snapshot));
 };
 
@@ -91,7 +92,8 @@ const uploadImage = (formData) => {
     method: 'post',
     data: formData,
     headers: {
-      Authorization: 'Client-ID 5b3be50a7c3a7ff',
+      Authorization: imgUrlConfig.authorization,
+      // Authorization: 'Client-ID 5b3be50a7c3a7ff',
     },
   };
   return axios(config)// get data
