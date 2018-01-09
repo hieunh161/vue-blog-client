@@ -44,6 +44,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [ ] add personal page
 [ ] add multi language
 [ ] add tag/category page
+[ ] add sticky bar for actions
 
 ## Problems
 1. Order in add item in firebase (not in date order but in id order)

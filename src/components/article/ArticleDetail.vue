@@ -1,5 +1,9 @@
 <template>
   <div class="article-detail">
+    <div class="sidebar" v-if="!isLoadingArtice && article">
+      <i class="circular ui icon big heart orange link" :class="{outline:!isLiked}" @click="likeArticle"></i>
+      <div class="like">{{numberLiked}}</div>
+    </div>
     <div class="ui main container" id="context" >
       <!-- progress bar -->
       <loader v-if="isLoadingArtice && !article"></loader>
@@ -241,4 +245,20 @@ a.header {
   background-color: #F7F7F7;
   min-height: calc(100vh - 144px);
 }
+
+@media screen {
+  .sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: calc(35vh);
+    margin-left: calc(8vw);
+    width: 50px;
+    text-align: center;
+  }
+  .like {
+    margin-top: 8px;
+    font-size: 16px;
+  }
+}
+
 </style>
