@@ -16,12 +16,14 @@ import '../semantic/dist/semantic';
 import './assets/css/nprogress.css';
 import './filter';
 import { firebaseConfig } from './config';
+import libPlugin from './plugin/libPlugin';
 
 Vue.config.productionTip = false;
 Vue.use(VueProgressiveImage);
 Vue.use(SocialSharing);
 Vue.use(Notifications);
 Vue.use(VueI18n);
+Vue.use(libPlugin);
 
 const i18n = new VueI18n({
   locale: 'en',
@@ -36,6 +38,7 @@ Vue.prototype.$firebase = firebase.initializeApp(firebaseConfig);
 // const unsubscribe = firebase.auth().onAuthStateChanged(() => {
 const vue = new Vue({
   i18n,
+  // libPlugin,
   el: '#app',
   router,
   store,

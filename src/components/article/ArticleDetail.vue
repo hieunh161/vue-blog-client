@@ -1,62 +1,64 @@
 <template>
   <div class="article-detail">
-    <div class="ui main container">
+    <div class="ui main container" id="context" >
       <!-- progress bar -->
       <loader v-if="isLoadingArtice && !article"></loader>
       <!-- article content -->
       <div class="article" v-if="!isLoadingArtice && article">
-        <div class="article-header ui header">
-          <h1 class="article-title">{{article.title}}</h1>
-        </div>
-        <div class="article-meta">
-          <p>
-            <span class="meta-attribute"><i class="ui icon calendar"></i>{{article.lastModified | formatDate}}</span>
-            <span class="meta-attribute"><i class="ui icon wait"></i>{{article.content | minToRead}} min read</span>
-            <span class="meta-attribute"><i class="ui icon unhide"></i> {{article.views}}</span>
-            <span class="meta-attribute">
-              <i class="ui icon heart orange link" :class="{outline:!isLiked}" @click="likeArticle"></i>
-              {{numberLiked}}
-            </span>
-          </p>
-        </div>
-        <div class="content">
-          <!-- cover image -->
-          <div class="coverImage">
-            <img class="ui centered image" id="coverImage" :src="article.coverImage ? article.coverImage.url : ''"/>
+        <div>
+          <div class="article-header ui header">
+            <h1 class="article-title">{{article.title}}</h1>
           </div>
-          <!-- article tag -->
-          <div class="ui tiny horizontal list" v-if="article.tags">
-            <div class="item" v-for="tag in Object.keys(article.tags)" v-bind:key="tag" >
-              <div class="ui  label">{{tag}}</div>
+          <div class="article-meta">
+            <p>
+              <span class="meta-attribute"><i class="ui icon calendar"></i>{{article.lastModified | formatDate}}</span>
+              <span class="meta-attribute"><i class="ui icon wait"></i>{{article.content | minToRead}} min read</span>
+              <span class="meta-attribute"><i class="ui icon unhide"></i> {{article.views}}</span>
+              <span class="meta-attribute">
+                <i class="ui icon heart orange link" :class="{outline:!isLiked}" @click="likeArticle"></i>
+                {{numberLiked}}
+              </span>
+            </p>
+          </div>
+          <div class="content">
+            <!-- cover image -->
+            <div class="coverImage">
+              <img class="ui centered image" id="coverImage" :src="article.coverImage ? article.coverImage.url : ''"/>
             </div>
-          </div>
-          <div class="mrkdwn-body">
-            <span v-html="article.content ? marked(article.content) : ''"></span>
-          </div>
-          <div>
-          </div>
-          <div class="meta-header">
-            <div class="ui items">
-              <div class="item">
-                <a class="ui tiny image avatar">
-                  <img :src="article.author.photoURL">
-                </a>
-                <div class="content">
-                  <a class="header">{{article.author.displayName}}</a>
-                  <span v-if="!isMyArticle">
-                    <span @click="followUser" v-if="!isFollowed" class="follow ui mini button basic green circular"><i class="user icon"></i>Follow</span>
-                    <span @click="unfollowUser" v-if="isFollowed" class="follow ui mini button green circular"><i class="user icon"></i>Following</span>
-                  </span>
-                  <div class="description">
-                    <p>{{article.author.description}}</p>
+            <!-- article tag -->
+            <div class="ui tiny horizontal list" v-if="article.tags">
+              <div class="item" v-for="tag in Object.keys(article.tags)" v-bind:key="tag" >
+                <div class="ui  label">{{tag}}</div>
+              </div>
+            </div>
+            <div class="mrkdwn-body">
+              <span v-html="article.content ? marked(article.content) : ''"></span>
+            </div>
+            <div>
+            </div>
+            <div class="meta-header">
+              <div class="ui items">
+                <div class="item">
+                  <a class="ui tiny image avatar">
+                    <img :src="article.author.photoURL">
+                  </a>
+                  <div class="content">
+                    <a class="header">{{article.author.displayName}}</a>
+                    <span v-if="!isMyArticle">
+                      <span @click="followUser" v-if="!isFollowed" class="follow ui mini button basic green circular"><i class="user icon"></i>Follow</span>
+                      <span @click="unfollowUser" v-if="isFollowed" class="follow ui mini button green circular"><i class="user icon"></i>Following</span>
+                    </span>
+                    <div class="description">
+                      <p>{{article.author.description}}</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <social-network :pageUrl="getPageUrl"></social-network>
+            <!-- facebook comment -->
+            <div class="fb-comments" data-href="my-blog-68afd.firebaseapp.com/article/-L2AhDoogBulzEAfSIoq" data-numposts="10"></div>
           </div>
-          <social-network :pageUrl="getPageUrl"></social-network>
-          <!-- facebook comment -->
-          <div class="fb-comments" data-href="my-blog-68afd.firebaseapp.com/article/-L2AhDoogBulzEAfSIoq" data-numposts="10"></div>
         </div>
       </div>
       <!-- fallback when content not found -->
@@ -68,8 +70,6 @@
 import { mapGetters } from 'vuex';
 import marked, { Renderer } from 'marked';
 import highlightjs from 'highlight.js';
-import _ from 'lodash';
-import nprogress from 'nprogress';
 import Loader from '../common/Loader';
 import PageNotFound from '../PageNotFound';
 import SocialNetwork from '../common/SocialNetwork';
@@ -94,16 +94,15 @@ export default {
     // Set the renderer to marked.
     marked.setOptions({ renderer });
     // load data from api
-    nprogress.start();
+    this.$np.start();
     this.isLoadingArtice = true;
     this.$store.dispatch('article/readArticleByIdWithViewUpdate', { articleId: this.$route.params.id })
       .then(() => {
         this.isLoadingArtice = false;
-        nprogress.done();
+        this.$np.done();
       });
   },
   mounted() {
-    console.log(this.$route.path);
   },
   computed: {
     ...mapGetters('article', ['article', 'articleId']),
@@ -124,7 +123,7 @@ export default {
     numberLiked() {
       if (this.article.likes) {
         // return default value when liked number is undefined
-        return _.countBy(Object.values(this.article.likes)).true || 0;
+        return this._.countBy(Object.values(this.article.likes)).true || 0;
       }
       return 0;
     },

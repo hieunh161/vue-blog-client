@@ -19,6 +19,14 @@ export const USER_ROLE = {
   ADMIN: 20,
 };
 
+/* Upload Status */
+export const UPLOAD_STATUS = {
+  INITIAL: 0,
+  SAVING: 10,
+  SUCCESS: 20,
+  FAILED: 30,
+};
+
 /* External URL */
 export const IMG_UPLOAD_URL = 'https://api.imgur.com/3/image.json';
 

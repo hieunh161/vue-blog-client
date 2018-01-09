@@ -36,11 +36,7 @@
 <script>
 import * as axios from 'axios';
 import Loader from '../common/Loader';
-
-const STATUS_INITIAL = 0;
-const STATUS_SAVING = 1;
-const STATUS_SUCCESS = 2;
-const STATUS_FAILED = 3;
+import { UPLOAD_STATUS } from '../../services/const';
 
 /* global $:true */
 export default {
@@ -58,23 +54,23 @@ export default {
       // article: {},
       message: 'files',
       uploadFieldName: 'image',
-      uploadStatus: STATUS_INITIAL,
+      uploadStatus: UPLOAD_STATUS.INITIAL,
       uploadedLink: '',
       isDragOver: false,
     };
   },
   computed: {
     isInitial() {
-      return this.uploadStatus === STATUS_INITIAL;
+      return this.uploadStatus === UPLOAD_STATUS.INITIAL;
     },
     isSaving() {
-      return this.uploadStatus === STATUS_SAVING;
+      return this.uploadStatus === UPLOAD_STATUS.SAVING;
     },
     isSuccess() {
-      return this.uploadStatus === STATUS_SUCCESS;
+      return this.uploadStatus === UPLOAD_STATUS.SUCCESS;
     },
     isFailed() {
-      return this.uploadStatus === STATUS_FAILED;
+      return this.uploadStatus === UPLOAD_STATUS.FAILED;
     },
   },
   methods: {
@@ -89,7 +85,7 @@ export default {
       const formData = new FormData();
       if (!fileList.length) return;
       // append the files to FormData
-      this.uploadStatus = STATUS_SAVING;
+      this.uploadStatus = UPLOAD_STATUS.SAVING;
       Array
         .from(Array(fileList.length).keys())
         .map(x => formData.append(fieldName, fileList[x], fileList[x].name));
@@ -115,7 +111,7 @@ export default {
           const result = Object.assign({}, x.data, { url: x.data.link });
           console.log(result);
           this.uploadedLink = x.data.link;
-          this.uploadStatus = STATUS_INITIAL;
+          this.uploadStatus = UPLOAD_STATUS.INITIAL;
           return Promise.resolve(x.data);
         });
     },

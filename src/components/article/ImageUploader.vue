@@ -51,11 +51,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import $ from 'jquery';
-
-const STATUS_INITIAL = 0;
-const STATUS_SAVING = 1;
-const STATUS_SUCCESS = 2;
-const STATUS_FAILED = 3;
+import { UPLOAD_STATUS } from '../../services/const';
 
 export default {
   data() {
@@ -67,21 +63,21 @@ export default {
     ...mapGetters({ uploadStatus: 'article/uploadStatus' }),
     ...mapGetters({ coverImage: 'article/coverImage' }),
     isInitial() {
-      return this.uploadStatus === STATUS_INITIAL;
+      return this.uploadStatus === UPLOAD_STATUS.INITIAL;
     },
     isSaving() {
-      return this.uploadStatus === STATUS_SAVING;
+      return this.uploadStatus === UPLOAD_STATUS.SAVING;
     },
     isSuccess() {
-      return this.uploadStatus === STATUS_SUCCESS;
+      return this.uploadStatus === UPLOAD_STATUS.SUCCESS;
     },
     isFailed() {
-      return this.uploadStatus === STATUS_FAILED;
+      return this.uploadStatus === UPLOAD_STATUS.FAILED;
     },
   },
   methods: {
     reset() {
-      this.$store.dispatch('article/updateUploadStatus', STATUS_INITIAL);
+      this.$store.dispatch('article/updateUploadStatus', UPLOAD_STATUS.INITIAL);
     },
     save(formData) {
       this.$store.dispatch('article/uploadImage', formData);

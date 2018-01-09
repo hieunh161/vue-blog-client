@@ -2,11 +2,10 @@ import * as firebase from 'firebase';
 import * as axios from 'axios';
 import util from './util';
 import { REF_ARTICLE, REF_USER, IMG_UPLOAD_URL, REF_ARTICLE_SHALLOW } from './const';
-import { imgUrlConfig } from '../config';
+import { imgUrlConfig, firebaseConfig } from '../config';
 
 const createTemplateArticle = (metaData) => {
   const articleContent = 'Start writing here...';
-  console.log(metaData);
   const content = {
     // userId,
     // userPhotoURL,
@@ -85,6 +84,10 @@ const setArticleCoverImage = (articleId, img) =>
 firebase.database().ref(REF_ARTICLE).child(articleId).child('coverImage')
 .set(img);
 
+// use json?shallow=true
+console.log(firebaseConfig.databaseURL);
+const getNumberOfArticles = () => 100;
+
 const deleteArticle = articleId => firebase.database().ref(REF_ARTICLE).child(articleId).remove();
 
 const uploadImage = (formData) => {
@@ -136,4 +139,6 @@ export default {
   createTemplateArticle,
   setArticleCoverImage,
   likeArticle,
+  // get
+  getNumberOfArticles,
 };

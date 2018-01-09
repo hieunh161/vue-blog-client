@@ -4,15 +4,9 @@ import _ from 'lodash';
 import * as types from '../mutation-types';
 import articleService from '../../services/article';
 import tagService from '../../services/tag';
+import { UPLOAD_STATUS } from '../../services/const';
 
 /* eslint-disable no-param-reassign */
-const STATUS = {
-  INITIAL: 0,
-  SAVING: 1,
-  SUCCESS: 2,
-  FAILED: 3,
-};
-
 const INITIAL_STATE = {
   // article
   articleId: '',
@@ -20,12 +14,15 @@ const INITIAL_STATE = {
   allArticles: [],
   userArticles: [],
   // image uploading
-  uploadStatus: STATUS.INITIAL,
+  uploadStatus: UPLOAD_STATUS.INITIAL,
   // loading status
-  isLoading: false,
   isSavingDraft: false,
   isPublishingArticle: false,
   isLoadingArticlesByUser: false,
+  // Lazy load and paging
+  numberArticlePerPage: 10,
+  pageIndex: 0,
+  totalArticles: 0,
 };
 
 // getters
@@ -37,7 +34,6 @@ const getters = {
   allArticles: s => s.allArticles,
   userArticles: s => s.userArticles,
   // loading status
-  isLoading: s => s.isLoading,
   isSavingDraft: s => s.isSavingDraft,
   isPublishingArticle: s => s.isPublishingArticle,
   isLoadingArticlesByUser: s => s.isLoadingArticlesByUser,
@@ -64,9 +60,6 @@ const mutations = {
       s.article.coverImage = coverImage;
     }
   },
-  [types.UPDATE_LOADING_FLAG](s, isLoading) {
-    s.isLoading = isLoading;
-  },
   [types.UPDATE_UPLOADING_STATUS](s, status) {
     s.uploadStatus = status;
   },
@@ -88,7 +81,9 @@ const mutations = {
     }
     // update likes only if likes object exist
     s.article.likes = Object.assign({}, s.article.likes, updateData);
-    console.log(s.article);
+  },
+  [types.GET_NUMBER_ARTICLES](s, number) {
+    s.numberArticles = number;
   },
 };
 
@@ -98,36 +93,14 @@ const actions = {
     commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
     return articleService.createTemplateArticle(user);
   },
-  readArticle: ({ commit, state }, { articleId, router }) => {
-    commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
-    commit(types.UPDATE_LOADING_FLAG, true);
-    commit(types.SET_ARTICLE_ID, articleId);
-    return articleService.readArticle(articleId).then(
-      (articleContent) => {
-        commit(types.UPDATE_LOADING_FLAG, false);
-        if (articleContent) {
-          commit(types.SET_ARTICLE, articleContent);
-          if (articleContent.coverImage) {
-            commit(types.UPDATE_UPLOADING_STATUS, STATUS.SUCCESS);
-          }
-          // increase number of views by one
-          const views = articleContent.views + 1;
-          articleService.updateArticleProperty(state.articleId, { views });
-        } else {
-          router.push({ path: 'page-not-found' });
-        }
-      });
-  },
   readArticleById: ({ commit, state }, { articleId }) => {
     commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
-    commit(types.UPDATE_LOADING_FLAG, true);
     commit(types.SET_ARTICLE_ID, articleId);
     return articleService.readArticle(articleId)
     .then(content => commit(types.SET_ARTICLE, content));
   },
   readArticleByIdWithViewUpdate: ({ commit, state }, { articleId }) => {
     commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
-    commit(types.UPDATE_LOADING_FLAG, true);
     commit(types.SET_ARTICLE_ID, articleId);
     return articleService.readArticle(articleId)
     .then((content) => {
@@ -142,12 +115,13 @@ const actions = {
     articleService.readAllArticles()
     .then(articles => commit(types.READ_ALL_ARTICLES, articles));
   },
+  getNumberOfArticles: ({ commit }) => articleService.getNumberOfArticles()
+    .then(number => commit(types.GET_NUMBER_ARTICLES, number)),
   readArticlesByUser: ({ commit }, userId) => articleService.readArticlesByUser(userId)
     .then(articles => commit(types.READ_USER_ARTICLES, articles)),
   updateArticle: (context, updateData) => {
     // update tags
     const { addTags, deleteTags, articleId } = updateData;
-    console.log(updateData);
     return tagService.updateTags(addTags, articleId, true)
     .then(() => tagService.updateTags(deleteTags, articleId, false))
     .then(() => articleService.updateArticle(updateData));
@@ -165,7 +139,7 @@ const actions = {
     });
   },
   uploadImage: ({ commit, dispatch }, formData) => {
-    commit(types.UPDATE_UPLOADING_STATUS, STATUS.SAVING);
+    commit(types.UPDATE_UPLOADING_STATUS, UPLOAD_STATUS.SAVING);
     articleService.uploadImage(formData)
       .then(img => dispatch('setArticleCoverImage', img));
   },
@@ -175,12 +149,12 @@ const actions = {
   setArticleCoverImage: ({ commit, state }, img) => {
     articleService.setArticleCoverImage(state.articleId, img).then(
       () => {
-        commit(types.UPDATE_UPLOADING_STATUS, STATUS.SUCCESS);
+        commit(types.UPDATE_UPLOADING_STATUS, UPLOAD_STATUS.SUCCESS);
         commit(types.UPDATE_COVER_IMAGE, img);
       },
     ).catch((err) => {
       console.log(err);
-      commit(types.UPDATE_UPLOADING_STATUS, STATUS.FAILED);
+      commit(types.UPDATE_UPLOADING_STATUS, UPLOAD_STATUS.FAILED);
     });
   },
   // like article
