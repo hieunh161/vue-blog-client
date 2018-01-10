@@ -21,8 +21,10 @@ const INITIAL_STATE = {
   isLoadingArticlesByUser: false,
   // Lazy load and paging
   numberArticlePerPage: 10,
+  articleIds: null,
   pageIndex: 0,
   totalArticles: 0,
+  totalPages: 0,
 };
 
 // getters
@@ -82,16 +84,43 @@ const mutations = {
     // update likes only if likes object exist
     s.article.likes = Object.assign({}, s.article.likes, updateData);
   },
-  [types.GET_NUMBER_ARTICLES](s, number) {
-    s.numberArticles = number;
+  [types.GET_NUMBER_ARTICLES](s, articleIds) {
+    s.articleIds = articleIds;
+    s.numberArticles = Object.keys(articleIds).length;
+    // total page
+    s.totalPages = Math.ceil(s.numberArticles / s.numberArticlePerPage);
   },
 };
 
 const actions = {
   createTemplateArticle: ({ commit }, user) => {
+    const articleTemplate = {
+      author: {
+        uid: user.uid,
+        photoURL: user.photoURL,
+        displayName: user.displayName,
+        description: user.description,
+      },
+      title: '',
+      content: 'Start writing here...',
+      slugify: '',
+      createTimestamp: Date.now(),
+      modifyTemestamp: Date.now(),
+      createUser: user.uid,
+      updateUser: user.uid,
+      published: false,
+      status: 0,
+      views: 0,
+      coverImage: {},
+      category: {},
+      tags: {},
+      comments: {},
+      likes: {},
+      isDelete: false,
+    };
     // reset all article data to default
     commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
-    return articleService.createTemplateArticle(user);
+    return articleService.createTemplateArticle(articleTemplate, user);
   },
   readArticleById: ({ commit, state }, { articleId }) => {
     commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
@@ -116,7 +145,7 @@ const actions = {
     .then(articles => commit(types.READ_ALL_ARTICLES, articles));
   },
   getNumberOfArticles: ({ commit }) => articleService.getNumberOfArticles()
-    .then(number => commit(types.GET_NUMBER_ARTICLES, number)),
+    .then(articleIds => commit(types.GET_NUMBER_ARTICLES, articleIds)),
   readArticlesByUser: ({ commit }, userId) => articleService.readArticlesByUser(userId)
     .then(articles => commit(types.READ_USER_ARTICLES, articles)),
   updateArticle: (context, updateData) => {
@@ -165,6 +194,7 @@ const actions = {
     commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);
     return articleService.likeArticle(articleId, userId, isLiked);
   },
+  // getNumberOfArticles: () => articleService.getNumberOfArticles(),
 };
 
 // initial state

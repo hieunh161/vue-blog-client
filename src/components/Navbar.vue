@@ -3,21 +3,21 @@
     <div class="ui menu attached inverted teal" id="nav-bar">
       <div class="ui container">
         <!-- left menu -->
-        <router-link class="nav-link item"  to="/" ><img class="logo" src="../assets/images/logo.png"> Educator</router-link>
+        <router-link class="nav-link item"  to="/" ><img class="logo" src="../assets/images/logo.png"> {{ $t('message.app.title') }}</router-link>
         <!-- right menu -->
         <div class="right menu">
-          <router-link class="nav-link item"  to="/login" v-if="!isLoggedIn" ><i class="ui icon sign in"></i> Login</router-link>
+          <router-link class="nav-link item"  to="/login" v-if="!isLoggedIn" ><i class="ui icon sign in"></i> {{ $t('message.navbar.login') }}</router-link>
           <!-- dropdown menu -->
           <div class="ui simple dropdown item" v-if="isLoggedIn">
             <img class="ui avatar image" :src= "avatar"/>
             <span>{{currentUser.displayName}}</span> <i class="dropdown icon"></i>
             <div class="menu">
-              <router-link class="nav-link item"  to="/user"><i class="user icon"></i> My Profile</router-link>
-              <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> My Articles</router-link>
+              <router-link class="nav-link item"  to="/user"><i class="user icon"></i> {{ $t('message.navbar.my_profile') }}</router-link>
+              <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> {{ $t('message.navbar.my_article') }}</router-link>
               <article-template></article-template>
               <div class="divider"></div>
-              <router-link class="nav-link item"  to="/dashboard" v-if="isAdmin"><i class="user icon"></i> Admin</router-link>
-              <a v-on:click="logout" class="nav-link item" v-if="isLoggedIn"><i class="sign out icon"></i> Logout</a>
+              <router-link class="nav-link item"  to="/dashboard" v-if="isAdmin"><i class="user icon"></i> {{ $t('message.navbar.admin') }}</router-link>
+              <a v-on:click="logout" class="nav-link item" v-if="isLoggedIn"><i class="sign out icon"></i> {{ $t('message.navbar.logout') }}</a>
             </div>
           </div>
         </div>

@@ -1,14 +1,14 @@
 <template>
   <div class="ui container" id="login-page">
-    <h1><i class="ui icon sign in"></i>SignIn</h1>
+    <h1><i class="ui icon sign in"></i>{{ $t('message.login.title') }}</h1>
     <div @click="facebookLogin" class="ui fluid large facebook button circular">
       <i class="facebook icon"></i>
-      Facebook
+      {{ $t('message.login.facebook') }}
     </div>
-    <div class="ui horizontal divider">OR</div>
+    <div class="ui horizontal divider">{{ $t('message.login.or') }}</div>
     <div @click="googleLogin" class="ui fluid large google plus button circular">
       <i class="google plus icon"></i>
-      Google Plus
+      {{ $t('message.login.google') }}
     </div>
   </div>
 </template>

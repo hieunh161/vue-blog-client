@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-link item" @click="createTemplateArticle"><i class="write icon"></i>Create New</div>
+  <div class="nav-link item" @click="createTemplateArticle"><i class="write icon"></i>{{ $t('message.navbar.create_new') }}</div>
 </template>
 
 <script>

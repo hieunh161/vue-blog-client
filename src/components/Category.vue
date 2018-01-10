@@ -4,9 +4,9 @@
       <table class="ui celled table" v-if="!isLoadingCategory">
         <thead>
           <tr>
-            <th>Category</th>
-            <th>LastModified</th>
-            <th>Action</th>
+            <th>{{ $t('message.category.title') }}</th>
+            <th>{{ $t('message.category.last_modified') }}</th>
+            <th>{{ $t('message.category.action') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -22,55 +22,55 @@
       </table>
       <div class="ui segment" id="categoryLoader" v-if="isLoadingCategory">
         <div class="ui active inverted dimmer">
-          <div class="ui text loader">Loading Category...</div>
+          <div class="ui text loader">{{ $t('message.category.loading') }}</div>
         </div>
         <p></p>
       </div>
-      <button class="ui button circular basic positive" v-if="!isShowAddCategoryForm" @click="isShowAddCategoryForm = !isShowAddCategoryForm">Add New Category</button>
-      <button class="ui button circular basic positive" v-if="isShowAddCategoryForm" @click="isShowAddCategoryForm = !isShowAddCategoryForm">Hide Category</button>
+      <button class="ui button circular basic positive" v-if="!isShowAddCategoryForm" @click="isShowAddCategoryForm = !isShowAddCategoryForm">{{ $t('message.category.add_form') }}</button>
+      <button class="ui button circular basic positive" v-if="isShowAddCategoryForm" @click="isShowAddCategoryForm = !isShowAddCategoryForm">{{ $t('message.category.hide_form') }}</button>
     </div>
     <!-- <confirm-modal></confirm-modal> -->
     <!-- modal -->
     <div class="ui modal">
       <i class="close icon"></i>
       <div class="header">
-        Confirm
+        {{ $t('message.common.confirm') }}
       </div>
       <div class="content">
         <div class="description">
-          <p>Do you want to delete {{selectedCategory ? selectedCategory.value.title : ''}} category?</p>
+          <p>{{ $t('message.confirm.delete_category', { category: selectedCategory ? selectedCategory.value.title : '' }) }}</p>
         </div>
       </div>
       <div class="actions">
-        <div class="ui basic red deny circular button">
-          Cancel
+        <div class="ui basic deny circular button">
+          {{ $t('button.common.cancel') }}
         </div>
-        <div class="ui positive circular button" @click="deleteCategory">
-          Yes
+        <div class="ui orange circular button" @click="deleteCategory">
+          {{ $t('button.common.delete') }}
         </div>
       </div>
     </div>
     <div v-if="isShowAddCategoryForm">
       <div class="ui divider"></div>
-      <div class="ui header">Add Category</div>
+      <div class="ui header">{{ $t('message.category.add') }}</div>
       <div class="ui form">
         <div class="field">
           <!-- <label>Add Category</label> -->
           <input type="text" v-model="addedCategory" name="category" placeholder="Add Category">
         </div>
-        <button class="ui button positive circular" @click="addCategory">Add</button>
+        <button class="ui button positive circular" @click="addCategory">{{ $t('button.common.add') }}</button>
       </div>
     </div>
     <div v-if="isShowUpdateCategoryForm">
       <div class="ui divider"></div>
-      <div class="ui header">Update Category</div>
+      <div class="ui header">{{ $t('message.category.update') }}</div>
       <div class="ui form">
         <div class="field">
           <!-- <label>Update Category</label> -->
           <input type="text" v-model="updatedCategory.value.title" name="category" placeholder="Add Category">
         </div>
-        <button class="ui button positive circular" :class='{loading:isUpdatingCategory}' @click="updateCategory">Update</button>
-        <button class="ui button basic circular red" @click="isShowUpdateCategoryForm = false">Cancel Update</button>
+        <button class="ui button basic circular" @click="isShowUpdateCategoryForm = false">{{ $t('button.common.cancel') }}</button>
+        <button class="ui button positive circular" :class='{loading:isUpdatingCategory}' @click="updateCategory">{{ $t('button.common.update') }}</button>
       </div>
     </div>
     <!-- footer -->
@@ -80,9 +80,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import * as $ from 'jquery';
-// import Toast from 'awesome-vue-toast';
-// import modal from './common/SemanticModal';
 
 export default {
   data() {
@@ -98,9 +95,13 @@ export default {
     };
   },
   mounted() {
+    this.$np.start();
     this.isLoadingCategory = true;
     this.$store.dispatch('category/readCategory')
-    .then(() => { this.isLoadingCategory = false; });
+    .then(() => {
+      this.isLoadingCategory = false;
+      this.$np.done();
+    });
   },
   methods: {
     addCategory() {
@@ -130,10 +131,10 @@ export default {
       }
     },
     openModal() {
-      $('.modal').modal('show');
+      this.$('.modal').modal('show');
     },
     closeModal() {
-      $('.modal').modal('close');
+      this.$('.modal').modal('close');
     },
   },
   computed: {

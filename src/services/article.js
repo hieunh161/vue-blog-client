@@ -4,53 +4,16 @@ import util from './util';
 import { REF_ARTICLE, REF_USER, IMG_UPLOAD_URL, REF_ARTICLE_SHALLOW } from './const';
 import { imgUrlConfig, firebaseConfig } from '../config';
 
-const createTemplateArticle = (metaData) => {
-  const articleContent = 'Start writing here...';
-  const content = {
-    // userId,
-    // userPhotoURL,
-    // userDisplayName,
-    // userDescription,
-    author: {
-      uid: metaData.uid,
-      photoURL: metaData.photoURL,
-      displayName: metaData.displayName,
-      description: metaData.description,
-    },
-    title: '',
-    coverImage: {},
-    // {
-    //   height: 400,
-    //   width: 800,
-    //   type: 'image/png',
-    //   link: DEFAULT_COVER_IMAGE,
-    //   name: '',
-    //   size: 37490,
-    //   url: DEFAULT_COVER_IMAGE,
-    // },
-    content: articleContent,
-    slugify: '',
-    createTimestamp: Date.now(),
-    modifyTemestamp: Date.now(),
-    createUser: metaData.uid,
-    updateUser: metaData.uid,
-    published: false,
-    status: 0,
-    views: 0,
-    // {} will not be insert to firebase
-    category: {},
-    tags: {},
-    comments: {},
-    likes: {},
-    isDelete: false,
-  };
-  return firebase.database().ref(REF_ARTICLE).push(content)
+const createTemplateArticle = (articleTemplate, user) => {
+  const userId = user.uid;
+  return firebase.database()
+  .ref(REF_ARTICLE).push(articleTemplate)
   .then((result) => {
     const articleId = result.key;
     const articleObject = {};
     articleObject[articleId] = true;
     firebase.database().ref(REF_USER)
-    .child(metaData.uid).child(REF_ARTICLE)
+    .child(userId).child(REF_ARTICLE)
     .update(articleObject);
     firebase.database().ref(REF_ARTICLE_SHALLOW)
     .update(articleObject);
@@ -77,24 +40,35 @@ const updateArticle = ({ articleId, article }) =>
 firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
 
 
-const updateArticleProperty = (articleId, data) =>
-firebase.database().ref(REF_ARTICLE).child(articleId).update(data);
+const updateArticleProperty = (articleId, article) =>
+firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
 
 const setArticleCoverImage = (articleId, img) =>
 firebase.database().ref(REF_ARTICLE).child(articleId).child('coverImage')
 .set(img);
 
-// use json?shallow=true
-console.log(firebaseConfig.databaseURL);
-const getNumberOfArticles = () => 100;
+const getNumberOfArticles = () => {
+  const url = `${firebaseConfig.databaseURL}/article.json?shallow=true`;
+  return axios.get(url).then(response => response.data);
+};
+
+const getNumberOfArticlesByUser = (userId) => {
+  const url = `${firebaseConfig.databaseURL}/user/${userId}/article.json?shallow=true`;
+  return axios.get(url).then(response => response.data);
+};
+
+const getNumberOfArticlesByCategory = (categoryId) => {
+  const url = `${firebaseConfig.databaseURL}/category/${categoryId}/article.json?shallow=true`;
+  return axios.get(url).then(response => response.data);
+};
 
 const deleteArticle = articleId => firebase.database().ref(REF_ARTICLE).child(articleId).remove();
 
-const uploadImage = (formData) => {
+const uploadImage = (imageData) => {
   const config = {
     url: IMG_UPLOAD_URL,
     method: 'post',
-    data: formData,
+    data: imageData,
     headers: {
       Authorization: imgUrlConfig.authorization,
       // Authorization: 'Client-ID 5b3be50a7c3a7ff',
@@ -139,6 +113,7 @@ export default {
   createTemplateArticle,
   setArticleCoverImage,
   likeArticle,
-  // get
   getNumberOfArticles,
+  getNumberOfArticlesByUser,
+  getNumberOfArticlesByCategory,
 };

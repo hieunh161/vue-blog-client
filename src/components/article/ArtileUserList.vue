@@ -9,10 +9,10 @@
           <router-link :to="`/article/${article.id}`">{{ article.title }}</router-link>
           <div class="description">Updated {{article.modifyTimestamp | fromNow}}</div>
           <br/>
-          <div class="ui brown basic horizontal label small" v-if="!isPublished(article.status)">Draft</div>
-          <div class="ui green basic horizontal label small" v-if="isPublished(article.status)">Public</div>
-          <router-link class="ui green basic horizontal label small" :to="`/article/${article.id}/edit`">Edit</router-link>
-          <div class="ui button red basic horizontal label small" @click="() => showConfirmDeleteModal(article)">Delete</div>
+          <div class="ui brown basic horizontal label small" v-if="!isPublished(article.status)">{{ $t('message.article.status.draft') }}</div>
+          <div class="ui green basic horizontal label small" v-if="isPublished(article.status)">{{ $t('message.article.status.publish') }}</div>
+          <router-link class="ui green basic horizontal label small" :to="`/article/${article.id}/edit`">{{ $t('button.common.update') }}</router-link>
+          <div class="ui button red basic horizontal label small" @click="() => showConfirmDeleteModal(article)">{{ $t('button.common.delete') }}</div>
         </div>
       </div>
     </div>
@@ -20,11 +20,11 @@
     <div class="ui modal">
       <i class="close icon"></i>
       <div class="header">
-        Confirm
+        {{ $t('message.common.confirm') }}
       </div>
       <div class="content">
         <div class="description">
-          <p>Do you want to delete {{selectedArticle ? selectedArticle.title : ''}} category?</p>
+          <p>{{ $t('message.confirm.delete_article', { article: selectedArticle ? selectedArticle.title : '' }) }}></p>
         </div>
       </div>
       <div class="actions">
@@ -40,9 +40,9 @@
     <loader v-if="isLoadingArtices"></loader>
     <div class="ui message" v-if="!isLoadingArtices && !userArticles || userArticles.length === 0">
       <div class="header">
-        No items found
+        {{ $t('message.article_not_found.title') }}
       </div>
-      <p>You haven't written any posts yet. Select 'Create New' from the menu to start one.</p>
+      <p>{{ $t('message.article_not_found.content') }}</p>
     </div>
   </div>
 </template>

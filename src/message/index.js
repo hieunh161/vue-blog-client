@@ -8,6 +8,29 @@
 const messages = {
   en: {
     message: {
+      common: {
+        confirm: 'Confirm',
+      },
+      confirm: {
+        delete_article: 'Do you want to delete {article} article?',
+        delete_category: 'Do you want to delete {category} category?',
+      },
+      login: {
+        facebook: 'Facebook',
+        google: 'Google Plus',
+        or: 'Or',
+        title: 'Login',
+      },
+      article: {
+        status: {
+          draft: 'Draft',
+          publish: 'Publish',
+        },
+      },
+      article_not_found: {
+        title: 'No items found',
+        content: `You haven't written any posts yet. Select 'Create New' from the menu to start one.`,
+      },
       page_not_found: {
         error: `404`,
         title: `Page Not Found`,
@@ -34,6 +57,30 @@ const messages = {
       article_list: {
         min_read: `min read`,
       },
+      category: {
+        update: 'Update Category',
+        add: 'Add Category',
+        hide_form: 'Hide Add Category',
+        add_form: 'Add New Category',
+        title: 'Category',
+        loading: 'Loading Category...',
+        last_modified: 'Last Modified',
+        action: 'Action',
+        delete_confirm: 'Do you want to delete {category} category?',
+      },
+      setting: {
+        title: 'Setting',
+      },
+      app: {
+        title: 'Educator',
+      },
+      navbar: {
+        login: 'Login',
+        logout: 'Logout',
+        admin: 'Admin',
+        my_profile: 'My Profile',
+        my_article: 'My Article',
+      },
     },
     button: {
       upload_image: {
@@ -50,6 +97,10 @@ const messages = {
         confirm: `Confirm`,
         close: `Close`,
         cancel: `Cancel`,
+        update: `Update`,
+        add: `Add`,
+        delete: `Delete`,
+        ok: `Ok`,
       },
     },
     warning: {

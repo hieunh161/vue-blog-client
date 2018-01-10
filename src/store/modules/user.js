@@ -83,7 +83,6 @@ const getters = {
   currentUserInfo: s => s.userInfo,
   isAdmin: (s) => {
     if (s.userInfo) {
-      // admin is 2
       return s.userInfo.role === USER_ROLE.ADMIN;
     }
     return false;

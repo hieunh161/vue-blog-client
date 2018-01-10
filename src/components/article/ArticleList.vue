@@ -46,6 +46,7 @@ import Loader from '../common/Loader';
 export default {
   mounted() {
     this.$store.dispatch('article/readAllArticles');
+    this.$store.dispatch('article/getNumberOfArticles');
   },
   methods: {
     getLikeNumber(likes) {

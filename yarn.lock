@@ -7995,6 +7995,10 @@ vue-i18n@^7.3.3:
   version "7.3.3"
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-7.3.3.tgz#e162431fef05daae1a9b9b3992ac5be238eff954"
 
+vue-lazyload@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/vue-lazyload/-/vue-lazyload-1.1.4.tgz#94dbb3fcb047f147f37900c0e22ad4fd478e31c4"
+
 vue-loader@^12.1.0:
   version "12.2.2"
   resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-12.2.2.tgz#2b3a764f27018f975bc78cb8b1f55137548ee2d7"
@@ -8045,6 +8049,10 @@ vue-social-sharing@^2.2.5:
   resolved "https://registry.yarnpkg.com/vue-social-sharing/-/vue-social-sharing-2.2.5.tgz#366892638748b8abfa8d4377a20e10b29493b937"
   dependencies:
     rollup-plugin-json "^2.1.0"
+
+vue-spinner@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/vue-spinner/-/vue-spinner-1.0.3.tgz#eecd3f79f63a815b690e9d54b199ab65be695499"
 
 vue-style-loader@^3.0.0, vue-style-loader@^3.0.1:
   version "3.0.1"

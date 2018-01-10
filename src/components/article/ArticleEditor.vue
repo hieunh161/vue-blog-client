@@ -65,9 +65,6 @@ import { mapGetters, mapState } from 'vuex';
 import { markdownEditor } from 'vue-simplemde';
 import $ from 'jquery';
 import nprogress from 'nprogress';
-// import { mavonEditor } from 'mavon-editor';
-// import 'mavon-editor/dist/css/index.css';
-import AsyncButton from '../common/AsyncButton';
 import ImageUploader from './ImageUploader';
 import ArticleTag from './ArticleTag';
 import Loader from '../common/Loader';
@@ -155,7 +152,6 @@ export default {
     },
   },
   components: {
-    AsyncButton,
     ImageUploader,
     ImageUploadModal,
     markdownEditor,

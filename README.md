@@ -42,9 +42,10 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [ ] add related article
 [ ] paging data of home page based on category
 [ ] add personal page
-[ ] add multi language
+[x] add multi language
 [ ] add tag/category page
-[ ] add sticky bar for actions
+[x] add sticky bar for actions
+[ ] search articles
 
 ## Problems
 1. Order in add item in firebase (not in date order but in id order)

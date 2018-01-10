@@ -25,6 +25,16 @@ const actions = {
     });
     commit(types.CATEGORY_SET_CATEGORY_NAME, names);
   }),
+  getCategoryNames: ({ commit }) => categoryService.readCategory().then((result) => {
+    const names = [];
+    result.map(item => name.push(item.title));
+    // result.forEach((element) => {
+    //   names.push(element.value.title);
+    // });
+    console.log(result);
+    console.log(names);
+    commit(types.CATEGORY_SET_CATEGORY_NAME, names);
+  }),
 };
 
 /* eslint-disable no-param-reassign */

@@ -3,10 +3,10 @@
     <div v-if="isAdmin" class="content">
       <div class="ui vertical menu" id="menu">
           <a class="active item">
-            Category
+            {{ $t('message.category.title') }}
           </a>
           <a class="item">
-            Settings
+            {{ $t('message.setting.title') }}
           </a>
       </div>
     </div>

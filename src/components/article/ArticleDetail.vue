@@ -1,10 +1,10 @@
 <template>
   <div class="article-detail">
-    <div class="sidebar" v-if="!isLoadingArtice && article">
-      <i class="circular ui icon big heart orange link" :class="{outline:!isLiked}" @click="likeArticle"></i>
-      <div class="like">{{numberLiked}}</div>
+    <div class="sidebar" v-if="!isLoadingArtice && article" data-tooltip="Give heart" data-position="right center">
+      <i class="ui icon huge heart orange link" :class="{outline:!isLiked}" @click="likeArticle"></i>
+      <div class="sidebar-like">{{numberLiked}}</div>
     </div>
-    <div class="ui main container" id="context" >
+    <div class="ui main container content">
       <!-- progress bar -->
       <loader v-if="isLoadingArtice && !article"></loader>
       <!-- article content -->
@@ -18,10 +18,6 @@
               <span class="meta-attribute"><i class="ui icon calendar"></i>{{article.lastModified | formatDate}}</span>
               <span class="meta-attribute"><i class="ui icon wait"></i>{{article.content | minToRead}} min read</span>
               <span class="meta-attribute"><i class="ui icon unhide"></i> {{article.views}}</span>
-              <span class="meta-attribute">
-                <i class="ui icon heart orange link" :class="{outline:!isLiked}" @click="likeArticle"></i>
-                {{numberLiked}}
-              </span>
             </p>
           </div>
           <div class="content">
@@ -246,18 +242,37 @@ a.header {
   min-height: calc(100vh - 144px);
 }
 
-@media screen {
+@media (max-width: 1281px) {
+  .sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: calc(78vh);
+    margin-left: calc(76vw);
+    width: 80px;
+    text-align: center;
+    float: right;
+    z-index: 999;
+  }
+  .sidebar-like {
+    margin-top: 8px;
+    font-size: 1.2em;
+  }
+}
+
+@media (min-width:1281px) {
   .sidebar {
     position: -webkit-sticky;
     position: sticky;
     top: calc(35vh);
-    margin-left: calc(8vw);
-    width: 50px;
+    margin-left: calc(6vw);
+    width: 80px;
     text-align: center;
+    float: left;
+    z-index: 999;
   }
-  .like {
+  .sidebar-like {
     margin-top: 8px;
-    font-size: 16px;
+    font-size: 1.2em;
   }
 }
 
