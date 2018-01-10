@@ -66,10 +66,9 @@ export default {
       });
     }
     this.$(window).scroll(() => {
-      if (this.$(window).scrollTop() + this.$(window).height() === this.$(document).height()) {
+      if (this.$(window).scrollTop() + this.$(window).height() === this.getDocHeight()) {
         // in case of loading articles, we need waiting for synchronize store
         if (!this.isLoading && this.canLoadMore) {
-          console.log('bottom');
           this.$np.start();
           this.isLoading = true;
           this.$store.dispatch('article/readMoreArticles')
@@ -95,6 +94,14 @@ export default {
       }
       return false;
     },
+    getDocHeight: () => Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight,
+      document.body.clientHeight,
+      document.documentElement.clientHeight,
+    ),
   },
   computed: {
     ...mapGetters('article', ['allArticles', 'canLoadMore']),

@@ -1,36 +1,25 @@
 import * as firebase from 'firebase';
 import util from './util';
+import { REF_CATEGORY } from './const';
 
-const CATEGORY_REF = 'category';
+const createCategory = category => firebase.database().ref(REF_CATEGORY)
+  .push(category);
 
-const createCategory = (category) => {
-  const content = {
-    title: category,
-    createdDate: Date.now(),
-    modified: Date.now(),
-  };
-  return firebase.database().ref(CATEGORY_REF).push(content);
-};
+const readCategories = () => firebase.database().ref(REF_CATEGORY)
+  .once('value').then(snapshot => util.getItemListFromSnapshot(snapshot));
 
-const readCategory = () => firebase.database().ref(CATEGORY_REF)
-.once('value').then(snapshot => util.getItemListFromSnapshot(snapshot));
-
-const updateCategory = (category) => {
-  const content = {
+const updateCategory = category => firebase.database().ref(REF_CATEGORY)
+  .child(category.key).update({
     title: category.value.title,
-    modified: Date.now(),
-  };
-  return firebase.database().ref(CATEGORY_REF).child(category.key).update(content);
-};
+    modifyTimestamp: Date.now(),
+  });
 
-const deleteCategory = (categoryId) => {
-  console.log(categoryId);
-  return firebase.database().ref(CATEGORY_REF).child(categoryId).remove();
-};
+const deleteCategory = categoryId => firebase.database().ref(REF_CATEGORY)
+  .child(categoryId).remove();
 
 export default {
   createCategory,
-  readCategory,
+  readCategories,
   updateCategory,
   deleteCategory,
 };

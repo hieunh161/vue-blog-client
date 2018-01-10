@@ -1,12 +1,14 @@
 <template>
-  <div id="app" class="wrapper">
-    <notifications group="notice" 
-      position="bottom right"
-      :duration="3000"
-      :speed="500"/>
-    <navbar class="page-header"></navbar>
-    <router-view class="page-content"></router-view>
-    <app-footer></app-footer>
+  <div id="app">
+    <div class="wrapper">
+      <notifications group="notice" 
+        position="bottom right"
+        :duration="3000"
+        :speed="500"/>
+      <navbar class="page-header"></navbar>
+      <router-view class="page-content"></router-view>
+      <app-footer></app-footer>
+    </div>
   </div>
 </template>
 
@@ -47,6 +49,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  overflow-x:hidden;
 }
 
 .wrapper {

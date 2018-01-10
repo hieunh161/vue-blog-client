@@ -8,13 +8,13 @@ const updateTag = (tag, articleId, isAdded) => {
     if (currentTag === null) {
       const articles = {};
       articles[articleId] = isAdded;
-      return { count: 1, modified: Date.now(), articles };
+      return { count: 1, modifyTimestamp: Date.now(), articles };
     }
     // update value if exist
     const articles = currentTag.articles;
     if (articles) articles[articleId] = isAdded;
     const count = isAdded ? currentTag.count + 1 : currentTag.count - 1;
-    return { count, modified: Date.now(), articles };
+    return { count, modifyTimestamp: Date.now(), articles };
   }, (err) => {
     if (err) {
       console.log(err);

@@ -12,7 +12,7 @@
         <tbody>
           <tr v-for="category in categories" v-bind:key="category.key">
             <td>{{category.value.title}}</td>
-            <td>{{category.value.modified | formatDate}}</td>
+            <td>{{category.value.modifyTimestamp | formatDate}}</td>
             <td>
               <a @click="() => showUpdateCategory(category)"><i class="ui icon large circular edit positive"></i></a>
               <a @click="() => showConfirmDeleteModal(category)"><i class="ui icon large circular red remove"></i></a>
@@ -29,9 +29,8 @@
       <button class="ui button circular basic positive" v-if="!isShowAddCategoryForm" @click="isShowAddCategoryForm = !isShowAddCategoryForm">{{ $t('message.category.add_form') }}</button>
       <button class="ui button circular basic positive" v-if="isShowAddCategoryForm" @click="isShowAddCategoryForm = !isShowAddCategoryForm">{{ $t('message.category.hide_form') }}</button>
     </div>
-    <!-- <confirm-modal></confirm-modal> -->
     <!-- modal -->
-    <div class="ui modal">
+    <div class="ui modal" id="confirm-delete-modal">
       <i class="close icon"></i>
       <div class="header">
         {{ $t('message.common.confirm') }}
@@ -55,7 +54,6 @@
       <div class="ui header">{{ $t('message.category.add') }}</div>
       <div class="ui form">
         <div class="field">
-          <!-- <label>Add Category</label> -->
           <input type="text" v-model="addedCategory" name="category" placeholder="Add Category">
         </div>
         <button class="ui button positive circular" @click="addCategory">{{ $t('button.common.add') }}</button>
@@ -66,15 +64,12 @@
       <div class="ui header">{{ $t('message.category.update') }}</div>
       <div class="ui form">
         <div class="field">
-          <!-- <label>Update Category</label> -->
           <input type="text" v-model="updatedCategory.value.title" name="category" placeholder="Add Category">
         </div>
         <button class="ui button basic circular" @click="isShowUpdateCategoryForm = false">{{ $t('button.common.cancel') }}</button>
         <button class="ui button positive circular" :class='{loading:isUpdatingCategory}' @click="updateCategory">{{ $t('button.common.update') }}</button>
       </div>
     </div>
-    <!-- footer -->
-    <footer class="footer"></footer>
   </div>
 </template>
 
@@ -97,7 +92,7 @@ export default {
   mounted() {
     this.$np.start();
     this.isLoadingCategory = true;
-    this.$store.dispatch('category/readCategory')
+    this.$store.dispatch('category/readCategories')
     .then(() => {
       this.isLoadingCategory = false;
       this.$np.done();
@@ -106,7 +101,7 @@ export default {
   methods: {
     addCategory() {
       if (this.addedCategory && this.addedCategory !== '') {
-        this.$store.dispatch('category/createCategory', { category: this.addedCategory });
+        this.$store.dispatch('category/createCategory', { title: this.addedCategory });
         this.addedCategory = '';
       }
     },
@@ -127,22 +122,20 @@ export default {
     },
     deleteCategory() {
       if (this.selectedCategory) {
-        this.$store.dispatch('category/deleteCategory', { categoryId: this.selectedCategory.key });
+        this.$store.dispatch('category/deleteCategory', this.selectedCategory);
+        this.closeModal();
       }
     },
     openModal() {
-      this.$('.modal').modal('show');
+      this.$('#confirm-delete-modal').modal('show');
     },
     closeModal() {
-      this.$('.modal').modal('close');
+      this.$('#confirm-delete-modal').modal('hide');
     },
   },
   computed: {
     ...mapGetters('category', ['categories']),
     ...mapGetters('user', ['currentUser', 'currentUserInfo', 'isAdmin']),
-  },
-  components: {
-    // modal,
   },
 };
 </script>

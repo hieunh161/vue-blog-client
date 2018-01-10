@@ -42,7 +42,7 @@
         <div class="content">
           <p>{{ $t('message.article_edit.select_category') }}</p>
           <select class="ui selection dropdown article-category" v-model="article.category">
-            <option v-for="category in categoriesName" v-bind:key="category">{{category}}</option>
+            <option v-for="category in categories" :value="category.key" v-bind:key="category.key">{{category.value.title}}</option>
           </select>
           <br>
           <p>{{ $t('message.article_edit.add_tag') }}</p>
@@ -80,8 +80,8 @@ export default {
     this.isLoadingArticle = true;
     this.$store.dispatch('article/readArticleById', { articleId: this.$route.params.id, router: this.$router })
       .then(() => {
-        nprogress.done();
         this.isLoadingArticle = false;
+        nprogress.done();
       });
     this.$store.dispatch('category/getListCategory');
   },
@@ -95,7 +95,6 @@ export default {
   },
   methods: {
     showPublishModal() {
-      // $('.ui.sidebar').sidebar('toggle');
       if (this.article.title) {
         $('#publish-modal').modal('show');
       } else {
@@ -163,7 +162,7 @@ export default {
   computed: {
     ...mapGetters('user', ['isAdmin', 'currentUserInfo', 'currentUser']),
     ...mapGetters('article', ['isLoading', 'articleId', 'isSavingDraft', 'isPublishingArticle']),
-    ...mapGetters('category', ['categoriesName']),
+    ...mapGetters('category', ['categories']),
     ...mapState('article', ['article']),
     isPublished() {
       return this.article.status === ARTICLE_STATUS.PUBLISH;

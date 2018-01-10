@@ -8,42 +8,44 @@ const state = {
 
 const getters = {
   categories: s => s.categories,
-  categoriesName: s => s.categoriesName,
 };
 
 const actions = {
-  createCategory: (context, { category }) => categoryService.createCategory(category),
-  readCategory: ({ commit }) => categoryService.readCategory().then((result) => {
-    commit(types.CATEGORY_READ_CATEGORY, result);
+  createCategory: ({ commit }, { title }) => {
+    const category = {
+      title,
+      createTimestamp: Date.now(),
+      modifyTimestamp: Date.now(),
+    };
+    return categoryService.createCategory(category)
+    .then(result => commit(types.CATEGORY_CREATE, {
+      key: result.key,
+      value: category,
+    }));
+  },
+  readCategories: ({ commit }) => categoryService.readCategories().then((result) => {
+    commit(types.CATEGORY_READ, result);
   }),
-  updateCategory: (context, { category }) => categoryService.updateCategory(category),
-  deleteCategory: (context, { categoryId }) => categoryService.deleteCategory(categoryId),
-  getListCategory: ({ commit }) => categoryService.readCategory().then((result) => {
-    const names = [];
-    result.forEach((element) => {
-      names.push(element.value.title);
-    });
-    commit(types.CATEGORY_SET_CATEGORY_NAME, names);
-  }),
-  getCategoryNames: ({ commit }) => categoryService.readCategory().then((result) => {
-    const names = [];
-    result.map(item => name.push(item.title));
-    // result.forEach((element) => {
-    //   names.push(element.value.title);
-    // });
-    console.log(result);
-    console.log(names);
-    commit(types.CATEGORY_SET_CATEGORY_NAME, names);
-  }),
+  updateCategory: ({ commit }, { category }) => categoryService.updateCategory(category),
+  deleteCategory: ({ commit }, category) => categoryService.deleteCategory(category.key)
+    .then(() => commit(types.CATEGORY_DELETE, category)),
 };
 
 /* eslint-disable no-param-reassign */
 const mutations = {
-  [types.CATEGORY_READ_CATEGORY]: (s, categories) => {
-    s.categories = Object.assign({}, s.categories, categories);
+  [types.CATEGORY_CREATE]: (s, category) => {
+    console.log(s.categories);
+    s.categories.push(category);
   },
-  [types.CATEGORY_SET_CATEGORY_NAME]: (s, categoriesName) => {
-    s.categoriesName = Object.assign({}, s.categoriesName, categoriesName);
+  [types.CATEGORY_READ]: (s, categories) => {
+    s.categories = categories;
+    // s.categories = Object.assign({}, s.categories, categories);
+    // console.log(s.categories);
+  },
+  [types.CATEGORY_DELETE]: (s, category) => {
+    console.log(s.categories);
+    const index = s.categories.indexOf(category);
+    s.categories.splice(index, 1);
   },
 };
 

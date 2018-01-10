@@ -44,6 +44,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [ ] add facebook comments or custom comment to site
 [ ] add related article
 [ ] add personal page
+[ ] Follower, following infor
 [ ] add tag/category page
 [ ] add load image like medium
 [ ] search articles

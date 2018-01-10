@@ -53,6 +53,7 @@ const mutations = {
     s.allArticles = articles;
   },
   [types.READ_MORE_ARTICLES](s, articles) {
+    console.log(s.allArticles);
     s.allArticles = s.allArticles.concat(articles);
     s.currentPageIndex += s.numberArticlePerPage;
   },

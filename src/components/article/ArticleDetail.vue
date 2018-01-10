@@ -15,7 +15,7 @@
           </div>
           <div class="article-meta">
             <p>
-              <span class="meta-attribute"><i class="ui icon calendar"></i>{{article.lastModified | formatDate}}</span>
+              <span class="meta-attribute"><i class="ui icon calendar"></i>{{article.createTimestamp | formatDate}}</span>
               <span class="meta-attribute"><i class="ui icon wait"></i>{{article.content | minToRead}} min read</span>
               <span class="meta-attribute"><i class="ui icon unhide"></i> {{article.views}}</span>
             </p>
