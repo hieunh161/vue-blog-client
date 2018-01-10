@@ -17,6 +17,19 @@ const getListArticleFromSnap = (snapshot) => {
   return Promise.resolve(result);
 };
 
+const getListArticleFromSnapExceptItem = (snapshot, exceptItem) => {
+  const result = [];
+  snapshot.forEach((item) => {
+    let article = {};
+    if (item.key !== exceptItem) {
+      article = item.val();
+      article.id = item.key;
+      result.push(article);
+    }
+  });
+  return Promise.resolve(result);
+};
+
 const slugify = (input, separator) => {
   if (!input) return '';
   const str = input
@@ -40,5 +53,6 @@ const slugify = (input, separator) => {
 export default {
   getItemListFromSnapshot,
   getListArticleFromSnap,
+  getListArticleFromSnapExceptItem,
   slugify,
 };

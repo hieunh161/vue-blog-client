@@ -1,7 +1,7 @@
 <template>
   <div class="ui main container">
     <div class="ui relaxed divided list" id="article-list">
-      <loader v-if="allArticles.length === 0"></loader>
+      <scale-loader :color="loaderColor" v-if="allArticles.length === 0 && isLoadingFirst"></scale-loader>
       <div class="ui three stackable cards">
         <div class="card"  v-for="item in allArticles" v-bind:key="item.key">
           <router-link class="description" :to="`/article/${item.id}`">
@@ -34,19 +34,52 @@
           </div>
         </div>
       </div>
-    </div>
+    <clip-loader :color="loaderColor" v-if="isLoading"></clip-loader>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import _ from 'lodash';
+import ClipLoader from 'vue-spinner/src/ClipLoader';
+import ScaleLoader from 'vue-spinner/src/ScaleLoader';
 import Loader from '../common/Loader';
 
 export default {
+  data() {
+    return {
+      loaderColor: '#00B5AD',
+      isLoadingFirst: false,
+      isLoading: false,
+    };
+  },
   mounted() {
-    this.$store.dispatch('article/readAllArticles');
-    this.$store.dispatch('article/getNumberOfArticles');
+    // just load if there is no items
+    if (this.allArticles.length === 0) {
+      this.$np.start();
+      this.isLoadingFirst = true;
+      this.$store.dispatch('article/getNumberOfArticles')
+      .then(() => this.$store.dispatch('article/readFirstArticles'))
+      .then(() => {
+        this.isLoadingFirst = false;
+        this.$np.done();
+      });
+    }
+    this.$(window).scroll(() => {
+      if (this.$(window).scrollTop() + this.$(window).height() === this.$(document).height()) {
+        // in case of loading articles, we need waiting for synchronize store
+        if (!this.isLoading && this.canLoadMore) {
+          console.log('bottom');
+          this.$np.start();
+          this.isLoading = true;
+          this.$store.dispatch('article/readMoreArticles')
+          .then(() => {
+            this.isLoading = false;
+            this.$np.done();
+          });
+        }
+      }
+    });
   },
   methods: {
     getLikeNumber(likes) {
@@ -64,11 +97,13 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('article', ['allArticles']),
+    ...mapGetters('article', ['allArticles', 'canLoadMore']),
     ...mapGetters('user', ['currentUser']),
   },
   components: {
     Loader,
+    ClipLoader,
+    ScaleLoader,
   },
 };
 </script>

@@ -38,13 +38,14 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [x] Add footer
 [x] Tag + Category
 [x] add hightlight or prismjs + markdown css
+[x] add sticky bar for actions
+[x] add multi language
+[x] paging data of home page based on category
 [ ] add facebook comments or custom comment to site
 [ ] add related article
-[ ] paging data of home page based on category
 [ ] add personal page
-[x] add multi language
 [ ] add tag/category page
-[x] add sticky bar for actions
+[ ] add load image like medium
 [ ] search articles
 
 ## Problems

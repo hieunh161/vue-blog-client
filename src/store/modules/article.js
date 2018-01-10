@@ -20,10 +20,10 @@ const INITIAL_STATE = {
   isPublishingArticle: false,
   isLoadingArticlesByUser: false,
   // Lazy load and paging
-  numberArticlePerPage: 10,
+  numberArticlePerPage: 6,
   articleIds: null,
-  pageIndex: 0,
-  totalArticles: 0,
+  currentPageIndex: 0,
+  numberArticles: 0,
   totalPages: 0,
 };
 
@@ -35,6 +35,7 @@ const getters = {
   article: s => s.article,
   allArticles: s => s.allArticles,
   userArticles: s => s.userArticles,
+  canLoadMore: s => s.numberArticles > s.allArticles.length,
   // loading status
   isSavingDraft: s => s.isSavingDraft,
   isPublishingArticle: s => s.isPublishingArticle,
@@ -47,6 +48,13 @@ const mutations = {
   },
   [types.READ_ALL_ARTICLES](s, articles) {
     s.allArticles = articles;
+  },
+  [types.READ_FIRST_ARTICLES](s, articles) {
+    s.allArticles = articles;
+  },
+  [types.READ_MORE_ARTICLES](s, articles) {
+    s.allArticles = s.allArticles.concat(articles);
+    s.currentPageIndex += s.numberArticlePerPage;
   },
   [types.SAVE_ARTICLE](s, { data }) {
     s.article.articleId = data;
@@ -140,6 +148,15 @@ const actions = {
       return commit(types.SET_ARTICLE, content);
     });
   },
+  readFirstArticles: ({ commit, state }) => articleService
+    .readFirstArticle(state.numberArticlePerPage)
+    .then(articles => commit(types.READ_MORE_ARTICLES, articles)),
+  readMoreArticles: ({ commit, state }) => {
+    // get last item
+    const lastItem = state.allArticles[state.currentPageIndex - 1].id;
+    return articleService.readMoreArticles(lastItem, state.numberArticlePerPage)
+    .then(articles => commit(types.READ_MORE_ARTICLES, articles));
+  },
   readAllArticles: ({ commit }) => {
     articleService.readAllArticles()
     .then(articles => commit(types.READ_ALL_ARTICLES, articles));
@@ -170,13 +187,13 @@ const actions = {
   uploadImage: ({ commit, dispatch }, formData) => {
     commit(types.UPDATE_UPLOADING_STATUS, UPLOAD_STATUS.SAVING);
     articleService.uploadImage(formData)
-      .then(img => dispatch('setArticleCoverImage', img));
+      .then(img => dispatch('updateArticleCoverImage', img));
   },
   updateUploadStatus: ({ commit }, uploadStatus) => {
     commit(types.UPDATE_UPLOADING_STATUS, uploadStatus);
   },
-  setArticleCoverImage: ({ commit, state }, img) => {
-    articleService.setArticleCoverImage(state.articleId, img).then(
+  updateArticleCoverImage: ({ commit, state }, img) => {
+    articleService.updateArticleCoverImage(state.articleId, img).then(
       () => {
         commit(types.UPDATE_UPLOADING_STATUS, UPLOAD_STATUS.SUCCESS);
         commit(types.UPDATE_COVER_IMAGE, img);
@@ -194,7 +211,6 @@ const actions = {
     commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);
     return articleService.likeArticle(articleId, userId, isLiked);
   },
-  // getNumberOfArticles: () => articleService.getNumberOfArticles(),
 };
 
 // initial state

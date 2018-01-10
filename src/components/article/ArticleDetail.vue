@@ -22,8 +22,8 @@
           </div>
           <div class="content">
             <!-- cover image -->
-            <div class="coverImage">
-              <img class="ui centered image" id="coverImage" :src="article.coverImage ? article.coverImage.url : ''"/>
+            <div class="cover-image">
+              <img class="ui centered image" :src="article.coverImage ? article.coverImage.url : ''"/>
             </div>
             <!-- article tag -->
             <div class="ui tiny horizontal list" v-if="article.tags">
@@ -31,12 +31,12 @@
                 <div class="ui  label">{{tag}}</div>
               </div>
             </div>
+            <!-- article content -->
             <div class="mrkdwn-body">
               <span v-html="article.content ? marked(article.content) : ''"></span>
             </div>
-            <div>
-            </div>
-            <div class="meta-header">
+            <!-- author -->
+            <div class="meta-header author">
               <div class="ui items">
                 <div class="item">
                   <a class="ui tiny image avatar">
@@ -219,12 +219,16 @@ a.header {
   font-size: 3rem;
 }
 
-.coverImage {
-  margin-bottom: 0px;
+.cover-image {
+  margin-bottom: 1rem;
 }
 
 .meta-header {
   margin: 0 0 24px 0;
+}
+
+.author {
+  margin-top: 1rem;
 }
 
 .description p {

@@ -78,6 +78,7 @@ const messages = {
         login: 'Login',
         logout: 'Logout',
         admin: 'Admin',
+        create_new: 'Create New',
         my_profile: 'My Profile',
         my_article: 'My Article',
       },

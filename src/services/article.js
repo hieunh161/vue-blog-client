@@ -27,7 +27,7 @@ const readArticle = articleId => firebase.database().ref(REF_ARTICLE)
   .then(snapshot => Promise.resolve(snapshot.val()));
 
 const readAllArticles = () => {
-  const ref = firebase.database().ref(REF_ARTICLE).orderByChild('views');
+  const ref = firebase.database().ref(REF_ARTICLE);
   return ref.once('value').then(snapshot => util.getListArticleFromSnap(snapshot));
 };
 
@@ -36,14 +36,25 @@ const readArticlesByUser = (userId) => {
   return ref.once('value').then(snapshot => util.getListArticleFromSnap(snapshot));
 };
 
+const readFirstArticle = (numberArticlePerPage) => {
+  const ref = firebase.database().ref(REF_ARTICLE).limitToFirst(numberArticlePerPage);
+  return ref.once('value').then(snapshot => util.getListArticleFromSnap(snapshot));
+};
+
+// problem about last index
+const readMoreArticles = (lastItem, numberArticlePerPage) => {
+  const ref = firebase.database().ref(REF_ARTICLE)
+    .startAt(null, lastItem).limitToFirst(numberArticlePerPage + 1);
+  return ref.once('value').then(snapshot => util.getListArticleFromSnapExceptItem(snapshot, lastItem));
+};
+
 const updateArticle = ({ articleId, article }) =>
 firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
-
 
 const updateArticleProperty = (articleId, article) =>
 firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
 
-const setArticleCoverImage = (articleId, img) =>
+const updateArticleCoverImage = (articleId, img) =>
 firebase.database().ref(REF_ARTICLE).child(articleId).child('coverImage')
 .set(img);
 
@@ -103,15 +114,17 @@ const likeArticle = (articleId, userId, liked) => {
 };
 
 export default {
-  uploadImage,
+  createTemplateArticle,
   readArticle,
   readAllArticles,
+  readFirstArticle,
+  readMoreArticles,
   readArticlesByUser,
   updateArticle,
   updateArticleProperty,
+  uploadImage,
   deleteArticle,
-  createTemplateArticle,
-  setArticleCoverImage,
+  updateArticleCoverImage,
   likeArticle,
   getNumberOfArticles,
   getNumberOfArticlesByUser,

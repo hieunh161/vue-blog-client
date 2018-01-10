@@ -17,6 +17,14 @@
     <div v-if="!isAdmin">
       <div class="ui active centered inline loader"></div>
     </div>
+    <div class="ui tabular menu">
+      <a class="item active">
+        {{ $t('message.category.title') }}
+      </a>
+      <a class="item">
+        {{ $t('message.setting.title') }}
+      </a>
+    </div>
   </div>
 </template>
 
