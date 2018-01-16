@@ -41,7 +41,7 @@
         <div class="header">{{ $t('message.article_edit.publish_header') }}</div>
         <div class="content">
           <p>{{ $t('message.article_edit.select_category') }}</p>
-          <select class="ui selection dropdown article-category" v-model="article.category">
+          <select class="ui selection dropdown article-category" v-model="article.category" @change="onChangeCategory">
             <option v-for="category in categories" :value="category.key" v-bind:key="category.key">{{category.value.title}}</option>
           </select>
           <br>
@@ -56,7 +56,7 @@
     </div>
     <!-- fallback when no items found -->
     <!-- fallback when content not found -->
-    <page-not-found v-if="!isLoadingArtice && !article"></page-not-found>
+    <page-not-found v-if="!isLoadingArticle && !article"></page-not-found>
   </div>
 </template>
 
@@ -78,12 +78,13 @@ export default {
     // load data from api
     nprogress.start();
     this.isLoadingArticle = true;
+    this.$store.dispatch('category/readCategories');
     this.$store.dispatch('article/readArticleById', { articleId: this.$route.params.id, router: this.$router })
       .then(() => {
+        this.originalCategory = this.article.category;
         this.isLoadingArticle = false;
         nprogress.done();
       });
-    this.$store.dispatch('category/getListCategory');
   },
   data() {
     return {
@@ -91,6 +92,7 @@ export default {
       addTags: [],
       deleteTags: [],
       isShowTextEmptyWarning: false,
+      originalCategory: {},
     };
   },
   methods: {
@@ -117,20 +119,34 @@ export default {
     saveArticle() {
       this.updateArticle();
       this.$emit('uploadArticleToServer');
-      this.$store.dispatch('article/publishArticle', { articleId: this.articleId, article: this.article, addTags: this.addTags, deleteTags: this.deleteTags });
+      this.$store.dispatch('article/publishArticle', {
+        articleId: this.articleId,
+        article: this.article,
+        addTags: this.addTags,
+        deleteTags: this.deleteTags,
+        oldCategory: this.originalCategory,
+        newCategory: this.article.category,
+      });
     },
     saveDraftArticle() {
       this.updateArticle();
       this.$emit('uploadArticleToServer');
-      this.$store.dispatch('article/saveDraft', { articleId: this.articleId, article: this.article, addTags: this.addTags, deleteTags: this.deleteTags });
+      this.$store.dispatch('article/saveDraft', {
+        articleId: this.articleId,
+        article: this.article,
+        addTags: this.addTags,
+        deleteTags: this.deleteTags,
+        oldCategory: this.originalCategory,
+        newCategory: this.article.category,
+      });
     },
     updateArticle() {
       this.article.updateTimestamp = Date.now();
       this.article.updateUser = this.currentUser.uid;
       this.article.slugify = util.slugify(this.article.title);
-      if (!this.article.category) {
-        this.article.category = {};
-      }
+      // if (!this.article.category) {
+      //   this.article.category = {};
+      // }
     },
     viewArticle() {
       // view article when article in publish state only
@@ -148,6 +164,9 @@ export default {
       this.article.tags = tags;
       this.addTags = addTags;
       this.deleteTags = deleteTags;
+    },
+    onChangeCategory() {
+      console.log(this.article.category);
     },
   },
   components: {

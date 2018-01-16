@@ -82,7 +82,6 @@ const uploadImage = (imageData) => {
     data: imageData,
     headers: {
       Authorization: imgUrlConfig.authorization,
-      // Authorization: 'Client-ID 5b3be50a7c3a7ff',
     },
   };
   return axios(config)// get data

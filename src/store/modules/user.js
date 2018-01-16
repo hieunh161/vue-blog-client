@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import _ from 'lodash';
-import * as types from '../mutation-types';
+import * as types from '../mutationTypes';
 import userService from '../../services/user';
 import { USER_ROLE } from '../../services/const';
 

@@ -1,5 +1,5 @@
 <template>
-  <social-sharing :url="pageUrl" inline-template>
+  <social-sharing inline-template>
     <div>
       <network network="facebook" class="ui circular button facebook">
         <i class="fa fa-fw fa-facebook"></i> Facebook
@@ -23,9 +23,6 @@ export default {
     },
   },
   data() {
-    return {
-      url: 'https://my-blog-68afd.firebaseapp.com/article/',
-    };
   },
 };
 </script>

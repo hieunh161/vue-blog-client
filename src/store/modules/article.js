@@ -1,9 +1,10 @@
 
 // import Vue from 'vue';
 import _ from 'lodash';
-import * as types from '../mutation-types';
+import * as types from '../mutationTypes';
 import articleService from '../../services/article';
 import tagService from '../../services/tag';
+import categoryService from '../../services/category';
 import { UPLOAD_STATUS } from '../../services/const';
 
 /* eslint-disable no-param-reassign */
@@ -53,7 +54,6 @@ const mutations = {
     s.allArticles = articles;
   },
   [types.READ_MORE_ARTICLES](s, articles) {
-    console.log(s.allArticles);
     s.allArticles = s.allArticles.concat(articles);
     s.currentPageIndex += s.numberArticlePerPage;
   },
@@ -114,7 +114,7 @@ const actions = {
       content: 'Start writing here...',
       slugify: '',
       createTimestamp: Date.now(),
-      modifyTemestamp: Date.now(),
+      modifyTimestamp: Date.now(),
       createUser: user.uid,
       updateUser: user.uid,
       published: false,
@@ -168,22 +168,27 @@ const actions = {
     .then(articles => commit(types.READ_USER_ARTICLES, articles)),
   updateArticle: (context, updateData) => {
     // update tags
-    const { addTags, deleteTags, articleId } = updateData;
+    const { addTags, deleteTags, articleId, oldCategory, newCategory } = updateData;
+    // remove old category, update new category
+    console.log(oldCategory);
+    console.log(newCategory);
+    if (oldCategory) {
+      categoryService.updateArticleCategory(oldCategory, articleId, false);
+    }
+    if (newCategory) {
+      categoryService.updateArticleCategory(newCategory, articleId, true);
+    }
     return tagService.updateTags(addTags, articleId, true)
     .then(() => tagService.updateTags(deleteTags, articleId, false))
     .then(() => articleService.updateArticle(updateData));
   },
   saveDraft: ({ commit, dispatch }, updateData) => {
     commit(types.ARTICLE_UPDATE_SAVING_DRAFT, true);
-    dispatch('updateArticle', updateData).then(() => {
-      commit(types.ARTICLE_UPDATE_SAVING_DRAFT, false);
-    });
+    return dispatch('updateArticle', updateData).then(() => commit(types.ARTICLE_UPDATE_SAVING_DRAFT, false));
   },
   publishArticle: ({ commit, dispatch }, updateData) => {
     commit(types.ARTICLE_UPDATE_PUBLISH, true);
-    dispatch('updateArticle', updateData).then(() => {
-      commit(types.ARTICLE_UPDATE_PUBLISH, false);
-    });
+    return dispatch('updateArticle', updateData).then(() => commit(types.ARTICLE_UPDATE_PUBLISH, false));
   },
   uploadImage: ({ commit, dispatch }, formData) => {
     commit(types.UPDATE_UPLOADING_STATUS, UPLOAD_STATUS.SAVING);

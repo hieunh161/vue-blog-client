@@ -43,11 +43,11 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [x] paging data of home page based on category
 [ ] add facebook comments or custom comment to site
 [ ] add related article
-[ ] add personal page
-[ ] Follower, following infor
+[ ] add personal page, Follower, following infor
 [ ] add tag/category page
 [ ] add load image like medium
 [ ] search articles
+[ ] add TOC table in sidebar
 
 ## Problems
 1. Order in add item in firebase (not in date order but in id order)

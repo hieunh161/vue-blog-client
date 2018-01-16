@@ -5,7 +5,7 @@ const updateTag = (tag, articleId, isAdded) => {
   // update transaction and create data if not exist
   return tagRef.child(tag).transaction((currentTag) => {
     // default value
-    if (currentTag === null) {
+    if (!currentTag) {
       const articles = {};
       articles[articleId] = isAdded;
       return { count: 1, modifyTimestamp: Date.now(), articles };
