@@ -13,3 +13,7 @@ export const imgUrlConfig = {
   uploadUrl: 'https://api.imgur.com/3/image.json',
   authorization: 'Client-ID 5b3be50a7c3a7ff',
 };
+
+export const apiDomain = 'http://localhost:8000/';
+
+export const loginUrl = `${apiDomain}oauth/token`;

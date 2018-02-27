@@ -170,8 +170,6 @@ const actions = {
     // update tags
     const { addTags, deleteTags, articleId, oldCategory, newCategory } = updateData;
     // remove old category, update new category
-    console.log(oldCategory);
-    console.log(newCategory);
     if (oldCategory) {
       categoryService.updateArticleCategory(oldCategory, articleId, false);
     }
@@ -216,6 +214,14 @@ const actions = {
     likedArticle[userId] = isLiked;
     commit(types.ARTICLE_UPDATE_LIKE_STATE, likedArticle);
     return articleService.likeArticle(articleId, userId, isLiked);
+  },
+  deleteArticle: (article) => {
+    categoryService.deleteArticleCategory(article.category);
+    tagService.deleteArticleFromTags(article.tags);
+    articleService.deleteArticle(article.id);
+    // delete tags
+    // delete category
+    // remove article
   },
 };
 

@@ -5,57 +5,36 @@
       <a class="item active" data-tab="draft">Draft</a>
       <a class="item" data-tab="publish">Publish</a>
     </div>
-    <!-- <div class="ui tab segment active" data-tab="draft">
-      Draft tab
-    </div>
-    <div class="ui tab segment" data-tab="publish">
-      Publish tab
-    </div> -->
-    <div class="ui tab relaxed divided list active" v-if="!isLoadingArtices" data-tab="draft">
-      <div class="item" v-for="article in draftArticles" v-bind:key="article.title">
-        <img class="ui small image" v-if="article.coverImage" :src="article.coverImage.url"/>
-        <img class="ui small image" v-if="!article.coverImage" src="https://i.imgur.com/I3QyKzY.png"/>
-        <div class="content">
-          <router-link :to="`/article/${article.id}`">{{ article.title }}</router-link>
-          <div class="description">Updated {{article.modifyTimestamp | fromNow}}</div>
-          <br/>
-          <div class="ui brown basic horizontal label small" v-if="!isPublished(article.status)">{{ $t('message.article.status.draft') }}</div>
-          <div class="ui green basic horizontal label small" v-if="isPublished(article.status)">{{ $t('message.article.status.publish') }}</div>
-          <router-link class="ui green basic horizontal label small" :to="`/article/${article.id}/edit`">{{ $t('button.common.update') }}</router-link>
-          <div class="ui button red basic horizontal label small" @click="() => showConfirmDeleteModal(article)">{{ $t('button.common.delete') }}</div>
+    <div class="ui tab active" data-tab="draft">
+       <div class="ui tab relaxed divided list active" v-if="!isLoadingArtices">
+        <div class="item" v-for="article in draftArticles" v-bind:key="article.title">
+          <img class="ui small image" v-if="article.coverImage" :src="article.coverImage.url"/>
+          <img class="ui small image" v-if="!article.coverImage" src="https://i.imgur.com/I3QyKzY.png"/>
+          <div class="content">
+            <router-link :to="`/article/${article.id}`">{{ article.title }}</router-link>
+            <div class="description">Updated {{article.modifyTimestamp | fromNow}}</div>
+            <br/>
+            <router-link class="ui green basic horizontal label small" :to="`/article/${article.id}/edit`">{{ $t('button.common.update') }}</router-link>
+            <div class="ui button red basic horizontal label small" @click="() => showConfirmDeleteModal(article)">{{ $t('button.common.delete') }}</div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="ui tab relaxed divided list" v-if="!isLoadingArtices" data-tab="publish">
-      <div class="item" v-for="article in publishArticles" v-bind:key="article.title">
-        <img class="ui small image" v-if="article.coverImage" :src="article.coverImage.url"/>
-        <img class="ui small image" v-if="!article.coverImage" src="https://i.imgur.com/I3QyKzY.png"/>
-        <div class="content">
-          <router-link :to="`/article/${article.id}`">{{ article.title }}</router-link>
-          <div class="description">Updated {{article.modifyTimestamp | fromNow}}</div>
-          <br/>
-          <div class="ui brown basic horizontal label small" v-if="!isPublished(article.status)">{{ $t('message.article.status.draft') }}</div>
-          <div class="ui green basic horizontal label small" v-if="isPublished(article.status)">{{ $t('message.article.status.publish') }}</div>
-          <router-link class="ui green basic horizontal label small" :to="`/article/${article.id}/edit`">{{ $t('button.common.update') }}</router-link>
-          <div class="ui button red basic horizontal label small" @click="() => showConfirmDeleteModal(article)">{{ $t('button.common.delete') }}</div>
+    <div class="ui tab" data-tab="publish">
+      <div class="ui tab relaxed divided list active" v-if="!isLoadingArtices">
+        <div class="item" v-for="article in publishArticles" v-bind:key="article.title">
+          <img class="ui small image" v-if="article.coverImage" :src="article.coverImage.url"/>
+          <img class="ui small image" v-if="!article.coverImage" src="https://i.imgur.com/I3QyKzY.png"/>
+          <div class="content">
+            <router-link :to="`/article/${article.id}`">{{ article.title }}</router-link>
+            <div class="description">Updated {{article.modifyTimestamp | fromNow}}</div>
+            <br/>
+            <router-link class="ui green basic horizontal label small" :to="`/article/${article.id}/edit`">{{ $t('button.common.update') }}</router-link>
+            <div class="ui button red basic horizontal label small" @click="() => showConfirmDeleteModal(article)">{{ $t('button.common.delete') }}</div>
+          </div>
         </div>
       </div>
     </div>
-    <!-- <div class="ui relaxed divided list" v-if="!isLoadingArtices">
-      <div class="item" v-for="article in articles" v-bind:key="article.title">
-        <img class="ui small image" v-if="article.coverImage" :src="article.coverImage.url"/>
-        <img class="ui small image" v-if="!article.coverImage" src="https://i.imgur.com/I3QyKzY.png"/>
-        <div class="content">
-          <router-link :to="`/article/${article.id}`">{{ article.title }}</router-link>
-          <div class="description">Updated {{article.modifyTimestamp | fromNow}}</div>
-          <br/>
-          <div class="ui brown basic horizontal label small" v-if="!isPublished(article.status)">{{ $t('message.article.status.draft') }}</div>
-          <div class="ui green basic horizontal label small" v-if="isPublished(article.status)">{{ $t('message.article.status.publish') }}</div>
-          <router-link class="ui green basic horizontal label small" :to="`/article/${article.id}/edit`">{{ $t('button.common.update') }}</router-link>
-          <div class="ui button red basic horizontal label small" @click="() => showConfirmDeleteModal(article)">{{ $t('button.common.delete') }}</div>
-        </div>
-      </div>
-    </div> -->
     <!-- modal -->
     <div class="ui modal">
       <i class="close icon"></i>
@@ -72,7 +51,7 @@
           Cancel
         </div>
         <div class="ui positive circular button" @click="deleteArticle">
-          Yes
+          Delete
         </div>
       </div>
     </div>
@@ -89,7 +68,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-// import * as $ from 'jquery';
 import nprogress from 'nprogress';
 import Loader from '../common/Loader';
 import { ARTICLE_STATUS } from '../../services/const';
@@ -124,10 +102,14 @@ export default {
     },
     deleteArticle() {
       // delete physical
-      // this.$store.dispatch('article/readArticlesByUser', this.$route.params.id);
+      this.$store.dispatch('article/deleteArticle', this.selectedArticle);
     },
-    openModal: () => this.$('.modal').modal('show'),
-    closeModal: () => this.$('.modal').modal('close'),
+    openModal() {
+      this.$('.modal').modal('show');
+    },
+    closeModal() {
+      this.$('.modal').modal('close');
+    },
     isPublished: articleStatus => articleStatus === ARTICLE_STATUS.PUBLISH,
   },
   components: {

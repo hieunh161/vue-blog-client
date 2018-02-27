@@ -20,6 +20,7 @@ const messages = {
         google: 'Google Plus',
         or: 'Or',
         title: 'Login',
+        sign_up: 'Sign up for new account',
       },
       article: {
         status: {

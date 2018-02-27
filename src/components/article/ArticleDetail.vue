@@ -55,7 +55,7 @@
                 </div>
               </div>
             </div>
-            <social-network :pageUrl="getPageUrl"></social-network>
+            <!-- <social-network :pageUrl="getPageUrl"></social-network> -->
             <!-- facebook comment -->
             <div class="fb-comments" data-href="my-blog-68afd.firebaseapp.com/article/-L2AhDoogBulzEAfSIoq" data-numposts="10"></div>
           </div>
@@ -72,7 +72,7 @@ import marked, { Renderer } from 'marked';
 import highlightjs from 'highlight.js';
 import Loader from '../common/Loader';
 import PageNotFound from '../PageNotFound';
-import SocialNetwork from '../common/SocialNetwork';
+// import SocialNetwork from '../common/SocialNetwork';
 import { baseUrl } from '../../config';
 
 export default {
@@ -151,7 +151,7 @@ export default {
   },
   components: {
     Loader,
-    SocialNetwork,
+    // SocialNetwork,
     PageNotFound,
   },
 };
