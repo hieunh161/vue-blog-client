@@ -10,18 +10,21 @@ import ArtileUserList from '@/components/article/ArtileUserList';
 import DemoPage from '@/components/demo/DemoPage';
 import Dashboard from '@/components/Dashboard';
 import PageNotFound from '@/components/PageNotFound';
+import UnAuthorized from '@/components/UnAuthorized';
 import * as firebase from 'firebase';
+import localStorage from '../services/localStorage';
 
 Vue.use(Router);
 
 const requireAuth = (to, from, next) => {
-  if (!firebase.auth().currentUser) {
-    console.log('User is not logged in');
-    next({
-      path: '/login',
-    });
-  } else {
+  // check from local storage then use token
+  const authUser = localStorage.get('authUser');
+  if (authUser && authUser.access_token) {
     next();
+  } else {
+    next({
+      path: '/unauthorized',
+    });
   }
 };
 
@@ -83,6 +86,11 @@ export default new Router({
       path: '*',
       name: 'PageNotFound',
       component: PageNotFound,
+    },
+    {
+      path: 'unauthorized',
+      name: 'UnAuthorized',
+      component: UnAuthorized,
     },
   ],
   scrollBehavior(to, from, savedPosition) {

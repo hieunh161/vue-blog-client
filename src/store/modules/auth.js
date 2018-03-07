@@ -1,14 +1,25 @@
 import * as axios from 'axios';
 import authService from '../../services/auth';
+import localStorage from '../../services/localStorage';
 import * as types from '../mutationTypes';
+
+// const AuthorizedStatus = {
+//   UNAUTHORIZED: 0,
+//   AUTHORIZING: 1,
+//   AUTHORIZED: 2,
+// };
 
 const state = {
   authUser: {
+    displayName: null,
+    photoUrl: null,
+    email: null,
+    access_token: null,
+    refresh_token: null,
+    // unused
     isAuthorizing: false,
     error_message: null,
     authorized: false,
-    access_token: null,
-    refresh_token: null,
   },
 };
 
@@ -18,6 +29,7 @@ const getters = {
 
 const actions = {
   login: ({ commit }, { username, password }) => {
+    commit(types.AUTH_CLEAR_STATE);
     commit(types.AUTH_SET_LOADING, true);
     return authService.login({ username, password })
       .then((response) => {
@@ -47,6 +59,14 @@ const actions = {
 
 /* eslint-disable no-param-reassign */
 const mutations = {
+  [types.AUTH_CLEAR_STATE](s) {
+    s.authUser.isAuthorizing = false;
+    s.authUser.error_message = null;
+    s.authUser.authorized = false;
+    s.authUser.access_token = null;
+    s.authUser.refresh_token = null;
+    localStorage.save('authUser', s.authUser);
+  },
   [types.AUTH_SET_LOADING](s, loading) {
     s.authUser.isAuthorizing = loading;
   },
@@ -56,6 +76,7 @@ const mutations = {
     s.authUser.refresh_token = header.refresh_token;
     axios.defaults.headers.common.Accept = 'application/json';
     axios.defaults.headers.common.Authorization = `Bearer ${header.access_token}`;
+    localStorage.save('authUser', s.authUser);
   },
   [types.AUTH_SET_ERROR](s, error) {
     s.authUser.error_message = error.message;

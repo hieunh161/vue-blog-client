@@ -1,8 +1,8 @@
 <template>
-  <div class="ui modal inverted" id="login-modal">
+  <div class="ui tiny modal inverted" id="login-modal">
     
     <i class="close icon"></i>
-    <div class="header">{{ $t('message.login.title') }}</div>
+    <div class="header center teal">{{ $t('message.login.title') }}</div>
     <div class="content">
       <div class="ui form">
         <div class="field">
@@ -27,6 +27,10 @@
         </div>
         <div class="ui button submit teal" :class="{loading: isLogging}" @click="accountLogin">Login</div>
       </div>
+      <div class="ui warning message" v-if="isShowError">
+        <i class="close icon" @click="isShowError = false"></i>
+        <div>{{ authUser.error_message }}</div>
+      </div>
       <div class="ui horizontal divider">OR</div>
       <div class="ui two column relaxed stackable grid">
         <div class="column">
@@ -43,17 +47,14 @@
         </div>
       </div>
       <br/>
+      <!-- {{authUser}} -->
       You dont have any account yet? <router-link class="nav-link"  :to="`/sign-up`">{{ $t('message.login.sign_up') }}</router-link>
-      <!-- <div class="ui floated left">New to us? <p class="nav-link">Sign up</p></div> -->
-    </div>
-    <div class="actions">
-      <div class="ui button cancel orange basic">Cancel</div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import store from '../store';
 
 export default {
   data() {
@@ -63,6 +64,8 @@ export default {
         username: 'hieunh161@gmail.com',
         password: 'password',
       },
+      authUser: store.getters['auth/authUser'],
+      isShowError: false,
     };
   },
   methods: {
@@ -71,26 +74,28 @@ export default {
       loginPassword.type = loginPassword.type === 'password' ? 'text' : 'password';
     },
     accountLogin() {
-      console.log(this.login.username);
+      this.isShowError = false;
       this.isLogging = true;
       this.$store.dispatch('auth/login', { username: this.login.username, password: this.login.password })
-        .then((response) => {
-          console.log(response);
+        .then(() => {
           this.isLogging = false;
-          this.hide();
+          if (this.authUser.error_message) {
+            this.isShowError = true;
+          } else {
+            this.hide();
+          }
         });
     },
     facebookLogin() {
+      this.isShowError = false;
       console.log('facebookLogin');
     },
     googleLogin() {
+      this.isShowError = false;
       console.log('googleLogin');
     },
     hide() {
       this.$('#login-modal').modal('hide');
-    },
-    computed: {
-      ...mapGetters('auth', ['authUser']),
     },
   },
 };

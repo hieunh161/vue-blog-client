@@ -39,8 +39,8 @@ export default {
         // set global config for axios header
         axios.defaults.headers.common.Accept = 'application/json';
         axios.defaults.headers.common.Authorization = `Bearer ${response.data.access_token}`;
-        axios.get('http://localhost:8000/api/test')
-        .then((res) => { this.response = res; });
+        axios.get('http://localhost:8000/api/v1/user-list')
+        .then(res => console.log(res.data));
       });
   },
   data() {

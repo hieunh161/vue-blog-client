@@ -6,6 +6,7 @@
         <router-link class="nav-link item"  to="/" ><img class="logo" src="../assets/images/logo.png"> {{ $t('message.app.title') }}</router-link>
         <!-- right menu -->
         <div class="right menu">
+          <!-- <router-link class="nav-link item"  to="/login" v-if="!isLoggedIn" ><i class="ui icon sign in"></i> {{ $t('message.navbar.login') }}</router-link> -->
           <router-link class="nav-link item"  to="/login" v-if="!isLoggedIn" ><i class="ui icon sign in"></i> {{ $t('message.navbar.login') }}</router-link>
           <!-- dropdown menu -->
           <div class="ui simple dropdown item" v-if="isLoggedIn">
