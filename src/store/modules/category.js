@@ -11,20 +11,15 @@ const getters = {
 };
 
 const actions = {
-  createCategory: ({ commit }, { title }) => {
-    const category = {
-      title,
-      createTimestamp: Date.now(),
-      modifyTimestamp: Date.now(),
-    };
-    return categoryService.createCategory(category)
-    .then(result => commit(types.CATEGORY_CREATE, {
-      key: result.key,
-      value: category,
-    }));
+  createCategory: ({ commit }, { name, priority }) => {
+    console.log(name);
+    return categoryService.createCategory({ name, priority })
+    .then(result => commit(types.CATEGORY_CREATE, result.data));
   },
-  readCategories: ({ commit }) => categoryService.readCategories().then((result) => {
-    commit(types.CATEGORY_READ, result);
+  readCategories: ({ commit }) => categoryService.readCategories()
+  .then((result) => {
+    console.log(result);
+    commit(types.CATEGORY_READ, result.data.data);
   }),
   updateCategory: ({ commit }, { category }) => categoryService.updateCategory({
     title: category.value.title,
@@ -40,6 +35,7 @@ const mutations = {
     s.categories.push(category);
   },
   [types.CATEGORY_READ]: (s, categories) => {
+    console.log(categories);
     s.categories = categories;
   },
   [types.CATEGORY_DELETE]: (s, category) => {

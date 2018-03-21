@@ -1,5 +1,5 @@
 import * as axios from 'axios';
-import { loginUrl } from '../config';
+import { loginUrl, userInfoUrl, userUrl } from '../config';
 import { clientId, clientSecret } from '../env';
 
 const login = ({ username, password }) => {
@@ -14,6 +14,12 @@ const login = ({ username, password }) => {
   return axios.post(loginUrl, postData);
 };
 
+const getUserInfo = ({ username }) => axios.get(`${userInfoUrl}/${username}`);
+
+const getUser = () => axios.get(userUrl);
+
 export default {
   login,
+  getUserInfo,
+  getUser,
 };

@@ -29,7 +29,7 @@
       </div>
       <div class="ui warning message" v-if="isShowError">
         <i class="close icon" @click="isShowError = false"></i>
-        <div>{{ authUser.error_message }}</div>
+        <div>{{ authResult.error_message }}</div>
       </div>
       <div class="ui horizontal divider">OR</div>
       <div class="ui two column relaxed stackable grid">
@@ -65,6 +65,7 @@ export default {
         password: 'password',
       },
       authUser: store.getters['auth/authUser'],
+      authResult: store.getters['auth/authResult'],
       isShowError: false,
     };
   },
@@ -79,10 +80,11 @@ export default {
       this.$store.dispatch('auth/login', { username: this.login.username, password: this.login.password })
         .then(() => {
           this.isLogging = false;
-          if (this.authUser.error_message) {
+          if (this.authResult.error_message) {
             this.isShowError = true;
           } else {
-            this.hide();
+            console.log('hide');
+            this.$('#login-modal').modal('hide');
           }
         });
     },
@@ -95,6 +97,7 @@ export default {
       console.log('googleLogin');
     },
     hide() {
+      // this.$(this).modal('hide').dequeue();
       this.$('#login-modal').modal('hide');
     },
   },

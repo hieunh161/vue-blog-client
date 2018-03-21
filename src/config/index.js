@@ -15,5 +15,9 @@ export const imgUrlConfig = {
 };
 
 export const apiDomain = 'http://localhost:8000/';
+export const apiPrefix = 'api/v1/';
 
 export const loginUrl = `${apiDomain}oauth/token`;
+export const userInfoUrl = `${apiDomain}${apiPrefix}users`;
+export const userUrl = `${apiDomain}${apiPrefix}user`;
+export const categoryUrl = `${apiDomain}${apiPrefix}categories`;

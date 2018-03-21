@@ -9,6 +9,8 @@ const messages = {
   en: {
     message: {
       common: {
+        id: 'ID',
+        priority: 'Priority',
         confirm: 'Confirm',
       },
       confirm: {

@@ -7,11 +7,11 @@
         <!-- right menu -->
         <div class="right menu">
           <!-- <router-link class="nav-link item"  to="/login" v-if="!isLoggedIn" ><i class="ui icon sign in"></i> {{ $t('message.navbar.login') }}</router-link> -->
-          <router-link class="nav-link item"  to="/login" v-if="!isLoggedIn" ><i class="ui icon sign in"></i> {{ $t('message.navbar.login') }}</router-link>
+          <a class="nav-link item"  v-if="!isLoggedIn" @click="accountLogin"><i class="ui icon sign in"></i> {{ $t('message.navbar.login') }}</a>
           <!-- dropdown menu -->
           <div class="ui simple dropdown item" v-if="isLoggedIn">
-            <img class="ui avatar image" :src= "avatar"/>
-            <span>{{currentUser.displayName}}</span> <i class="dropdown icon"></i>
+            <img class="ui avatar image" :src= "authUser.photoUrl"/>
+            <span>{{ authUser.displayName }}</span> <i class="dropdown icon"></i>
             <div class="menu">
               <router-link class="nav-link item"  to="/user"><i class="user icon"></i> {{ $t('message.navbar.my_profile') }}</router-link>
               <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> {{ $t('message.navbar.my_article') }}</router-link>
@@ -24,25 +24,32 @@
         </div>
       </div>
     </div>
+    <login-modal></login-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import ArticleTemplate from './article/ArticleTemplate';
+import LoginModal from './LoginModal';
 
 export default {
   name: 'navbar',
   computed: {
-    ...mapGetters('user', ['isLoggedIn', 'avatar', 'currentUser', 'isAdmin']),
+    ...mapGetters('user', ['avatar', 'currentUser']),
+    ...mapGetters('auth', ['authUser', 'isLoggedIn', 'isAdmin']),
   },
   methods: {
     logout() {
-      this.$store.dispatch('user/logOut');
+      this.$store.dispatch('auth/logout');
+    },
+    accountLogin() {
+      this.$('#login-modal').modal('show');
     },
   },
   components: {
     ArticleTemplate,
+    LoginModal,
   },
 };
 </script>

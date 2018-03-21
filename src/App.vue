@@ -16,7 +16,9 @@
 import { mapState } from 'vuex';
 import Navbar from '@/components/Navbar';
 import AppFooter from '@/components/AppFooter';
-import Firebase from 'firebase';
+// import Firebase from 'firebase';
+import localStorage from './services/localStorage';
+// import { auth } from 'firebase';
 
 export default {
   name: 'app',
@@ -28,18 +30,11 @@ export default {
     AppFooter,
   },
   beforeCreate() {
-    Firebase.auth().onAuthStateChanged((user) => {
-      // initially user = null, after auth it will be either <fb_user> or false
-      this.$store.dispatch('user/setCurrentUser', user || false);
-      if (user) {
-        this.$store.dispatch('user/getUserInfo', user);
-      }
-      if (user && this.$route.path === '/login') {
-        this.$router.replace('/');
-      } else if (!user && this.$route.path !== '/login') {
-        // this.$router.replace('/login');
-      }
-    });
+    // get access_token from local storage
+    const authUser = localStorage.get('authUser');
+    if (authUser) {
+      this.$store.dispatch('auth/setAuthUser', authUser);
+    }
   },
 };
 </script>

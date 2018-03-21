@@ -1,18 +1,19 @@
 /* eslint-disable no-trailing-spaces */
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '@/components/Home';
-import Login from '@/components/Login';
-import UserProfile from '@/components/UserProfile';
-import ArticleDetail from '@/components/article/ArticleDetail';
-import ArticleEditor from '@/components/article/ArticleEditor';
-import ArtileUserList from '@/components/article/ArtileUserList';
-import DemoPage from '@/components/demo/DemoPage';
-import Dashboard from '@/components/Dashboard';
-import PageNotFound from '@/components/PageNotFound';
-import UnAuthorized from '@/components/UnAuthorized';
-import * as firebase from 'firebase';
+// import Login from '@/components/Login';
+// import * as firebase from 'firebase';
 import localStorage from '../services/localStorage';
+
+const Home = () => import('@/components/Home');
+const UserProfile = () => import('@/components/UserProfile');
+const ArticleDetail = () => import('@/components/article/ArticleDetail');
+const ArticleEditor = () => import('@/components/article/ArticleEditor');
+const ArtileUserList = () => import('@/components/article/ArtileUserList');
+const DemoPage = () => import('@/components/demo/DemoPage');
+const Dashboard = () => import('@/components/Dashboard');
+const PageNotFound = () => import('@/components/PageNotFound');
+const UnAuthorized = () => import('@/components/UnAuthorized');
 
 Vue.use(Router);
 
@@ -29,15 +30,15 @@ const requireAuth = (to, from, next) => {
 };
 
 // redirect to home if user come to login page when logged in
-const isLoggedIn = (to, from, next) => {
-  if (firebase.auth().currentUser && to.path === '/login') {
-    next({
-      path: '/',
-    });
-  } else {
-    next();
-  }
-};
+// const isLoggedIn = (to, from, next) => {
+//   if (firebase.auth().currentUser && to.path === '/login') {
+//     next({
+//       path: '/',
+//     });
+//   } else {
+//     next();
+//   }
+// };
 
 export default new Router({
   mode: 'history',
@@ -47,12 +48,12 @@ export default new Router({
       name: 'Home',
       component: Home,
     },
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login,
-      beforeEnter: isLoggedIn,
-    },
+    // {
+    //   path: '/login',
+    //   name: 'Login',
+    //   component: Login,
+    //   beforeEnter: isLoggedIn,
+    // },
     {
       path: '/dashboard',
       name: 'Dashboard',

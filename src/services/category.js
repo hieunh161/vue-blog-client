@@ -1,9 +1,11 @@
 import * as firebase from 'firebase';
-import util from './util';
+import * as axios from 'axios';
+// import util from './util';
 import { REF_CATEGORY, REF_ARTICLE } from './const';
+import { categoryUrl } from '../config';
 
-const createCategory = category => firebase.database().ref(REF_CATEGORY)
-  .push(category);
+const createCategory = category => axios.post(categoryUrl, category);
+// firebase.database().ref(REF_CATEGORY).push(category);
 
 const createArticleCategory = (categoryId, articleId) => firebase.database().ref(REF_CATEGORY)
   .child(categoryId)
@@ -11,8 +13,9 @@ const createArticleCategory = (categoryId, articleId) => firebase.database().ref
   .child(articleId)
   .set(true);
 
-const readCategories = () => firebase.database().ref(REF_CATEGORY)
-  .once('value').then(snapshot => util.getItemListFromSnapshot(snapshot));
+const readCategories = () => axios.get(categoryUrl);
+// firebase.database().ref(REF_CATEGORY).once('value')
+// .then(snapshot => util.getItemListFromSnapshot(snapshot));
 
 const updateCategory = category => firebase.database().ref(REF_CATEGORY)
   .child(category.key).update(category);
