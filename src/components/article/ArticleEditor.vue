@@ -1,12 +1,14 @@
 <template>
   <div id="article-edit-page">
     <!-- loading -->
-    <loader v-if="isLoadingArticle"></loader>
+    <div class="ui center aligned grid loading" v-if="isLoadingArticle">
+      <circle-loader></circle-loader>
+    </div>
     <!-- article content -->
-    <div v-if="!isLoadingArticle && article">
+    <div v-if="!isLoadingArticle && selectedArticle">
       <div class="ui transparent massive left input fluid article-title">
         <input type="text" 
-        v-model="article.title"
+        v-model="selectedArticle.title"
         v-on:keyup="updateTextEmptyWarning"
         placeholder="Untitled Post">
       </div>
@@ -16,7 +18,7 @@
       </div>
       <image-uploader class="article-cover-image"></image-uploader>
       <div class="article-action">
-        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveDraftArticle">{{ $t('button.article_edit.save_draft') }}</div>
+        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveDraft">{{ $t('button.article_edit.save_draft') }}</div>
         <div class="ui button basic positive" v-if="!isPublishingArticle" :class='{loading:isPublishingArticle}' @click="() => showPublishModal()">{{ $t('button.article_edit.publish') }}</div>
         <div class="ui button basic positive" v-if="isPublishingArticle" :class='{loading:isPublishingArticle}' @click="() => privateArticle()">{{ $t('button.article_edit.private') }}</div>
         <div class="ui button basic positive" v-if="isPublishingArticle" @click="viewArticle">{{ $t('button.article_edit.view_article') }}</div>
@@ -26,52 +28,48 @@
         class="article-editor"
         language="en" 
         value="write a story"
-        v-model="article.content">
+        v-model="selectedArticle.content">
       </markdown-editor>
-      <!-- <mavon-editor
-        v-model="article.content"
-        value="# Write your story..."
-        language="en"
-        style="height: 95%"></mavon-editor> -->
       <!-- Image Upload Modal -->
-      <image-upload-modal :initImgs="article.images"></image-upload-modal>
+      <image-upload-modal :initImgs="selectedArticle.images"></image-upload-modal>
       <!-- Publish Modal -->
       <div class="ui modal" id="publish-modal">
         <i class="close icon"></i>
         <div class="header">{{ $t('message.article_edit.publish_header') }}</div>
         <div class="content">
           <p>{{ $t('message.article_edit.select_category') }}</p>
-          <select class="ui selection dropdown article-category" v-model="article.category" @change="onChangeCategory">
-            <option v-for="category in categories" :value="category.key" v-bind:key="category.key">{{category.value.title}}</option>
+          <select class="ui selection dropdown article-category" v-model="selectedArticle.category_id">
+            <option v-for="category in categories" :value="category.id" v-bind:key="category.id">{{category.name}}</option>
           </select>
           <br>
           <p>{{ $t('message.article_edit.add_tag') }}</p>
           <article-tag class="article-tag" :on-change="onChangeTags" :initTags="article.tags" placeholder="Add Tag"></article-tag>
         </div>
         <div class="actions">
-          <div class="ui basic button orange" @click="hidePublishModal">{{ $t('button.common.cancel') }}</div>
+          <div class="ui basic button red" @click="hidePublishModal">{{ $t('button.common.cancel') }}</div>
           <div class="ui basic button positive" @click="publishArticle">{{ $t('button.article_edit.publish') }}</div>
         </div>
       </div>
     </div>
     <!-- fallback when no items found -->
     <!-- fallback when content not found -->
-    <page-not-found v-if="!isLoadingArticle && !article"></page-not-found>
+    <page-not-found v-if="!isLoadingArticle && !selectedArticle"></page-not-found>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex';
 import { markdownEditor } from 'vue-simplemde';
-import $ from 'jquery';
 import nprogress from 'nprogress';
-import ImageUploader from './ImageUploader';
-import ArticleTag from './ArticleTag';
-import Loader from '../common/Loader';
-import ImageUploadModal from './ImageUploadModal';
-import PageNotFound from '../PageNotFound';
 import util from '../../services/util';
 import { ARTICLE_STATUS } from '../../services/const';
+
+const ImageUploader = () => import('./ImageUploader');
+const ArticleTag = () => import('./ArticleTag');
+const Loader = () => import('../common/Loader');
+const ImageUploadModal = () => import('./ImageUploadModal');
+const PageNotFound = () => import('../PageNotFound');
+const CircleLoader = () => import('../common/CircleLoader');
 
 export default {
   created() {
@@ -79,7 +77,7 @@ export default {
     nprogress.start();
     this.isLoadingArticle = true;
     this.$store.dispatch('category/readCategories');
-    this.$store.dispatch('article/readArticleById', { articleId: this.$route.params.id, router: this.$router })
+    this.$store.dispatch('article/readArticleById', { articleId: this.$route.params.id })
       .then(() => {
         this.originalCategory = this.article.category;
         this.isLoadingArticle = false;
@@ -97,19 +95,19 @@ export default {
   },
   methods: {
     showPublishModal() {
-      if (this.article.title) {
-        $('#publish-modal').modal('show');
+      if (this.selectedArticle.title) {
+        this.$('#publish-modal').modal('show');
       } else {
         this.isShowTextEmptyWarning = true;
       }
     },
     updateTextEmptyWarning() {
-      if (this.article.title) {
+      if (this.selectedArticle.title) {
         this.isShowTextEmptyWarning = false;
       }
     },
     privateArticle() {
-      this.article.status = ARTICLE_STATUS.DRAFT;
+      this.selectedArticle.status = ARTICLE_STATUS.DRAFT;
       this.saveArticle();
     },
     publishArticle() {
@@ -128,25 +126,23 @@ export default {
         newCategory: this.article.category,
       });
     },
-    saveDraftArticle() {
-      this.updateArticle();
-      this.$emit('uploadArticleToServer');
-      this.$store.dispatch('article/saveDraft', {
-        articleId: this.articleId,
-        article: this.article,
-        addTags: this.addTags,
-        deleteTags: this.deleteTags,
-        oldCategory: this.originalCategory,
-        newCategory: this.article.category,
-      });
+    saveDraft() {
+      console.log('save');
+      this.selectedArticle.slugify = util.slugify(this.selectedArticle.title);
+      // this.updateArticle();
+      // this.$emit('uploadArticleToServer');
+      // {
+      //   articleId: this.articleId,
+      //   article: this.article,
+      //   addTags: this.addTags,
+      //   deleteTags: this.deleteTags,
+      //   oldCategory: this.originalCategory,
+      //   newCategory: this.article.category,
+      // }
+      this.$store.dispatch('article/saveDraft', this.selectedArticle);
     },
     updateArticle() {
-      this.article.updateTimestamp = Date.now();
-      this.article.updateUser = this.currentUser.uid;
-      this.article.slugify = util.slugify(this.article.title);
-      // if (!this.article.category) {
-      //   this.article.category = {};
-      // }
+      this.selectedArticle.slugify = util.slugify(this.selectedArticle.title);
     },
     viewArticle() {
       // view article when article in publish state only
@@ -158,31 +154,29 @@ export default {
       this.$emit('showUploadModal');
     },
     hidePublishModal() {
-      $('#publish-modal').modal('hide');
+      this.$('#publish-modal').modal('hide');
     },
     onChangeTags(tags, addTags, deleteTags) {
       this.article.tags = tags;
       this.addTags = addTags;
       this.deleteTags = deleteTags;
     },
-    onChangeCategory() {
-      console.log(this.article.category);
-    },
   },
   components: {
     ImageUploader,
     ImageUploadModal,
     markdownEditor,
-    // mavonEditor,
+    CircleLoader,
     ArticleTag,
     Loader,
     PageNotFound,
   },
   computed: {
     ...mapGetters('user', ['isAdmin', 'currentUserInfo', 'currentUser']),
-    ...mapGetters('article', ['isLoading', 'articleId', 'isSavingDraft', 'isPublishingArticle']),
+    ...mapGetters('article', ['isLoading', 'articleId', 'isSavingDraft', 'isPublishingArticle', 'selectedArticle']),
     ...mapGetters('category', ['categories']),
     ...mapState('article', ['article']),
+    // ...mapGetters('article', ['selectedArticle']),
     isPublished() {
       return this.article.status === ARTICLE_STATUS.PUBLISH;
     },
@@ -226,5 +220,9 @@ export default {
 
 .content p {
   margin: 0;
+}
+
+.loading {
+  margin: 40px;
 }
 </style>

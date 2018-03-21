@@ -72,6 +72,8 @@ import nprogress from 'nprogress';
 import Loader from '../common/Loader';
 import { ARTICLE_STATUS } from '../../services/const';
 
+// TODO: bug v-if make dimmer not work when back and forth
+
 export default {
   data() {
     return {

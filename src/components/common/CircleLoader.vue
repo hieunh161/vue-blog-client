@@ -7,7 +7,7 @@
 export default {
   props: {
     size: {
-      default: '40px',
+      default: '60px',
     },
   },
   computed: {

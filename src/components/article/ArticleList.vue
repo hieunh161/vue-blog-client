@@ -19,7 +19,7 @@
             <div  class="ui list">
               <div class="item">
                 <div class="right floated content">
-                  <div class="ui circular basic orange label">
+                  <div class="ui circular basic red label">
                     <i class="orange heart icon" :class="{ outline:!isLiked(item) }"></i>{{ getLikeNumber(item.likes) }}
                   </div>
                 </div>

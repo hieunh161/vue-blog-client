@@ -4,6 +4,7 @@ import user from './modules/user';
 import article from './modules/article';
 import articleUser from './modules/articleUser';
 import category from './modules/category';
+import file from './modules/file';
 // new modules
 import auth from './modules/auth';
 
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     article,
     articleUser,
     category,
+    file,
     auth,
   },
 });

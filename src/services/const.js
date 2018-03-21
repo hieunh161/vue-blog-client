@@ -3,7 +3,6 @@ export const REF_ARTICLE = 'article';
 export const REF_USER = 'user';
 export const REF_TAG = 'tag';
 export const REF_CATEGORY = 'category';
-export const REF_ARTICLE_SHALLOW = 'article_shallow';
 export const REF_LIKE = 'like';
 
 /* Article status */

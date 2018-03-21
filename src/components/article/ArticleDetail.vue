@@ -1,14 +1,18 @@
 <template>
   <div class="article-detail">
-    <div class="sidebar" v-if="!isLoadingArtice && article" data-tooltip="Give heart" data-position="right center">
+    <!-- side bar -->
+    <div class="sidebar" v-if="!isLoadingArticle && article" data-tooltip="Give heart" data-position="right center">
       <i class="ui icon huge heart orange link" :class="{outline:!isLiked}" @click="likeArticle"></i>
       <div class="sidebar-like">{{numberLiked}}</div>
     </div>
     <div class="ui main container content">
       <!-- progress bar -->
-      <loader v-if="isLoadingArtice && !article"></loader>
+      <loader v-if="isLoadingArticle && !article"></loader>
+      <div class="ui center aligned grid loading" v-if="isLoadingArticle">
+        <circle-loader></circle-loader>
+      </div>
       <!-- article content -->
-      <div class="article" v-if="!isLoadingArtice && article">
+      <div class="article" v-if="!isLoadingArticle && article">
         <div>
           <div class="article-header ui header">
             <h1 class="article-title">{{article.title}}</h1>
@@ -40,10 +44,10 @@
               <div class="ui items">
                 <div class="item">
                   <a class="ui tiny image avatar">
-                    <img :src="article.author.photoURL">
+                    <img :src="article.author.photo_url">
                   </a>
                   <div class="content">
-                    <a class="header">{{article.author.displayName}}</a>
+                    <a class="header">{{article.author.display_name}}</a>
                     <span v-if="!isMyArticle">
                       <span @click="followUser" v-if="!isFollowed" class="follow ui mini button basic green circular"><i class="user icon"></i>Follow</span>
                       <span @click="unfollowUser" v-if="isFollowed" class="follow ui mini button green circular"><i class="user icon"></i>Following</span>
@@ -62,7 +66,7 @@
         </div>
       </div>
       <!-- fallback when content not found -->
-      <page-not-found v-if="!isLoadingArtice && !article"></page-not-found>
+      <page-not-found v-if="!isLoadingArticle && !article"></page-not-found>
     </div>
   </div>
 </template>
@@ -75,10 +79,12 @@ import PageNotFound from '../PageNotFound';
 // import SocialNetwork from '../common/SocialNetwork';
 import { baseUrl } from '../../config';
 
+const CircleLoader = () => import('../common/CircleLoader');
+
 export default {
   data() {
     return {
-      isLoadingArtice: false,
+      isLoadingArticle: false,
     };
   },
   created() {
@@ -95,14 +101,12 @@ export default {
     marked.setOptions({ renderer });
     // load data from api
     this.$np.start();
-    this.isLoadingArtice = true;
+    this.isLoadingArticle = true;
     this.$store.dispatch('article/readArticleByIdWithViewUpdate', { articleId: this.$route.params.id })
       .then(() => {
-        this.isLoadingArtice = false;
+        this.isLoadingArticle = false;
         this.$np.done();
       });
-  },
-  mounted() {
   },
   computed: {
     ...mapGetters('article', ['article', 'articleId']),
@@ -151,8 +155,8 @@ export default {
   },
   components: {
     Loader,
-    // SocialNetwork,
     PageNotFound,
+    CircleLoader,
   },
 };
 </script>
@@ -280,4 +284,7 @@ a.header {
   }
 }
 
+.loading {
+  padding: 40px;
+}
 </style>

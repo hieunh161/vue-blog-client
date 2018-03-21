@@ -17,7 +17,7 @@ export default {
   computed: {
     ...mapGetters('user', ['currentUser', 'currentUserInfo']),
     ...mapGetters('auth', ['authUser']),
-    ...mapGetters('article', ['editingArticle']),
+    ...mapGetters('article', ['selectedArticle']),
   },
   methods: {
     createNewArticle() {
@@ -25,8 +25,8 @@ export default {
       this.$store.dispatch('article/createNew', this.authUser.userId)
       .then(() => {
         // redirect to edit page with created id
-        console.log((`done create template Article ${this.editingArticle.id}`));
-        this.$router.push({ path: `/article/${this.editingArticle.id}/edit` });
+        console.log((`done create template Article ${this.selectedArticle.id}`));
+        this.$router.push({ path: `/article/${this.selectedArticle.id}/edit` });
       });
     },
   },

@@ -14,7 +14,7 @@
         <div class="ui basic deny button">
           {{ $t('button.common.cancel') }}
         </div>
-        <div class="ui orange button" @click="deleteCategory">
+        <div class="ui red button" @click="deleteCategory">
           {{ $t('button.common.delete') }}
         </div>
       </div>

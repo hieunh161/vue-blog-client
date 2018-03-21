@@ -1,27 +1,8 @@
 import * as firebase from 'firebase';
 import * as axios from 'axios';
 import util from './util';
-import { REF_ARTICLE, REF_USER, IMG_UPLOAD_URL, REF_ARTICLE_SHALLOW } from './const';
+import { REF_ARTICLE, REF_USER, IMG_UPLOAD_URL } from './const';
 import { imgUrlConfig, firebaseConfig, articleUrl } from '../config';
-// import { articleUrl } from '../config';
-
-const createTemplateArticle = (articleTemplate, user) => {
-  const userId = user.uid;
-  return firebase.database()
-  .ref(REF_ARTICLE).push(articleTemplate)
-  .then((result) => {
-    const articleId = result.key;
-    const articleObject = {};
-    articleObject[articleId] = true;
-    firebase.database().ref(REF_USER)
-    .child(userId).child(REF_ARTICLE)
-    .update(articleObject);
-    firebase.database().ref(REF_ARTICLE_SHALLOW)
-    .update(articleObject);
-    return Promise.resolve(articleId);
-  })
-  .then(articleId => articleId);
-};
 
 const readArticle = articleId => axios.get(`${articleUrl}/${articleId}`);
 // firebase.database().ref(REF_ARTICLE)
@@ -49,9 +30,7 @@ const readMoreArticles = (lastItem, numberArticlePerPage) => {
     .startAt(null, lastItem).limitToFirst(numberArticlePerPage + 1);
   return ref.once('value').then(snapshot => util.getListArticleFromSnapExceptItem(snapshot, lastItem));
 };
-
-const updateArticle = ({ articleId, article }) =>
-firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
+// firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
 
 const updateArticleProperty = (articleId, article) =>
 firebase.database().ref(REF_ARTICLE).child(articleId).update(article);
@@ -116,8 +95,9 @@ const likeArticle = (articleId, userId, liked) => {
 
 const createNew = article => axios.post(articleUrl, article);
 
+const updateArticle = article => axios.put(`${articleUrl}/${article.id}`, article);
+
 export default {
-  createTemplateArticle,
   readArticle,
   readAllArticles,
   readFirstArticle,

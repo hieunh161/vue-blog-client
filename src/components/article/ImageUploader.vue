@@ -2,47 +2,44 @@
 <div>
   <div class="container">
     <!-- upload -->
-    <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
+    <form enctype="multipart/form-data" novalidate v-if="!coverImage || isReupload && !isUploading">
       <div class="dropbox">
         <input type="file"
-          :disabled="isSaving" 
+          :disabled="isUploading" 
           name="image"
           @change="filesChange($event.target.name, $event.target.files);"
           accept="image/*" class="input-file">
-          <p v-if="isInitial" class="hint-message" v-html="$t('message.upload_image.upload_hint')"></p>
-          <p v-if="isSaving" class="ui active centered inline loader">
-            {{ $t('message.upload_image.uploading') }}
-          </p>
+          <p class="hint-message" v-html="$t('message.upload_image.upload_hint')"></p>
       </div>
     </form>
-      <div v-if="isSuccess">
-        <div class="ui medium image" id="image-dimmer">
-          <div class="ui dimmer">
-            <div class="content">
-              <div class="center">
-                <div class="ui teal button" @click="showPreviewImageModal">{{ $t('button.upload_image.preview') }}</div>
-                <h5><a href="javascript:void(0)" @click="reset()">{{ $t('message.upload_image.change_cover_image') }}</a></h5>
-              </div>
+    <!-- cancel -->
+    <a v-if="isReupload && !isUploading" class="ui red basic" href="javascript:void(0)" @click="isReupload = false">Cancel Upload</a>
+    <!-- loading -->
+    <div class="ui center aligned grid loading" v-if="isUploading">
+      <circle-loader></circle-loader>
+    </div>
+    <!-- dislay image -->
+    <div v-if="coverImage && !isReupload && !isUploading">
+      <div class="ui medium image" id="image-dimmer">
+        <div class="ui dimmer">
+          <div class="content">
+            <div class="center">
+              <div class="ui teal button" @click="showPreviewImageModal">{{ $t('button.upload_image.preview') }}</div>
+              <h5><a href="javascript:void(0)" @click="isReupload = true">{{ $t('message.upload_image.change_cover_image') }}</a></h5>
             </div>
           </div>
-          <img v-if="coverImage" class="ui image" :src="coverImage.url">
         </div>
+        <img v-if="coverImage" class="ui image" :src="coverImage">
       </div>
-      <!-- failed -->
-      <div v-if="isFailed">
-        <h2>{{ $t('message.upload_image.upload_failed') }}</h2>
-        <p>
-          <a href="javascript:void(0)" @click="reset()">{{ $t('message.upload_image.try_again') }}</a>
-        </p>
-        <pre>{{ uploadError }}</pre>
+    </div>
+    <!-- preview modal -->
+    <div class="ui basic fullscreen modal" id="preview-image-modal">
+      <i class="close icon"></i>
+      <img class="ui centered image" v-if="coverImage" :src="coverImage">
+      <div class="actions">
+        <div class="ui cancel basic red button" @click="hidePreviewImageModal">{{ $t('button.common.cancel') }}</div>
       </div>
-      <div class="ui basic fullscreen modal" id="preview-image-modal">
-        <i class="close icon"></i>
-        <img class="ui centered image" v-if="coverImage" :src="coverImage.url">
-        <div class="actions">
-          <div class="ui basic orange button" @click="hidePreviewImageModal">{{ $t('button.common.cancel') }}</div>
-        </div>
-      </div>
+    </div>
   </div>
 </div>
 </template>
@@ -50,58 +47,55 @@
 <!-- Javascript -->
 <script>
 import { mapGetters } from 'vuex';
-import $ from 'jquery';
-import { UPLOAD_STATUS } from '../../services/const';
+
+const CircleLoader = () => import('../common/CircleLoader');
 
 export default {
   data() {
     return {
-      uploadFieldName: 'image',
+      isReupload: false,
+      isUploading: false,
     };
   },
   computed: {
-    ...mapGetters({ uploadStatus: 'article/uploadStatus' }),
-    ...mapGetters({ coverImage: 'article/coverImage' }),
-    isInitial() {
-      return this.uploadStatus === UPLOAD_STATUS.INITIAL;
-    },
-    isSaving() {
-      return this.uploadStatus === UPLOAD_STATUS.SAVING;
-    },
-    isSuccess() {
-      return this.uploadStatus === UPLOAD_STATUS.SUCCESS;
-    },
-    isFailed() {
-      return this.uploadStatus === UPLOAD_STATUS.FAILED;
-    },
+    ...mapGetters('file', ['uploadImage']),
+    ...mapGetters('article', ['coverImage']),
   },
   methods: {
-    reset() {
-      this.$store.dispatch('article/updateUploadStatus', UPLOAD_STATUS.INITIAL);
-    },
-    save(formData) {
-      this.$store.dispatch('article/uploadImage', formData);
-    },
     filesChange(fieldName, fileList) {
-      // handle file changes
-      const formData = new FormData();
       if (!fileList.length) return;
-      // append the files to FormData
-      Array
-        .from(Array(fileList.length).keys())
+      this.$np.start();
+      this.isUploading = true;
+      const formData = new FormData();
+      Array.from(Array(fileList.length).keys())
         .map(x => formData.append(fieldName, fileList[x], fileList[x].name));
-      this.save(formData);
+      this.$store.dispatch('file/uploadImage', formData)
+      .then(() => {
+        // update link
+        if (this.uploadImage) this.$store.dispatch('article/updateCoverImage', this.uploadImage.link);
+        this.$np.done();
+        this.isUploading = false;
+        this.isReupload = false;
+        this.$notify({
+          group: 'notice',
+          type: 'success',
+          title: 'Message',
+          text: 'Image is uploaded successfully!',
+        });
+      });
     },
     showPreviewImageModal() {
-      $('#preview-image-modal').modal('show');
+      this.$('#preview-image-modal').modal('show');
     },
     hidePreviewImageModal() {
-      $('#preview-image-modal').modal('hide');
+      this.$('#preview-image-modal').modal('hide');
     },
   },
   mounted() {
-    // this.reset();
-    $('#image-dimmer').dimmer({ on: 'hover' });
+    this.$('#image-dimmer').dimmer({ on: 'hover' });
+  },
+  components: {
+    CircleLoader,
   },
 };
 </script>
@@ -119,16 +113,16 @@ export default {
   cursor: pointer;
 }
 
+.dropbox:hover {
+  background: #EAEAEA; /* when mouse over to the drop zone, change color */
+}
+
 .input-file {
   opacity: 0; /* invisible but it's there! */
   width: 50%;
   height: 80px;
   position: absolute;
   cursor: pointer;
-}
-
-.dropbox:hover {
-  background: #EAEAEA; /* when mouse over to the drop zone, change color */
 }
 
 .dropbox p {
@@ -141,4 +135,7 @@ export default {
   font-size: 15px !important;
 }
 
+.loading {
+  margin: 40px;
+}
 </style>
