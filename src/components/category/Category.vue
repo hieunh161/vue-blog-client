@@ -24,12 +24,10 @@
           </tr>
         </tbody>
       </table>
-      <div class="ui segment" id="categoryLoader" v-if="isLoadingCategory">
-        <div class="ui active inverted dimmer">
-          <div class="ui text loader">{{ $t('message.category.loading') }}</div>
-        </div>
-        <p></p>
+      <div class="ui center aligned grid loading" v-if="isLoadingCategory">
+        <circle-loader></circle-loader>
       </div>
+      
       <button class="ui button basic positive" v-if="!isShowAddCategoryForm" @click="isShowAddCategoryForm = !isShowAddCategoryForm">{{ $t('message.category.add_form') }}</button>
       <button class="ui button basic positive" v-if="isShowAddCategoryForm" @click="isShowAddCategoryForm = !isShowAddCategoryForm">{{ $t('message.category.hide_form') }}</button>
     </div>
@@ -52,6 +50,8 @@ import { mapGetters } from 'vuex';
 const CategoryAdd = () => import('./CategoryAdd.vue');
 const CategoryUpdate = () => import('./CategoryUpdate.vue');
 const CategoryDelete = () => import('./CategoryDelete.vue');
+const CircleLoader = () => import('../common/CircleLoader.vue');
+const SquareLoader = () => import('../common/SquareLoader.vue');
 
 export default {
   data() {
@@ -91,6 +91,8 @@ export default {
     CategoryAdd,
     CategoryUpdate,
     CategoryDelete,
+    CircleLoader,
+    SquareLoader,
   },
 };
 </script>
@@ -104,5 +106,8 @@ a:hover {
 }
 #categoryLoader{
   height: 100px;
+}
+.loading {
+  margin: 40px;
 }
 </style>

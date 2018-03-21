@@ -84,14 +84,14 @@ export default new Router({
       component: ArtileUserList,
     },
     {
+      path: '/unauthorized',
+      name: 'UnAuthorized',
+      component: UnAuthorized,
+    },
+    {
       path: '*',
       name: 'PageNotFound',
       component: PageNotFound,
-    },
-    {
-      path: 'unauthorized',
-      name: 'UnAuthorized',
-      component: UnAuthorized,
     },
   ],
   scrollBehavior(to, from, savedPosition) {

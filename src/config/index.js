@@ -21,3 +21,5 @@ export const loginUrl = `${apiDomain}oauth/token`;
 export const userInfoUrl = `${apiDomain}${apiPrefix}users`;
 export const userUrl = `${apiDomain}${apiPrefix}user`;
 export const categoryUrl = `${apiDomain}${apiPrefix}categories`;
+
+export const articleUrl = `${apiDomain}${apiPrefix}articles`;

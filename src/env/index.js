@@ -1,3 +1,3 @@
-export const clientId = '4';
+export const clientId = '3';
 
-export const clientSecret = '9VhX1B5Ho5LaXAokOystSoPtAexhR1S6GKzfwhwz';
+export const clientSecret = 'Yq9YUSY1EVi1AO8RmUJqxVhVxmeRK0cqMfUvmv8F';

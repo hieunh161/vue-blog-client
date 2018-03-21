@@ -40,6 +40,12 @@ const messages = {
         content: `We are sorry but the page you are looking for does not exist.<br><br>
                   You can always find insightful posts on our <a href='/'>homepage</a>`,
       },
+      unauthorized: {
+        error: `401`,
+        title: `Unauthorized`,
+        content: `We are sorry but you dont have permission to view this page.<br><br>
+                  Please contact with <a href='/'>administrator</a>`,
+      },
       upload_image: {
         try_again: `Please try again!`,
         upload_failed: `Upload failed.`,

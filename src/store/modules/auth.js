@@ -20,7 +20,6 @@ const state = {
     role: null,
   },
   authResult: {
-    // unused
     isAuthorizing: false,
     error_message: null,
     authorized: false,
@@ -40,36 +39,16 @@ const actions = {
     commit(types.AUTH_SET_LOADING, true);
     return authService.login({ username, password })
       .then((response) => {
-        console.log(response);
         if (response.status === 200) {
           commit(types.AUTH_SET_TOKEN, response.data);
-          // const header = {
-          //   Accept: 'application/json',
-          //   Authorization: `Bearer ${response.data.access_token}`,
-          // };
-          // // set global config for axios header
-          // axios.defaults.headers.common.Accept = 'application/json';
-          // axios.defaults.headers.common.Authorization = `Bearer ${response.data.access_token}`;
-          // get user infor
-          // authService.getUserInfo({ username })
           authService.getUser()
-            .then((res) => {
-              // if (res.status === 200) {
-              console.log('getUser');
-              console.log(res);
-              commit(types.AUTH_SET_USER_INFO, res.data);
-              // }
-            });
+            .then(result => commit(types.AUTH_SET_USER_INFO, result.data));
         } else if (response.data.error) {
           console.log(response);
         }
         commit(types.AUTH_SET_LOADING, false);
       })
-      .catch((error) => {
-        console.log('come here error in catch');
-        console.log(error.response);
-        commit(types.AUTH_SET_ERROR, error.response.data);
-      });
+      .catch(error => commit(types.AUTH_SET_ERROR, error.response.data));
   },
   logout: ({ commit }) => {
     commit(types.AUTH_CLEAR_STATE);

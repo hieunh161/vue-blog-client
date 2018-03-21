@@ -79,4 +79,29 @@ h1, h2, h3, h4, h5 {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif !important;
 }
 
+.vue-notification {
+  padding: 10px;
+  margin: 0 5px 5px;
+
+  font-size: 12px;
+
+  color: #ffffff;
+  background: #44A4FC;
+  border-left: 5px solid #187FE7;
+}
+
+.vue-notification.success {
+  background: #68CD86;
+  border-left-color: #42A85F;
+}
+
+.vue-notification.error {
+  background: #E54D42;
+  border-left-color: #B82E24;
+}
+
+.vue-notification.warn {
+  background: #ffb648;
+  border-left-color: #f48a06;
+}
 </style>

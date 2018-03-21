@@ -60,7 +60,7 @@ export default {
               group: 'notice',
               type: 'success',
               title: 'Message',
-              text: 'Category is created successfully!',
+              text: `Category ${this.category.name} is created successfully!`,
             });
             this.category.name = '';
             this.category.priority = null;

@@ -14,7 +14,7 @@ const actions = {
     categoryService.createCategory({ name, priority })
     .then(result => commit(types.CATEGORY_CREATE, result.data)),
   readCategories: ({ commit }) => categoryService.readCategories()
-    .then(result => commit(types.CATEGORY_READ, result.data.data)),
+    .then(result => commit(types.CATEGORY_READ, result.data)),
   updateCategory: ({ commit }, { id, name, priority }) =>
     categoryService.updateCategory({ id, name, priority })
     .then(result => commit(types.CATEGORY_UPDATE, result.data)),

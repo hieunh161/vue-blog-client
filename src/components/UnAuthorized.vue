@@ -1,16 +1,16 @@
 <template>
   <div class="container page-not-found">
-    <div class="not-found header">{{ $t('message.page_not_found.error') }}</div>
-    <div class="not-found content">{{ $t('message.page_not_found.title') }}</div>
+    <div class="not-found header">{{ $t('message.unauthorized.error') }}</div>
+    <div class="not-found content">{{ $t('message.unauthorized.title') }}</div>
     <div class="ui horizontal divider"> <i class="ui icon meh"></i>
     </div>
-    <div class="not-found detail" v-html="$t('message.page_not_found.content')"></div>
+    <div class="not-found detail" v-html="$t('message.unauthorized.content')"></div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'page-not-found',
+  name: 'unauthozired',
 };
 </script>
 

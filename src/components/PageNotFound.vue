@@ -2,7 +2,7 @@
   <div class="container page-not-found">
     <div class="not-found header">{{ $t('message.page_not_found.error') }}</div>
     <div class="not-found content">{{ $t('message.page_not_found.title') }}</div>
-    <div class="ui horizontal divider"> <i class="ui icon meh"></i>
+    <div class="ui horizontal container divider"> <i class="ui icon meh"></i>
     </div>
     <div class="not-found detail" v-html="$t('message.page_not_found.content')"></div>
   </div>

@@ -2,7 +2,8 @@ import * as firebase from 'firebase';
 import * as axios from 'axios';
 import util from './util';
 import { REF_ARTICLE, REF_USER, IMG_UPLOAD_URL, REF_ARTICLE_SHALLOW } from './const';
-import { imgUrlConfig, firebaseConfig } from '../config';
+import { imgUrlConfig, firebaseConfig, articleUrl } from '../config';
+// import { articleUrl } from '../config';
 
 const createTemplateArticle = (articleTemplate, user) => {
   const userId = user.uid;
@@ -22,9 +23,10 @@ const createTemplateArticle = (articleTemplate, user) => {
   .then(articleId => articleId);
 };
 
-const readArticle = articleId => firebase.database().ref(REF_ARTICLE)
-  .child(articleId).once('value')
-  .then(snapshot => Promise.resolve(snapshot.val()));
+const readArticle = articleId => axios.get(`${articleUrl}/${articleId}`);
+// firebase.database().ref(REF_ARTICLE)
+//   .child(articleId).once('value')
+//   .then(snapshot => Promise.resolve(snapshot.val()));
 
 const readAllArticles = () => {
   const ref = firebase.database().ref(REF_ARTICLE);
@@ -112,6 +114,8 @@ const likeArticle = (articleId, userId, liked) => {
   .update(likedArticle));
 };
 
+const createNew = article => axios.post(articleUrl, article);
+
 export default {
   createTemplateArticle,
   readArticle,
@@ -128,4 +132,6 @@ export default {
   getNumberOfArticles,
   getNumberOfArticlesByUser,
   getNumberOfArticlesByCategory,
+  // new
+  createNew,
 };

@@ -15,7 +15,7 @@
             <div class="menu">
               <router-link class="nav-link item"  to="/user"><i class="user icon"></i> {{ $t('message.navbar.my_profile') }}</router-link>
               <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> {{ $t('message.navbar.my_article') }}</router-link>
-              <article-template></article-template>
+              <article-new></article-new>
               <div class="divider"></div>
               <router-link class="nav-link item"  to="/dashboard" v-if="isAdmin"><i class="user icon"></i> {{ $t('message.navbar.admin') }}</router-link>
               <a v-on:click="logout" class="nav-link item" v-if="isLoggedIn"><i class="sign out icon"></i> {{ $t('message.navbar.logout') }}</a>
@@ -30,8 +30,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import ArticleTemplate from './article/ArticleTemplate';
-import LoginModal from './LoginModal';
+// import ArticleTemplate from './article/ArticleTemplate';
+// import LoginModal from './LoginModal';
+
+const ArticleNew = () => import('./article/ArticleNew');
+const LoginModal = () => import('./LoginModal');
 
 export default {
   name: 'navbar',
@@ -48,8 +51,9 @@ export default {
     },
   },
   components: {
-    ArticleTemplate,
+    // ArticleTemplate,
     LoginModal,
+    ArticleNew,
   },
 };
 </script>

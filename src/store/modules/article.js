@@ -26,6 +26,8 @@ const INITIAL_STATE = {
   currentPageIndex: 0,
   numberArticles: 0,
   totalPages: 0,
+  // new
+  editingArticle: null,
 };
 
 // getters
@@ -41,64 +43,8 @@ const getters = {
   isSavingDraft: s => s.isSavingDraft,
   isPublishingArticle: s => s.isPublishingArticle,
   isLoadingArticlesByUser: s => s.isLoadingArticlesByUser,
-};
-
-const mutations = {
-  [types.READ_USER_ARTICLES](s, articles) {
-    s.userArticles = articles;
-  },
-  [types.READ_ALL_ARTICLES](s, articles) {
-    s.allArticles = articles;
-  },
-  [types.READ_FIRST_ARTICLES](s, articles) {
-    s.allArticles = articles;
-  },
-  [types.READ_MORE_ARTICLES](s, articles) {
-    s.allArticles = s.allArticles.concat(articles);
-    s.currentPageIndex += s.numberArticlePerPage;
-  },
-  [types.SAVE_ARTICLE](s, { data }) {
-    s.article.articleId = data;
-  },
-  [types.SET_ARTICLE](s, article) {
-    s.article = article;
-  },
-  [types.SET_ARTICLE_ID](s, articleId) {
-    s.articleId = articleId;
-  },
-  [types.UPDATE_COVER_IMAGE](s, coverImage) {
-    if (s.article) {
-      s.article.coverImage = coverImage;
-    }
-  },
-  [types.UPDATE_UPLOADING_STATUS](s, status) {
-    s.uploadStatus = status;
-  },
-  // edit article
-  [types.ARTICLE_UPDATE_SAVING_DRAFT](s, status) {
-    s.isSavingDraft = status;
-  },
-  [types.ARTICLE_UPDATE_PUBLISH](s, status) {
-    s.isPublishingArticle = status;
-  },
-  // reset state
-  [types.ARTICLE_UPDATE_DEFAULT_STATE](s) {
-    Object.assign(s, _.cloneDeep(INITIAL_STATE));
-  },
-  // update state of likes when user click like
-  [types.ARTICLE_UPDATE_LIKE_STATE](s, updateData) {
-    if (!s.article.likes) {
-      s.article = Object.assign({}, s.article, { likes: updateData });
-    }
-    // update likes only if likes object exist
-    s.article.likes = Object.assign({}, s.article.likes, updateData);
-  },
-  [types.GET_NUMBER_ARTICLES](s, articleIds) {
-    s.articleIds = articleIds;
-    s.numberArticles = Object.keys(articleIds).length;
-    // total page
-    s.totalPages = Math.ceil(s.numberArticles / s.numberArticlePerPage);
-  },
+  // new
+  editingArticle: s => s.editingArticle,
 };
 
 const actions = {
@@ -219,9 +165,70 @@ const actions = {
     categoryService.deleteArticleCategory(article.category);
     tagService.deleteArticleFromTags(article.tags);
     articleService.deleteArticle(article.id);
-    // delete tags
-    // delete category
-    // remove article
+  },
+  createNew: ({ commit }, userId) => articleService.createNew({ author: userId })
+    .then(result => commit(types.ARTICLE_SET_EDITING, result.data)),
+};
+
+const mutations = {
+  [types.READ_USER_ARTICLES](s, articles) {
+    s.userArticles = articles;
+  },
+  [types.READ_ALL_ARTICLES](s, articles) {
+    s.allArticles = articles;
+  },
+  [types.READ_FIRST_ARTICLES](s, articles) {
+    s.allArticles = articles;
+  },
+  [types.READ_MORE_ARTICLES](s, articles) {
+    s.allArticles = s.allArticles.concat(articles);
+    s.currentPageIndex += s.numberArticlePerPage;
+  },
+  [types.SAVE_ARTICLE](s, { data }) {
+    s.article.articleId = data;
+  },
+  [types.SET_ARTICLE](s, article) {
+    s.article = article;
+  },
+  [types.SET_ARTICLE_ID](s, articleId) {
+    s.articleId = articleId;
+  },
+  [types.UPDATE_COVER_IMAGE](s, coverImage) {
+    if (s.article) {
+      s.article.coverImage = coverImage;
+    }
+  },
+  [types.UPDATE_UPLOADING_STATUS](s, status) {
+    s.uploadStatus = status;
+  },
+  // edit article
+  [types.ARTICLE_UPDATE_SAVING_DRAFT](s, status) {
+    s.isSavingDraft = status;
+  },
+  [types.ARTICLE_UPDATE_PUBLISH](s, status) {
+    s.isPublishingArticle = status;
+  },
+  // reset state
+  [types.ARTICLE_UPDATE_DEFAULT_STATE](s) {
+    Object.assign(s, _.cloneDeep(INITIAL_STATE));
+  },
+  // update state of likes when user click like
+  [types.ARTICLE_UPDATE_LIKE_STATE](s, updateData) {
+    if (!s.article.likes) {
+      s.article = Object.assign({}, s.article, { likes: updateData });
+    }
+    // update likes only if likes object exist
+    s.article.likes = Object.assign({}, s.article.likes, updateData);
+  },
+  [types.GET_NUMBER_ARTICLES](s, articleIds) {
+    s.articleIds = articleIds;
+    s.numberArticles = Object.keys(articleIds).length;
+    // total page
+    s.totalPages = Math.ceil(s.numberArticles / s.numberArticlePerPage);
+  },
+  // new
+  [types.ARTICLE_SET_EDITING](s, article) {
+    s.editingArticle = article;
   },
 };
 
