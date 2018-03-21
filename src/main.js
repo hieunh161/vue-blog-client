@@ -7,6 +7,8 @@ import VueProgressiveImage from 'vue-progressive-image';
 import SocialSharing from 'vue-social-sharing';
 import Notifications from 'vue-notification';
 import VueI18n from 'vue-i18n';
+import velocity from 'velocity-animate';
+// import plugin from 'plugin';
 import App from './App';
 import router from './router';
 import store from './store';
@@ -21,7 +23,7 @@ import libPlugin from './plugin/libPlugin';
 Vue.config.productionTip = false;
 Vue.use(VueProgressiveImage);
 Vue.use(SocialSharing);
-Vue.use(Notifications);
+Vue.use(Notifications, { velocity });
 Vue.use(VueI18n);
 Vue.use(libPlugin);
 
@@ -35,7 +37,6 @@ Vue.prototype.$firebase = firebase.initializeApp(firebaseConfig);
 
 /* eslint-disable no-new */
 /* eslint-disable no-unused-vars */
-// const unsubscribe = firebase.auth().onAuthStateChanged(() => {
 const vue = new Vue({
   i18n,
   // libPlugin,
@@ -45,5 +46,3 @@ const vue = new Vue({
   template: '<App/>',
   components: { App },
 });
-  // unsubscribe();
-// });

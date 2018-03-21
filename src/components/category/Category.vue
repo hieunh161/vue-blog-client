@@ -34,39 +34,14 @@
       <button class="ui button basic positive" v-if="isShowAddCategoryForm" @click="isShowAddCategoryForm = !isShowAddCategoryForm">{{ $t('message.category.hide_form') }}</button>
     </div>
     <!-- modal -->
-    <div class="ui tiny modal" id="confirm-delete-modal">
-      <i class="close icon"></i>
-      <div class="header">
-        {{ $t('message.common.confirm') }}
-      </div>
-      <div class="content">
-        <div class="description">
-          <p>{{ $t('message.confirm.delete_category', { category: selectedCategory ? selectedCategory.name : '' }) }}</p>
-        </div>
-      </div>
-      <div class="actions">
-        <div class="ui basic deny button">
-          {{ $t('button.common.cancel') }}
-        </div>
-        <div class="ui orange button" @click="deleteCategory">
-          {{ $t('button.common.delete') }}
-        </div>
-      </div>
-    </div>
+    <category-delete :category="selectedCategory"></category-delete>
     <div v-if="isShowAddCategoryForm">
       <div class="ui divider"></div>
       <category-add></category-add>
     </div>
     <div v-if="isShowUpdateCategoryForm">
       <div class="ui divider"></div>
-      <div class="ui header">{{ $t('message.category.update') }}</div>
-      <div class="ui form">
-        <div class="field">
-          <input type="text" v-model="updatedCategory.name" name="category" placeholder="Add Category">
-        </div>
-        <button class="ui button basic" @click="isShowUpdateCategoryForm = false">{{ $t('button.common.cancel') }}</button>
-        <button class="ui button positive" :class='{loading:isUpdatingCategory}' @click="updateCategory">{{ $t('button.common.update') }}</button>
-      </div>
+      <category-update :category="selectedCategory"></category-update>
     </div>
   </div>
 </template>
@@ -75,22 +50,14 @@
 import { mapGetters } from 'vuex';
 
 const CategoryAdd = () => import('./CategoryAdd.vue');
+const CategoryUpdate = () => import('./CategoryUpdate.vue');
+const CategoryDelete = () => import('./CategoryDelete.vue');
 
 export default {
   data() {
     return {
       isLoadingCategory: false,
-      isUpdatingCategory: false,
-      updatedCategory: {
-        name: null,
-        priority: null,
-      },
-      categoryList: [],
       selectedCategory: null,
-      addedCategory: {
-        name: null,
-        priority: null,
-      },
       isShowAddCategoryForm: false,
       isShowUpdateCategoryForm: false,
     };
@@ -105,40 +72,25 @@ export default {
     });
   },
   methods: {
-    updateCategory() {
-      this.isUpdatingCategory = true;
-      this.$store.dispatch('category/updateCategory', { category: this.updatedCategory })
-      .then(() => { this.isUpdatingCategory = false; });
-      this.$notify({ group: 'notice', name: 'Notification', text: 'Update category successfully', type: 'success' });
-      this.isShowUpdateCategoryForm = false;
-    },
     showUpdateCategory(category) {
       this.isShowUpdateCategoryForm = true;
-      this.updatedCategory = category;
+      this.selectedCategory = category;
     },
     showConfirmDeleteModal(category) {
       this.selectedCategory = category;
       this.openModal();
     },
-    deleteCategory() {
-      if (this.selectedCategory) {
-        this.$store.dispatch('category/deleteCategory', this.selectedCategory);
-        this.closeModal();
-      }
-    },
     openModal() {
-      this.$('#confirm-delete-modal').modal('show');
-    },
-    closeModal() {
-      this.$('#confirm-delete-modal').modal('hide');
+      this.$('#confirm-delete-category-modal').modal('show');
     },
   },
   computed: {
     ...mapGetters('category', ['categories']),
-    ...mapGetters('user', ['currentUser', 'currentUserInfo', 'isAdmin']),
   },
   components: {
     CategoryAdd,
+    CategoryUpdate,
+    CategoryDelete,
   },
 };
 </script>

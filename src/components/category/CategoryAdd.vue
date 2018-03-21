@@ -40,7 +40,6 @@ export default {
   },
   methods: {
     addCategory(e) {
-      console.log('add');
       this.clearValidation();
       if (e) e.preventDefault();
       if (this.category.name === null || this.category.name === '') {
@@ -52,9 +51,20 @@ export default {
         this.formValidation.errors.push('Category priority is requried and must greater than 0');
       }
       if (this.formValidation.isValid) {
-        this.$store.dispatch('category/createCategory', this.category);
-        this.category.name = '';
-        this.category.priority = null;
+        this.$np.start();
+        this.$store.dispatch('category/createCategory', this.category)
+          .then(() => {
+            this.$np.done();
+            // show notification
+            this.$notify({
+              group: 'notice',
+              type: 'success',
+              title: 'Message',
+              text: 'Category is created successfully!',
+            });
+            this.category.name = '';
+            this.category.priority = null;
+          });
       }
     },
     clearValidation() {

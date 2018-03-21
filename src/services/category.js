@@ -5,7 +5,6 @@ import { REF_CATEGORY, REF_ARTICLE } from './const';
 import { categoryUrl } from '../config';
 
 const createCategory = category => axios.post(categoryUrl, category);
-// firebase.database().ref(REF_CATEGORY).push(category);
 
 const createArticleCategory = (categoryId, articleId) => firebase.database().ref(REF_CATEGORY)
   .child(categoryId)
@@ -14,11 +13,8 @@ const createArticleCategory = (categoryId, articleId) => firebase.database().ref
   .set(true);
 
 const readCategories = () => axios.get(categoryUrl);
-// firebase.database().ref(REF_CATEGORY).once('value')
-// .then(snapshot => util.getItemListFromSnapshot(snapshot));
 
-const updateCategory = category => firebase.database().ref(REF_CATEGORY)
-  .child(category.key).update(category);
+const updateCategory = category => axios.put(`${categoryUrl}/${category.id}`, category);
 
 const updateArticleCategory = (categoryId, articleId, value) => firebase.database()
   .ref(REF_CATEGORY)
@@ -27,8 +23,7 @@ const updateArticleCategory = (categoryId, articleId, value) => firebase.databas
   .child(articleId)
   .set(value);
 
-const deleteCategory = categoryId => firebase.database().ref(REF_CATEGORY)
-  .child(categoryId).remove();
+const deleteCategory = id => axios.delete(`${categoryUrl}/${id}`);
 
 const deleteArticleCategory = (categoryId, articleId) => firebase.database().ref(REF_CATEGORY)
   .child(categoryId).child(REF_ARTICLE)

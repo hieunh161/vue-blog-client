@@ -3,7 +3,6 @@ import categoryService from '../../services/category';
 
 const state = {
   categories: [],
-  categoriesName: [],
 };
 
 const getters = {
@@ -11,22 +10,16 @@ const getters = {
 };
 
 const actions = {
-  createCategory: ({ commit }, { name, priority }) => {
-    console.log(name);
-    return categoryService.createCategory({ name, priority })
-    .then(result => commit(types.CATEGORY_CREATE, result.data));
-  },
+  createCategory: ({ commit }, { name, priority }) =>
+    categoryService.createCategory({ name, priority })
+    .then(result => commit(types.CATEGORY_CREATE, result.data)),
   readCategories: ({ commit }) => categoryService.readCategories()
-  .then((result) => {
-    console.log(result);
-    commit(types.CATEGORY_READ, result.data.data);
-  }),
-  updateCategory: ({ commit }, { category }) => categoryService.updateCategory({
-    title: category.value.title,
-    modifyTimestamp: Date.now(),
-  }),
-  deleteCategory: ({ commit }, category) => categoryService.deleteCategory(category.key)
-    .then(() => commit(types.CATEGORY_DELETE, category)),
+    .then(result => commit(types.CATEGORY_READ, result.data.data)),
+  updateCategory: ({ commit }, { id, name, priority }) =>
+    categoryService.updateCategory({ id, name, priority })
+    .then(result => commit(types.CATEGORY_UPDATE, result.data)),
+  deleteCategory: ({ commit }, id) => categoryService.deleteCategory(id)
+    .then(() => commit(types.CATEGORY_DELETE, id)),
 };
 
 /* eslint-disable no-param-reassign */
@@ -35,12 +28,13 @@ const mutations = {
     s.categories.push(category);
   },
   [types.CATEGORY_READ]: (s, categories) => {
-    console.log(categories);
     s.categories = categories;
   },
-  [types.CATEGORY_DELETE]: (s, category) => {
-    const index = s.categories.indexOf(category);
-    s.categories.splice(index, 1);
+  [types.CATEGORY_UPDATE]: (s, category) => {
+    Object.assign(s.categories[s.categories.findIndex(el => el.id === category.id)], category);
+  },
+  [types.CATEGORY_DELETE]: (s, categoryId) => {
+    s.categories.splice(s.categories.findIndex(el => el.id === categoryId), 1);
   },
 };
 

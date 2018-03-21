@@ -1,10 +1,15 @@
 <template>
   <div id="app">
     <div class="wrapper">
-      <notifications group="notice" 
+      <notifications 
+        group="notice" 
         position="bottom right"
+        type="success"
+        animation-type="velocity"
         :duration="3000"
-        :speed="500"/>
+        :speed="500"
+        :max="3"
+        />
       <navbar class="page-header"></navbar>
       <router-view class="page-content"></router-view>
       <app-footer></app-footer>
@@ -16,9 +21,8 @@
 import { mapState } from 'vuex';
 import Navbar from '@/components/Navbar';
 import AppFooter from '@/components/AppFooter';
-// import Firebase from 'firebase';
 import localStorage from './services/localStorage';
-// import { auth } from 'firebase';
+
 
 export default {
   name: 'app',
@@ -74,4 +78,5 @@ body {
 h1, h2, h3, h4, h5 {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif !important;
 }
+
 </style>
