@@ -7,6 +7,7 @@ const state = {
 
 const getters = {
   categories: s => s.categories,
+  featuredCategory: s => s.categories.filter(category => category.priority >= 50),
 };
 
 const actions = {

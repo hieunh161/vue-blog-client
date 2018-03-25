@@ -23,5 +23,8 @@ export const userUrl = `${apiDomain}${apiPrefix}user`;
 export const categoryUrl = `${apiDomain}${apiPrefix}categories`;
 
 export const articleUrl = `${apiDomain}${apiPrefix}articles`;
+export const articleHomeUrl = `${apiDomain}${apiPrefix}articles-home`;
+export const articleCategoryUrl = `${apiDomain}${apiPrefix}articles/category/`;
+
 
 export const imageUploadUrl = 'https://api.imgur.com/3/image.json';

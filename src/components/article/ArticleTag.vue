@@ -1,7 +1,7 @@
 
 <template>
   <div @click="focusNewTag()" v-bind:class="{'read-only': readOnly}" class="ui small input ">
-    <span v-for="(value, tag, index) in tags" v-bind:key="tag" class="ui label  basic article-tag">
+    <span v-for="(value, tag) in tags" v-bind:key="tag" class="ui label  basic article-tag">
       <span>{{ tag }}</span>
       <i class="delete icon" v-if="!readOnly" @click.prevent.stop="remove(tag)"></i>
     </span>
@@ -105,7 +105,7 @@ export default {
     },
   },
   created() {
-    this.$parent.$on('uploadArticleToServer', this.resetFirstChange);
+    this.$parent.$on('saveTag', this.resetFirstChange);
   },
 };
 </script>

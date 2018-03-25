@@ -29,6 +29,8 @@ const INITIAL_STATE = {
   // new
   selectedArticle: null,
   // viewArticle: null,
+  // loading paging
+  homeContent: [],
 };
 
 // getters
@@ -44,42 +46,14 @@ const getters = {
   isLoadingArticlesByUser: s => s.isLoadingArticlesByUser,
   // new
   selectedArticle: s => s.selectedArticle,
-  coverImage: s => (s.selectedArticle ? s.selectedArticle.coverImage : null),
+  coverImage: s => (s.selectedArticle ? s.selectedArticle.cover_image : null),
   uploadStatus: s => s.uploadStatus,
+  homeContent: s => s.homeContent,
 };
 
 const actions = {
-  createTemplateArticle: ({ commit }, user) => {
-    const articleTemplate = {
-      author: {
-        uid: user.uid,
-        photoURL: user.photoURL,
-        displayName: user.displayName,
-        description: user.description,
-      },
-      title: '',
-      content: 'Start writing here...',
-      slugify: '',
-      createTimestamp: Date.now(),
-      modifyTimestamp: Date.now(),
-      createUser: user.uid,
-      updateUser: user.uid,
-      published: false,
-      status: 0,
-      views: 0,
-      coverImage: {},
-      category: {},
-      tags: {},
-      comments: {},
-      likes: {},
-      isDelete: false,
-    };
-    // reset all article data to default
-    commit(types.ARTICLE_UPDATE_DEFAULT_STATE);
-    return articleService.createTemplateArticle(articleTemplate, user);
-  },
   readArticleByIdWithViewUpdate: ({ commit, state }, { articleId }) =>
-  articleService.readArticle(articleId)
+    articleService.readArticle(articleId)
     .then((result) => {
       commit(types.ARTICLE_SET_VIEW, result.data);
       return articleService.updateArticle(state.article);
@@ -115,7 +89,7 @@ const actions = {
     .then(() => tagService.updateTags(deleteTags, articleId, false))
     .then(() => articleService.updateArticle(updateData));
   },
-  saveDraft: ({ commit, dispatch }, updateData) => articleService.updateArticle(updateData)
+  save: ({ commit, dispatch }, updateData) => articleService.updateArticle(updateData)
     .then(result => console.log(result)),
   publishArticle: ({ commit, dispatch }, updateData) => {
     commit(types.ARTICLE_UPDATE_PUBLISH, true);
@@ -158,8 +132,10 @@ const actions = {
   readArticleById: ({ commit }, { articleId }) => articleService.readArticle(articleId)
     .then(result => commit(types.ARTICLE_SET_SELECTED, result.data)),
   updateCoverImage: ({ state }, link) => {
-    state.selectedArticle.coverImage = link;
+    state.selectedArticle.cover_image = link;
   },
+  homeArticles: ({ commit }) => articleService.articlesHome()
+    .then(result => commit(types.ARTICLE_SET_HOME_CONTENT, result.data)),
 };
 
 const mutations = {
@@ -187,7 +163,7 @@ const mutations = {
   },
   [types.UPDATE_COVER_IMAGE](s, coverImage) {
     if (s.article) {
-      s.article.coverImage = coverImage;
+      s.article.cover_image = coverImage;
     }
   },
   [types.UPDATE_UPLOADING_STATUS](s, status) {
@@ -225,6 +201,9 @@ const mutations = {
   [types.ARTICLE_SET_VIEW](s, article) {
     s.article = article;
     s.article.views += 1;
+  },
+  [types.ARTICLE_SET_HOME_CONTENT](s, homeContent) {
+    s.homeContent = homeContent;
   },
 };
 

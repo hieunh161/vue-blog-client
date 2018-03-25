@@ -1,26 +1,9 @@
 import * as firebase from 'firebase';
+import * as axios from 'axios';
 // import * as axios from 'axios';
 import util from './util';
 import { REF_ARTICLE } from './const';
-// import { imgUrlConfig, firebaseConfig } from '../config';
-
-// const createTemplateArticle = (articleTemplate, user) => {
-//   const userId = user.uid;
-//   return firebase.database()
-//   .ref(REF_ARTICLE).push(articleTemplate)
-//   .then((result) => {
-//     const articleId = result.key;
-//     const articleObject = {};
-//     articleObject[articleId] = true;
-//     firebase.database().ref(REF_USER)
-//     .child(userId).child(REF_ARTICLE)
-//     .update(articleObject);
-//     firebase.database().ref(REF_ARTICLE_SHALLOW)
-//     .update(articleObject);
-//     return Promise.resolve(articleId);
-//   })
-//   .then(articleId => articleId);
-// };
+import { articleUrl } from '../config';
 
 const getArticlesByStatus = (userId, status) => {
   firebase.database().ref(REF_ARTICLE)
@@ -39,7 +22,17 @@ const getArticlesByUser = userId => firebase.database().ref(REF_ARTICLE)
     .once('value')
     .then(result => util.getListArticleFromSnap(result));
 
+
+const articlesByUser = (userId, pageIndex) => axios.get(`${articleUrl}/user/${userId}?page=${pageIndex}`);
+
+// const articlesByUserStatus = (userId, status, pageIndex) =>
+// axios.get(`${articleUrl}/user/${userId}/status/${status}?page=${pageIndex}`);
+
+const articlesByUserStatus = (userId, status) => axios.get(`${articleUrl}/user/${userId}/status/${status}`);
+
 export default {
   getArticlesByUser,
   getArticlesByStatus,
+  articlesByUser,
+  articlesByUserStatus,
 };

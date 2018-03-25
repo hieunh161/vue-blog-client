@@ -10,6 +10,7 @@ const UserProfile = () => import('@/components/UserProfile');
 const ArticleDetail = () => import('@/components/article/ArticleDetail');
 const ArticleEditor = () => import('@/components/article/ArticleEditor');
 const ArtileUserList = () => import('@/components/article/ArtileUserList');
+const ArticleCategoryList = () => import('@/components/article/ArticleCategoryList');
 const DemoPage = () => import('@/components/demo/DemoPage');
 const Dashboard = () => import('@/components/Dashboard');
 const PageNotFound = () => import('@/components/PageNotFound');
@@ -78,6 +79,10 @@ export default new Router({
     {
       path: '/article/:id/edit',
       component: ArticleEditor,
+    },
+    {
+      path: '/category/:id/:name',
+      component: ArticleCategoryList,
     },
     {
       path: '/user/:id/article',

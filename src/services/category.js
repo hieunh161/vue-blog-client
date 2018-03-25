@@ -6,12 +6,6 @@ import { categoryUrl } from '../config';
 
 const createCategory = category => axios.post(categoryUrl, category);
 
-const createArticleCategory = (categoryId, articleId) => firebase.database().ref(REF_CATEGORY)
-  .child(categoryId)
-  .child(REF_ARTICLE)
-  .child(articleId)
-  .set(true);
-
 const readCategories = () => axios.get(categoryUrl);
 
 const updateCategory = category => axios.put(`${categoryUrl}/${category.id}`, category);
@@ -29,6 +23,12 @@ const deleteArticleCategory = (categoryId, articleId) => firebase.database().ref
   .child(categoryId).child(REF_ARTICLE)
   .child(articleId)
   .remove();
+
+const createArticleCategory = (categoryId, articleId) => firebase.database().ref(REF_CATEGORY)
+  .child(categoryId)
+  .child(REF_ARTICLE)
+  .child(articleId)
+  .set(true);
 
 export default {
   createCategory,

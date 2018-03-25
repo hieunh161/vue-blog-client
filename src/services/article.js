@@ -2,12 +2,9 @@ import * as firebase from 'firebase';
 import * as axios from 'axios';
 import util from './util';
 import { REF_ARTICLE, REF_USER, IMG_UPLOAD_URL } from './const';
-import { imgUrlConfig, firebaseConfig, articleUrl } from '../config';
+import { imgUrlConfig, firebaseConfig, articleUrl, articleHomeUrl } from '../config';
 
 const readArticle = articleId => axios.get(`${articleUrl}/${articleId}`);
-// firebase.database().ref(REF_ARTICLE)
-//   .child(articleId).once('value')
-//   .then(snapshot => Promise.resolve(snapshot.val()));
 
 const readAllArticles = () => {
   const ref = firebase.database().ref(REF_ARTICLE);
@@ -97,6 +94,10 @@ const createNew = article => axios.post(articleUrl, article);
 
 const updateArticle = article => axios.put(`${articleUrl}/${article.id}`, article);
 
+const articlesByUser = (userId, pageIndex) => axios.get(`${articleUrl}/user/${userId}?page=${pageIndex}`);
+
+const articlesHome = () => axios.get(articleHomeUrl);
+
 export default {
   readArticle,
   readAllArticles,
@@ -114,4 +115,6 @@ export default {
   getNumberOfArticlesByCategory,
   // new
   createNew,
+  articlesByUser,
+  articlesHome,
 };

@@ -14,7 +14,7 @@
             <span>{{ authUser.displayName }}</span> <i class="dropdown icon"></i>
             <div class="menu">
               <router-link class="nav-link item"  to="/user"><i class="user icon"></i> {{ $t('message.navbar.my_profile') }}</router-link>
-              <router-link class="nav-link item"  :to="`/user/${currentUser ? currentUser.uid : ''}/article/`"><i class="archive icon"></i> {{ $t('message.navbar.my_article') }}</router-link>
+              <router-link class="nav-link item"  :to="`/user/${authUser ? authUser.userId : ''}/article/`"><i class="archive icon"></i> {{ $t('message.navbar.my_article') }}</router-link>
               <article-new></article-new>
               <div class="divider"></div>
               <router-link class="nav-link item"  to="/dashboard" v-if="isAdmin"><i class="user icon"></i> {{ $t('message.navbar.admin') }}</router-link>

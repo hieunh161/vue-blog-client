@@ -1,11 +1,11 @@
 <template>
   <div id="article-edit-page">
     <!-- loading -->
-    <div class="ui center aligned grid loading" v-if="isLoadingArticle">
+    <div class="ui center aligned grid loading-spinner" v-if="isisLoading">
       <circle-loader></circle-loader>
     </div>
     <!-- article content -->
-    <div v-if="!isLoadingArticle && selectedArticle">
+    <div v-if="!isisLoading && selectedArticle">
       <div class="ui transparent massive left input fluid article-title">
         <input type="text" 
         v-model="selectedArticle.title"
@@ -18,11 +18,14 @@
       </div>
       <image-uploader class="article-cover-image"></image-uploader>
       <div class="article-action">
-        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="saveDraft">{{ $t('button.article_edit.save_draft') }}</div>
-        <div class="ui button basic positive" v-if="!isPublishingArticle" :class='{loading:isPublishingArticle}' @click="() => showPublishModal()">{{ $t('button.article_edit.publish') }}</div>
-        <div class="ui button basic positive" v-if="isPublishingArticle" :class='{loading:isPublishingArticle}' @click="() => privateArticle()">{{ $t('button.article_edit.private') }}</div>
-        <div class="ui button basic positive" v-if="isPublishingArticle" @click="viewArticle">{{ $t('button.article_edit.view_article') }}</div>
+        <div class="ui button basic" :class='{loading:isSavingDraft}' @click="save">{{ $t('button.article_edit.save') }}</div>
+        <div class="ui button basic positive" v-if="!isPublished" :class='{loading:isPublishing}' @click="() => showPublishModal()">{{ $t('button.article_edit.publish') }}</div>
+        <div class="ui button basic positive" v-if="isPublished" :class='{loading:isPublishing}' @click="() => showPublishModal()">Change Meta Data</div>
+        <div class="ui button basic positive" v-if="isPublished" :class='{loading:isPrivating}' @click="() => privateArticle()">{{ $t('button.article_edit.private') }}</div>
+        <div class="ui button basic positive" v-if="isPublished" @click="viewArticle">{{ $t('button.article_edit.view_article') }}</div>
         <div class="ui button basic positive" @click="showUploadModal">{{ $t('button.article_edit.upload_image') }}</div>
+        <div class="ui green horizontal label" v-if="isPublished">Published</div>
+        <div class="ui red horizontal label" v-if="!isPublished">Private</div>
       </div>
       <markdown-editor
         class="article-editor"
@@ -43,7 +46,7 @@
           </select>
           <br>
           <p>{{ $t('message.article_edit.add_tag') }}</p>
-          <article-tag class="article-tag" :on-change="onChangeTags" :initTags="article.tags" placeholder="Add Tag"></article-tag>
+          <article-tag class="article-tag" :on-change="onChangeTags" :initTags="filterName(selectedArticle.tags)" placeholder="Add Tag"></article-tag>
         </div>
         <div class="actions">
           <div class="ui basic button red" @click="hidePublishModal">{{ $t('button.common.cancel') }}</div>
@@ -53,7 +56,7 @@
     </div>
     <!-- fallback when no items found -->
     <!-- fallback when content not found -->
-    <page-not-found v-if="!isLoadingArticle && !selectedArticle"></page-not-found>
+    <page-not-found v-if="!isisLoading && !selectedArticle"></page-not-found>
   </div>
 </template>
 
@@ -71,26 +74,31 @@ const ImageUploadModal = () => import('./ImageUploadModal');
 const PageNotFound = () => import('../PageNotFound');
 const CircleLoader = () => import('../common/CircleLoader');
 
+// TODO: bug v-if make dimmer not work when back and forth
+
 export default {
   created() {
     // load data from api
     nprogress.start();
-    this.isLoadingArticle = true;
+    this.isisLoading = true;
     this.$store.dispatch('category/readCategories');
     this.$store.dispatch('article/readArticleById', { articleId: this.$route.params.id })
       .then(() => {
         this.originalCategory = this.article.category;
-        this.isLoadingArticle = false;
+        this.isisLoading = false;
         nprogress.done();
       });
   },
   data() {
     return {
-      isLoadingArticle: false,
+      isisLoading: false,
       addTags: [],
       deleteTags: [],
       isShowTextEmptyWarning: false,
       originalCategory: {},
+      isSavingDraft: false,
+      isPublishing: false,
+      isPrivating: false,
     };
   },
   methods: {
@@ -107,47 +115,73 @@ export default {
       }
     },
     privateArticle() {
-      this.selectedArticle.status = ARTICLE_STATUS.DRAFT;
-      this.saveArticle();
+      this.selectedArticle.status_id = ARTICLE_STATUS.DRAFT;
+      this.selectedArticle.slugify = util.slugify(this.selectedArticle.title);
+      this.$np.start();
+      this.isPrivating = true;
+      return this.$store.dispatch('article/save', this.selectedArticle)
+        .then(() => {
+          this.isPrivating = false;
+          this.$np.done();
+          this.$notify({
+            group: 'notice',
+            type: 'success',
+            title: 'Message',
+            text: 'Private article successfully',
+          });
+        });
+    },
+    filterName(tags) {
+      if (!tags) return {};
+      const filteredTags = {};
+      tags.forEach((element) => {
+        filteredTags[element.name] = true;
+      });
+      return filteredTags;
     },
     publishArticle() {
-      this.article.status = ARTICLE_STATUS.PUBLISH;
-      this.saveArticle();
-    },
-    saveArticle() {
-      this.updateArticle();
-      this.$emit('uploadArticleToServer');
-      this.$store.dispatch('article/publishArticle', {
-        articleId: this.articleId,
-        article: this.article,
-        addTags: this.addTags,
-        deleteTags: this.deleteTags,
-        oldCategory: this.originalCategory,
-        newCategory: this.article.category,
-      });
-    },
-    saveDraft() {
-      console.log('save');
+      this.selectedArticle.status_id = ARTICLE_STATUS.PUBLISH;
       this.selectedArticle.slugify = util.slugify(this.selectedArticle.title);
-      // this.updateArticle();
-      // this.$emit('uploadArticleToServer');
-      // {
-      //   articleId: this.articleId,
-      //   article: this.article,
-      //   addTags: this.addTags,
-      //   deleteTags: this.deleteTags,
-      //   oldCategory: this.originalCategory,
-      //   newCategory: this.article.category,
-      // }
-      this.$store.dispatch('article/saveDraft', this.selectedArticle);
+      // add tags
+      this.selectedArticle.addTags = this.addTags;
+      this.selectedArticle.deleteTags = this.deleteTags;
+      console.log(this.selectedArticle);
+      this.$np.start();
+      this.isPublishing = true;
+      return this.$store.dispatch('article/save', this.selectedArticle)
+        .then(() => {
+          this.isPublishing = false;
+          this.$np.done();
+          this.$notify({
+            group: 'notice',
+            type: 'success',
+            title: 'Message',
+            text: 'Publish article successfully',
+          });
+          // clear tags
+          this.$emit('saveTag');
+        });
     },
-    updateArticle() {
+    save() {
+      this.$np.start();
+      this.isSavingDraft = true;
       this.selectedArticle.slugify = util.slugify(this.selectedArticle.title);
+      return this.$store.dispatch('article/save', this.selectedArticle)
+        .then(() => {
+          this.isSavingDraft = false;
+          this.$np.done();
+          this.$notify({
+            group: 'notice',
+            type: 'success',
+            title: 'Message',
+            text: 'save article successfully',
+          });
+        });
     },
     viewArticle() {
       // view article when article in publish state only
-      if (this.article.status === 1) {
-        this.$router.push(`/article/${this.articleId}`);
+      if (this.selectedArticle.status_id === 2) {
+        this.$router.push(`/article/${this.selectedArticle.id}`);
       }
     },
     showUploadModal() {
@@ -173,12 +207,11 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['isAdmin', 'currentUserInfo', 'currentUser']),
-    ...mapGetters('article', ['isLoading', 'articleId', 'isSavingDraft', 'isPublishingArticle', 'selectedArticle']),
+    ...mapGetters('article', ['articleId', 'selectedArticle']),
     ...mapGetters('category', ['categories']),
     ...mapState('article', ['article']),
-    // ...mapGetters('article', ['selectedArticle']),
     isPublished() {
-      return this.article.status === ARTICLE_STATUS.PUBLISH;
+      return this.selectedArticle.status_id === ARTICLE_STATUS.PUBLISH;
     },
   },
 };
@@ -222,7 +255,7 @@ export default {
   margin: 0;
 }
 
-.loading {
+.loading-spinner {
   margin: 40px;
 }
 </style>

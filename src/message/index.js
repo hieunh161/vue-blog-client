@@ -99,6 +99,7 @@ const messages = {
       article_edit: {
         publish: `Publish`,
         save_draft: `Save Draft`,
+        save: `Save`,
         private: `Private`,
         view_article: `View Article`,
         upload_image: `Upload Image`,

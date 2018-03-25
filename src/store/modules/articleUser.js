@@ -2,60 +2,60 @@
 // import Vue from 'vue';
 // import _ from 'lodash';
 import * as types from '../mutationTypes';
-import articleUser from '../../services/articleUser';
+// import articleUser from '../../services/articleUser';
 import { ARTICLE_STATUS } from '../../services/const';
-// import tagService from '../../services/tag';
+import articleUserService from '../../services/articleUser';
 // import { UPLOAD_STATUS } from '../../services/const';
 
 /* eslint-disable no-param-reassign */
 const INITIAL_STATE = {
-  // publishArticles: [],
-  // draftArticles: [],
   articles: [],
+  status: ARTICLE_STATUS.DRAFT,
+  publishArticles: [],
+  draftArticles: [],
 };
 
 // getters
 const getters = {
-  publishArticles: s => s.articles.filter(article => article.status === ARTICLE_STATUS.PUBLISH),
-  draftArticles: s => s.articles.filter(article => article.status === ARTICLE_STATUS.DRAFT),
+  publishArticles: s => s.publishArticles,
+  draftArticles: s => s.draftArticles,
   articles: s => s.articles,
-};
-
-const mutations = {
-  // [types.ARTICLE_USER_SET_PUBLISH]: (state, articles) => {
-  //   state.publishArticles.push(articles);
-  // },
-  // [types.ARTICLE_USER_SET_DRAFT]: (state, articles) => {
-  //   state.draftArticles.push(articles);
-  // },
-  [types.ARTICLE_USER_SET_CONTENT]: (state, articles) => {
-    state.articles = articles;
-  },
+  hasArticleInTab: s => s.hasArticleInTab,
 };
 
 const actions = {
-  getArticlesByUser: ({ commit }, userId) => articleUser.getArticlesByUser(userId)
+  getArticlesByUser: ({ commit }, userId) => articleUserService.getArticlesByUser(userId)
     .then(result => commit(types.ARTICLE_USER_SET_CONTENT, result)),
   getArticlesByStatus: ({ commit }, userId, status) => {
-    articleUser.getArticlesByStatus(userId, status)
+    articleUserService.getArticlesByStatus(userId, status)
     .then(result => commit(types.ARTICLE_USER_SET_PUBLISH, result));
   },
-  // getPublishArticles: ({ commit }, userId) => {
-  //   articleUser.getArticlesByStatus(userId, ARTICLE_STATUS.PUBLISH)
-  //   .then(result => commit(types.ARTICLE_USER_SET_PUBLISH, result));
-  // },
-  // getDraftArticles: ({ commit }, userId) => {
-  //   articleUser.getArticlesByStatus(userId, ARTICLE_STATUS.DRAFT)
-  //   .then(result => commit(types.ARTICLE_USER_SET_DRAFT, result));
-  // },
-  // getUserArticles: ({ dispatch }, userId) => {
-  //   dispatch('getPublishArticles', userId)
-  //   .then(() => dispatch('getDraftArticles', userId));
-  // },
-  // getArticlesByUser: (userId) => {
-  // },
-  // getOthersArticles: (userId) => {
-  // },
+  articlesByUser: ({ commit, state }, userId) =>
+    articleUserService.articlesByUser(userId, state.pageIndex)
+    .then(result => commit(types.ARTICLE_USER_SET_CONTENT, result.data)),
+  setTab: ({ commit }, status) => commit(types.ARTICLE_USER_SET_STATUS, status),
+  getArticles: ({ commit, state }, { userId, pageIndex }) =>
+    articleUserService.articlesByUserStatus(userId, state.status, pageIndex)
+    .then(result => commit(types.ARTICLE_USER_SET_CONTENT, result.data)),
+  loadTabContent: ({ commit, state }, userId) =>
+  articleUserService.articlesByUserStatus(userId, state.status)
+    .then(result => commit(types.ARTICLE_USER_SET_CONTENT, result.data)),
+};
+
+const mutations = {
+  [types.ARTICLE_USER_SET_CONTENT]: (state, result) => {
+    if (state.status === ARTICLE_STATUS.DRAFT) {
+      state.draftArticles = result;
+      state.hasArticleInTab = state.draftArticles.length > 0;
+    }
+    if (state.status === ARTICLE_STATUS.PUBLISH) {
+      state.publishArticles = result;
+      state.hasArticleInTab = state.publishArticles.length > 0;
+    }
+  },
+  [types.ARTICLE_USER_SET_STATUS]: (s, status) => {
+    s.status = status;
+  },
 };
 
 // initial state

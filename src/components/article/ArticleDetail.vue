@@ -19,7 +19,7 @@
           </div>
           <div class="article-meta">
             <p>
-              <span class="meta-attribute"><i class="ui icon calendar"></i>{{article.createTimestamp | formatDate}}</span>
+              <span class="meta-attribute"><i class="ui icon calendar"></i>{{article.created_at | formatDate}}</span>
               <span class="meta-attribute"><i class="ui icon wait"></i>{{article.content | minToRead}} min read</span>
               <span class="meta-attribute"><i class="ui icon unhide"></i> {{article.views}}</span>
             </p>
@@ -27,7 +27,7 @@
           <div class="content">
             <!-- cover image -->
             <div class="cover-image">
-              <img class="ui centered image" :src="article.coverImage ? article.coverImage.url : ''"/>
+              <img class="ui centered image" :src="article.cover_image ? article.cover_image : ''"/>
             </div>
             <!-- article tag -->
             <div class="ui tiny horizontal list" v-if="article.tags">
@@ -75,11 +75,11 @@ import { mapGetters } from 'vuex';
 import marked, { Renderer } from 'marked';
 import highlightjs from 'highlight.js';
 import Loader from '../common/Loader';
-import PageNotFound from '../PageNotFound';
 // import SocialNetwork from '../common/SocialNetwork';
 import { baseUrl } from '../../config';
 
 const CircleLoader = () => import('../common/CircleLoader');
+const PageNotFound = () => import('../PageNotFound');
 
 export default {
   data() {

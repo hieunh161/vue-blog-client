@@ -7,8 +7,8 @@ export const REF_LIKE = 'like';
 
 /* Article status */
 export const ARTICLE_STATUS = {
-  DRAFT: 0,
-  PUBLISH: 10,
+  DRAFT: 1,
+  PUBLISH: 2,
 };
 
 /* User Role */

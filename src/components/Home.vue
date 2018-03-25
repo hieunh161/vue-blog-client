@@ -1,12 +1,6 @@
 <template>
   <div>
-    <button @click="showLoginModal">Login</button>
-    
-    home
-    access_token: {{authUser.access_token}}
-    <!-- <login-modal></login-modal> -->
-    <!-- {{ response }} -->
-    <!-- <article-list class="ui container"></article-list> -->
+    <article-list class="ui container"></article-list>
   </div>
 </template>
 
