@@ -48,6 +48,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 [ ] add load image like medium
 [ ] search articles
 [ ] add TOC table in sidebar
+[ ] add upload file to laravel
 
 ## Problems
 1. Order in add item in firebase (not in date order but in id order)

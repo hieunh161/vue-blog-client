@@ -94,6 +94,8 @@ const createNew = article => axios.post(articleUrl, article);
 
 const updateArticle = article => axios.put(`${articleUrl}/${article.id}`, article);
 
+const updateArticleView = articleId => axios.put(`${articleUrl}/${articleId}/view`);
+
 const articlesByUser = (userId, pageIndex) => axios.get(`${articleUrl}/user/${userId}?page=${pageIndex}`);
 
 const articlesHome = () => axios.get(articleHomeUrl);
@@ -104,7 +106,6 @@ export default {
   readFirstArticle,
   readMoreArticles,
   readArticlesByUser,
-  updateArticle,
   updateArticleProperty,
   uploadImage,
   deleteArticle,
@@ -115,6 +116,8 @@ export default {
   getNumberOfArticlesByCategory,
   // new
   createNew,
+  updateArticle,
+  updateArticleView,
   articlesByUser,
   articlesHome,
 };

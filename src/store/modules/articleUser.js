@@ -1,11 +1,7 @@
 
-// import Vue from 'vue';
-// import _ from 'lodash';
 import * as types from '../mutationTypes';
-// import articleUser from '../../services/articleUser';
 import { ARTICLE_STATUS } from '../../services/const';
 import articleUserService from '../../services/articleUser';
-// import { UPLOAD_STATUS } from '../../services/const';
 
 /* eslint-disable no-param-reassign */
 const INITIAL_STATE = {

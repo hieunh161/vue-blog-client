@@ -56,7 +56,7 @@ const actions = {
     articleService.readArticle(articleId)
     .then((result) => {
       commit(types.ARTICLE_SET_VIEW, result.data);
-      return articleService.updateArticle(state.article);
+      return articleService.updateArticleView(articleId);
     }),
   readFirstArticles: ({ commit, state }) => articleService
     .readFirstArticle(state.numberArticlePerPage)

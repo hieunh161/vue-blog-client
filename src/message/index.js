@@ -34,6 +34,10 @@ const messages = {
         title: 'No items found',
         content: `You haven't written any posts yet. Select 'Create New' from the menu to start one.`,
       },
+      not_have_permission: {
+        title: 'Permission',
+        content: `You don't have permimssion to access this page.`,
+      },
       page_not_found: {
         error: `404`,
         title: `Page Not Found`,

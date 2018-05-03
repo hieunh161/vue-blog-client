@@ -23,7 +23,8 @@
         <div class="ui button basic positive" v-if="isPublished" :class='{loading:isPublishing}' @click="() => showPublishModal()">Change Meta Data</div>
         <div class="ui button basic positive" v-if="isPublished" :class='{loading:isPrivating}' @click="() => privateArticle()">{{ $t('button.article_edit.private') }}</div>
         <div class="ui button basic positive" v-if="isPublished" @click="viewArticle">{{ $t('button.article_edit.view_article') }}</div>
-        <div class="ui button basic positive" @click="showUploadModal">{{ $t('button.article_edit.upload_image') }}</div>
+        <div class="ui button basic positive" @click="showUploadModal(0)">{{ $t('button.article_edit.upload_image') }}</div>
+        <div class="ui button basic positive" @click="showUploadModal(1)">{{ $t('button.article_edit.upload_image') }}</div>
         <div class="ui green horizontal label" v-if="isPublished">Published</div>
         <div class="ui red horizontal label" v-if="!isPublished">Private</div>
       </div>
@@ -34,7 +35,7 @@
         v-model="selectedArticle.content">
       </markdown-editor>
       <!-- Image Upload Modal -->
-      <image-upload-modal :initImgs="selectedArticle.images"></image-upload-modal>
+      <image-upload-modal :types="types" :initImgs="selectedArticle.images"></image-upload-modal>
       <!-- Publish Modal -->
       <div class="ui modal" id="publish-modal">
         <i class="close icon"></i>
@@ -99,6 +100,7 @@ export default {
       isSavingDraft: false,
       isPublishing: false,
       isPrivating: false,
+      types: 0,
     };
   },
   methods: {
@@ -184,8 +186,15 @@ export default {
         this.$router.push(`/article/${this.selectedArticle.id}`);
       }
     },
-    showUploadModal() {
-      this.$emit('showUploadModal');
+    showUploadModal(types) {
+      this.types = types;
+      console.log(this.types);
+      // this.$emit('showUploadModal', types);
+      this.$('#modal_image_upload').modal('show');
+    },
+    showLocalUploadModal() {
+      console.log('clicked');
+      this.$emit('showLocalUploadModal');
     },
     hidePublishModal() {
       this.$('#publish-modal').modal('hide');

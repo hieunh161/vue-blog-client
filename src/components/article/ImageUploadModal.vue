@@ -1,7 +1,8 @@
 <template>
   <div class="ui modal" id="modal_image_upload">
     <i class="close icon"></i>
-    <div class="header">{{ $t('message.upload_image.upload_modal_title') }}</div>
+    <div class="header" v-if="types === 0">Upload File To Server</div>
+    <div class="header" v-if="types === 1">{{ $t('message.upload_image.upload_modal_title') }}</div>
     <div class="content">
       <form enctype="multipart/form-data" id="theform" novalidate v-if="!isSaving">
         <div class="dropbox" :class="{dragover:isDragOver}">
@@ -20,10 +21,14 @@
       <!-- <div class="progressbar" v-if="isSaving">
         <div class="ui active centered inline loader">Uploading file...</div>
       </div> -->
-      <loader v-if="isSaving"></loader>
+      <!-- <loader v-if="isSaving"></loader> -->
+      <div class="ui center aligned grid loading-spinner" v-if="isSaving">
+        <circle-loader></circle-loader>
+      </div>
       <div v-if="uploadedLink !== ''">
         <div class="ui divider"></div>
         <img class="ui middle aligned small image center" :src="uploadedLink" >
+        <div class="" @click="copyLink(uploadedLink)">Copy Link</div>
         <span>{{uploadedLink}}</span>
       </div>
     </div>
@@ -38,16 +43,19 @@ import * as axios from 'axios';
 import Loader from '../common/Loader';
 import { UPLOAD_STATUS } from '../../services/const';
 
-/* global $:true */
+const CircleLoader = () => import('../common/CircleLoader');
+
 export default {
   props: {
     initImages: {
       type: Object,
       default: () => {},
     },
-  },
-  created() {
-    this.$parent.$on('showUploadModal', this.showUploadModal);
+    // 0 : local server, 1: imgUrl
+    types: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -75,10 +83,10 @@ export default {
   },
   methods: {
     showUploadModal() {
-      $('#modal_image_upload').modal('show');
+      this.$('#modal_image_upload').modal('show');
     },
     closeUploadModal() {
-      $('#modal_image_upload').modal('hide');
+      this.$('#modal_image_upload').modal('hide');
     },
     filesChange(fieldName, fileList) {
       // handle file changes
@@ -86,15 +94,45 @@ export default {
       if (!fileList.length) return;
       // append the files to FormData
       this.uploadStatus = UPLOAD_STATUS.SAVING;
+      console.log(fieldName);
       Array
         .from(Array(fileList.length).keys())
         .map(x => formData.append(fieldName, fileList[x], fileList[x].name));
-      this.save(formData);
-      // setTimeout(() => { this.uploadStatus = STATUS_INITIAL; }, 3000);
+      if (this.types === 1) {
+        this.save(formData);
+      } else if (this.types === 0) {
+        this.saveToLocal(formData);
+      }
     },
     onDragOver(status) {
       this.isDragOver = status;
       console.log(this.isDragOver);
+    },
+    saveToLocal(formData) {
+      const config = {
+        url: 'http://localhost:8000/api/v1/image',
+        method: 'post',
+        data: formData,
+        // headers: {
+        //   Authorization: 'Client-ID 5b3be50a7c3a7ff',
+        // },
+      };
+      return axios(config)
+        .then((result) => {
+          console.log(result);
+          this.uploadStatus = UPLOAD_STATUS.INITIAL;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.uploadStatus = UPLOAD_STATUS.INITIAL;
+        });
+        // .then((x) => {
+        //   Object.assign({}, x.data, { url: x.data.link });
+        //   // console.log(result);
+        //   this.uploadedLink = x.data.link;
+        //   this.uploadStatus = UPLOAD_STATUS.INITIAL;
+        //   return Promise.resolve(x.data);
+        // });
     },
     save(formData) {
       const config = {
@@ -108,16 +146,39 @@ export default {
       return axios(config)// get data
         .then(x => x.data)
         .then((x) => {
-          const result = Object.assign({}, x.data, { url: x.data.link });
-          console.log(result);
+          Object.assign({}, x.data, { url: x.data.link });
+          // console.log(result);
           this.uploadedLink = x.data.link;
           this.uploadStatus = UPLOAD_STATUS.INITIAL;
           return Promise.resolve(x.data);
         });
     },
+    copyLink(copyLink) {
+      console.log(copyLink);
+      /* Get the text field */
+      const copyText = document.createElement('textarea');
+      copyText.text = copyLink;
+      document.body.appendChild(copyText);
+      /* Select the text field */
+      copyText.focus();
+      copyText.select();
+      /* Copy the text inside the text field */
+      const successful = document.execCommand('copy');
+      console.log(successful);
+      copyText.parentElement.removeChild(copyText);
+      /* Alert the copied text */
+      // alert("Copied the text: " + copyText.value);
+      this.$notify({
+        group: 'notice',
+        type: 'success',
+        title: 'Message',
+        text: `${copyLink} is copied to clipboard!`,
+      });
+    },
   },
   components: {
     Loader,
+    CircleLoader,
   },
 };
 </script>
@@ -142,8 +203,8 @@ export default {
   cursor: pointer;
 }
 
-.dropbox:hover {
-  background: EAEAEA;
+.dropbox:hover, .dragover {
+  background: #EAEAEA;
 }
 
 .dropbox p {

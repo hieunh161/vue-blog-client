@@ -108,6 +108,7 @@
 import { mapGetters } from 'vuex';
 import nprogress from 'nprogress';
 import { ARTICLE_STATUS } from '../../services/const';
+import localStorage from '../../services/localStorage';
 
 const CircleLoader = () => import('../common/CircleLoader');
 
@@ -120,6 +121,11 @@ export default {
   },
   mounted() {
     this.$('#user-article-tab .item').tab();
+    /* eslint-disable eqeqeq */
+    if (localStorage.get('authUser').userId != this.$route.params.id) {
+      console.log('abc');
+      this.$router.push({ path: '/unauthorized' });
+    }
   },
   created() {
     nprogress.start();

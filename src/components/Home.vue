@@ -8,7 +8,6 @@
 // import * as axios from 'axios';
 import { mapGetters } from 'vuex';
 import ArticleList from './article/ArticleList';
-// import LoginModal from './LoginModal';
 
 export default {
   name: 'home',
@@ -49,7 +48,6 @@ export default {
   },
   components: {
     ArticleList,
-    // LoginModal,
   },
   computed: {
     ...mapGetters('auth', ['authUser']),

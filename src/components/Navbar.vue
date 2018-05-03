@@ -30,8 +30,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-// import ArticleTemplate from './article/ArticleTemplate';
-// import LoginModal from './LoginModal';
 
 const ArticleNew = () => import('./article/ArticleNew');
 const LoginModal = () => import('./LoginModal');
