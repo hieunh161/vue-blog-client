@@ -14,8 +14,18 @@
       <div class="ui three stackable cards">
         <div class="card " v-for="item in category.articles" v-bind:key="item.key">
           <router-link class="description" :to="`/article/${item.id}`">
-            <div class="ui image cover_image" v-if="item.cover_image" :style="{ backgroundImage: `url('${item.cover_image}')` }"></div>
-            <div class="ui image cover_image" v-if="!item.cover_image"  :style="{ backgroundImage: `url('https://i.imgur.com/I3QyKzY.png')` }"></div>
+            <!-- <div class="ui image cover_image" v-if="item.cover_image" :style="{ backgroundImage: `url('${item.cover_image}')` }"></div> -->
+            <!-- <div class="ui image cover_image" v-if="!item.cover_image"  :style="{ backgroundImage: `url('https://i.imgur.com/I3QyKzY.png')` }"></div> -->
+            <progressive-img class="cover_image" 
+                v-if="item.cover_image" 
+                :src="item.cover_image"
+                :placeholder="item.cover_image"
+                :blur="30"/>
+            <!-- <progressive-img class="cover_image" 
+                v-if="!item.cover_image" 
+                src="https://i.imgur.com/I3QyKzY.png"
+                placeholder="https://i.imgur.com/I3QyKzY.png"
+                :blur="30"/> -->
           </router-link>
           <div class="content">
             <div class="ui green header link">
@@ -152,7 +162,7 @@ ul.ui.list ul, ol.ui.list ol, .ui.list .list {
 }
 
 .cover_image {
-  height: 200px;
+  height: 170px;
   width: 100%;
   background-position: 50% 50%;
   background-size: cover;

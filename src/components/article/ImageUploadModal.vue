@@ -18,10 +18,6 @@
             <p v-if="isInitial" v-html="$t('message.upload_image.upload_modal_hint')"></p>
         </div>
       </form>
-      <!-- <div class="progressbar" v-if="isSaving">
-        <div class="ui active centered inline loader">Uploading file...</div>
-      </div> -->
-      <!-- <loader v-if="isSaving"></loader> -->
       <div class="ui center aligned grid loading-spinner" v-if="isSaving">
         <circle-loader></circle-loader>
       </div>
@@ -40,7 +36,6 @@
 
 <script>
 import * as axios from 'axios';
-import Loader from '../common/Loader';
 import { UPLOAD_STATUS } from '../../services/const';
 
 const CircleLoader = () => import('../common/CircleLoader');
@@ -94,7 +89,6 @@ export default {
       if (!fileList.length) return;
       // append the files to FormData
       this.uploadStatus = UPLOAD_STATUS.SAVING;
-      console.log(fieldName);
       Array
         .from(Array(fileList.length).keys())
         .map(x => formData.append(fieldName, fileList[x], fileList[x].name));
@@ -106,7 +100,6 @@ export default {
     },
     onDragOver(status) {
       this.isDragOver = status;
-      console.log(this.isDragOver);
     },
     saveToLocal(formData) {
       const config = {
@@ -120,19 +113,13 @@ export default {
       return axios(config)
         .then((result) => {
           console.log(result);
+          this.uploadedLink = `http://localhost:8000${result.data.path}`;
           this.uploadStatus = UPLOAD_STATUS.INITIAL;
         })
         .catch((err) => {
           console.log(err);
           this.uploadStatus = UPLOAD_STATUS.INITIAL;
         });
-        // .then((x) => {
-        //   Object.assign({}, x.data, { url: x.data.link });
-        //   // console.log(result);
-        //   this.uploadedLink = x.data.link;
-        //   this.uploadStatus = UPLOAD_STATUS.INITIAL;
-        //   return Promise.resolve(x.data);
-        // });
     },
     save(formData) {
       const config = {
@@ -147,7 +134,6 @@ export default {
         .then(x => x.data)
         .then((x) => {
           Object.assign({}, x.data, { url: x.data.link });
-          // console.log(result);
           this.uploadedLink = x.data.link;
           this.uploadStatus = UPLOAD_STATUS.INITIAL;
           return Promise.resolve(x.data);
@@ -158,16 +144,18 @@ export default {
       /* Get the text field */
       const copyText = document.createElement('textarea');
       copyText.text = copyLink;
+      // Chrome
+      copyText.value = copyLink;
+      // FF
+      copyText.textContent = copyLink;
       document.body.appendChild(copyText);
       /* Select the text field */
       copyText.focus();
       copyText.select();
       /* Copy the text inside the text field */
-      const successful = document.execCommand('copy');
+      const successful = document.execCommand('Copy');
       console.log(successful);
       copyText.parentElement.removeChild(copyText);
-      /* Alert the copied text */
-      // alert("Copied the text: " + copyText.value);
       this.$notify({
         group: 'notice',
         type: 'success',
@@ -177,7 +165,6 @@ export default {
     },
   },
   components: {
-    Loader,
     CircleLoader,
   },
 };

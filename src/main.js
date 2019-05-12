@@ -21,7 +21,9 @@ import { firebaseConfig } from './config';
 import libPlugin from './plugin/libPlugin';
 
 Vue.config.productionTip = false;
-Vue.use(VueProgressiveImage);
+Vue.use(VueProgressiveImage, {
+  delay: 500,
+});
 Vue.use(SocialSharing);
 Vue.use(Notifications, { velocity });
 Vue.use(VueI18n);

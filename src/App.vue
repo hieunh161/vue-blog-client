@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import * as axios from 'axios';
 import { mapState } from 'vuex';
 import Navbar from '@/components/Navbar';
 import AppFooter from '@/components/AppFooter';
@@ -35,9 +36,12 @@ export default {
   },
   beforeCreate() {
     // get access_token from local storage
+    console.log('beforeCreate');
     const authUser = localStorage.get('authUser');
     if (authUser) {
       this.$store.dispatch('auth/setAuthUser', authUser);
+      axios.defaults.headers.common.Accept = 'application/json';
+      axios.defaults.headers.common.Authorization = `Bearer ${authUser.access_token}`;
     }
   },
 };

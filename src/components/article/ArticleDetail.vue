@@ -27,7 +27,10 @@
           <div class="content">
             <!-- cover image -->
             <div class="cover-image">
-              <img class="ui centered image" :src="article.cover_image ? article.cover_image : ''"/>
+              <!-- <img class="ui centered image" :src="article.cover_image ? article.cover_image : ''"/> -->
+              <progressive-img :src="article.cover_image ? article.cover_image : ''"
+                :placeholder="article.cover_image ? article.cover_image : ''"
+                :blur="30"/>
             </div>
             <!-- article tag -->
             <div class="ui tiny horizontal list" v-if="article.tags">

@@ -24,7 +24,7 @@
         <div class="ui button basic positive" v-if="isPublished" :class='{loading:isPrivating}' @click="() => privateArticle()">{{ $t('button.article_edit.private') }}</div>
         <div class="ui button basic positive" v-if="isPublished" @click="viewArticle">{{ $t('button.article_edit.view_article') }}</div>
         <div class="ui button basic positive" @click="showUploadModal(0)">{{ $t('button.article_edit.upload_image') }}</div>
-        <div class="ui button basic positive" @click="showUploadModal(1)">{{ $t('button.article_edit.upload_image') }}</div>
+        <div class="ui button basic positive" @click="showUploadModal(1)">Upload Image To Imgurl</div>
         <div class="ui green horizontal label" v-if="isPublished">Published</div>
         <div class="ui red horizontal label" v-if="!isPublished">Private</div>
       </div>
@@ -147,7 +147,6 @@ export default {
       // add tags
       this.selectedArticle.addTags = this.addTags;
       this.selectedArticle.deleteTags = this.deleteTags;
-      console.log(this.selectedArticle);
       this.$np.start();
       this.isPublishing = true;
       return this.$store.dispatch('article/save', this.selectedArticle)
